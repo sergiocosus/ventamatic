@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace Ventamatic\Events;
 
 abstract class Event
 {
