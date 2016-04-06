@@ -16,10 +16,11 @@ class CreateTablesProducts extends Migration
             $table->increments('id');
             $table->string('bar_code')->unique();
             $table->string('description')->unique();
-            $table->decimal('minimum',15,3);
+            $table->decimal('global_minimum',15,3)->nullable(true);
+            $table->decimal('global_price', 15,2)->nullable(true);
 
             $table->unsignedInteger('unit_id');
-            $table->unsignedInteger('brand_id');
+            $table->unsignedInteger('brand_id')->nullable(true);
             $table->unsignedInteger('category_id')->nullable(true);
 
             $table->timestamps();
@@ -28,7 +29,6 @@ class CreateTablesProducts extends Migration
             $table->foreign('unit_id')->references('id')->on('units');
             $table->foreign('brand_id')->references('id')->on('brands');
             $table->foreign('category_id')->references('id')->on('categories');
-
         });
     }
 
