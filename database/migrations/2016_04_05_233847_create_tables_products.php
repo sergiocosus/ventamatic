@@ -21,14 +21,12 @@ class CreateTablesProducts extends Migration
 
             $table->unsignedInteger('unit_id');
             $table->unsignedInteger('brand_id')->nullable(true);
-            $table->unsignedInteger('category_id')->nullable(true);
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('unit_id')->references('id')->on('units');
             $table->foreign('brand_id')->references('id')->on('brands');
-            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
