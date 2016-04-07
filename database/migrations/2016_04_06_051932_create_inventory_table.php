@@ -13,16 +13,19 @@ class CreateInventoryTable extends Migration
     public function up()
     {
         Schema::create('inventories', function(Blueprint $table){
+            $table->increments('id');
             $table->unsignedInteger('branch_id');
             $table->unsignedInteger('product_id');
             $table->decimal('quantity',15,3);
             $table->decimal('price',15,2);
             $table->decimal('minimum',15,3);
 
+            $table->timestamps();
+
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('branch_id')->references('id')->on('branches');
 
-            $table->primary(['branch_id', 'product_id']);
+            $table->unique(['branch_id', 'product_id']);
         });
     }
 
