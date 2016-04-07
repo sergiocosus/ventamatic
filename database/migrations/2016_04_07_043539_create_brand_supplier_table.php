@@ -18,6 +18,8 @@ class CreateBrandSupplierTable extends Migration
 
             $table->foreign('brand_id')->references('id')->on('brands');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
+
+            $table->primary(['brand_id', 'supplier_id']);
         });
     }
 

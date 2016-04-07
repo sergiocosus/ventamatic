@@ -20,6 +20,8 @@ class CreateProductBuyTable extends Migration
 
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('buy_id')->references('id')->on('buys');
+
+            $table->primary(['product_id', 'buy_id']);
         });
     }
 

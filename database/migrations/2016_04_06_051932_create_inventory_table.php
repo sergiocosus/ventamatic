@@ -21,6 +21,8 @@ class CreateInventoryTable extends Migration
 
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('branch_id')->references('id')->on('branches');
+
+            $table->primary(['branch_id', 'product_id']);
         });
     }
 

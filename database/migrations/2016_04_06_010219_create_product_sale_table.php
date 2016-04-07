@@ -20,6 +20,8 @@ class CreateProductSaleTable extends Migration
 
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('sale_id')->references('id')->on('sales');
+
+            $table->primary(['product_id', 'sale_id']);
         });
     }
 
