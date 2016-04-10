@@ -20,14 +20,10 @@ class CreateScheduleTable extends Migration
             $table->float('initial_amount');
             $table->float('system_amount');
             $table->float('final_amount');
-            $table->enum('status', [
-                'incomplete',
-                'warning',
-                'ok',
-            ]);
+            $table->unsignedInteger('schedule_status_id'); 
 
             $table->timestamps();
-
+            $table->foreign('schedule_status_id')->references('id')->on('schedule_statuses');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('branch_id')->references('id')->on('branches');
         });

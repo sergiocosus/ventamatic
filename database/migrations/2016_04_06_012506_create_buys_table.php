@@ -15,10 +15,8 @@ class CreateBuysTable extends Migration
         Schema::create('buys', function(Blueprint $table){
             $table->increments('id');
 
-            $table->enum('payment_type',[
-                'cash',
-                'card',
-            ]);
+            $table->unsignedInteger('payment_type_id');
+            
             $table->string('card_payment_id');
             $table->decimal('iva',13,2);
             $table->decimal('ieps',13,2);
@@ -33,7 +31,7 @@ class CreateBuysTable extends Migration
             $table->unsignedInteger('branch_id');
             $table->string('supplier_bill_id');
 
-
+            $table->foreign('payment_type_id')->references('id')->on('payment_types');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
             $table->foreign('branch_id')->references('id')->on('branches');
