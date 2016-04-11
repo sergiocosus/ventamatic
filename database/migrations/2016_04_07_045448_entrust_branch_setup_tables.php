@@ -52,7 +52,7 @@ class EntrustBranchSetupTables extends Migration
 
             $table->foreign('branch_permission_id')->references('id')->on('branch_permissions')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('branch_role_id')->references('id')->on('roles')
+            $table->foreign('branch_role_id')->references('id')->on('branch_roles')
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->primary(['branch_permission_id', 'branch_role_id'],'branch_permission_role_pk');
