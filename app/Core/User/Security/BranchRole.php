@@ -1,6 +1,8 @@
 <?php namespace Ventamatic\Core\User\Security;
 
-use Ventamatic\Core\User\EntrustForBranch\EntrustBranchRole;
+
+
+use Ventamatic\Core\Modules\EntrustBranch\EntrustBranchRole;
 
 class BranchRole extends EntrustBranchRole {
 

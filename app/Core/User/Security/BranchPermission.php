@@ -1,10 +1,8 @@
 <?php namespace Ventamatic\Core\User\Security;
 
-use Illuminate\Database\Eloquent\Model;
+use Ventamatic\Core\Modules\EntrustBranch\EntrustBranchPermission;
 
-class BranchPermission extends Model {
-
-    /* TODO Make Entrust for Branch and apply to this class */
+class BranchPermission extends EntrustBranchPermission {
 
     protected $fillable = ['id', 'name', 'display_name', 'description'];
 

@@ -1,0 +1,286 @@
+<?php namespace Ventamatic\Modules\EntrustBranch;
+
+use Cache;
+use Config;
+use Ventamatic\Core\Branch\Branch;
+
+
+trait EntrustBranchUserTrait 
+{
+
+    //Big block of caching functionality.
+    public function branchCachedRoles(Branch $branch)
+    {
+        $userPrimaryKey = $this->primaryKey;
+        $cacheKey = 'entrust_branch_roles_for_user_'.$this->$userPrimaryKey;
+        return Cache::tags(Config::get('entrust-branch.role_user_table'))
+            ->remember($cacheKey, Config::get('cache.ttl'), function () use ($branch){
+            return $this->branchRolesBy($branch->id)->get();
+        });
+    }/*
+    public function save(array $options = [])
+    {   //both inserts and updates
+        $result = parent::save($options);
+        Cache::tags(Config::get('entrust-branch.role_user_table'))->flush();
+        return $result;
+    }
+    public function delete(array $options = [])
+    {   //soft or hard
+        $result = parent::delete($options);
+        Cache::tags(Config::get('entrust-branch.role_user_table'))->flush();
+        return $result;
+    }
+    public function restore()
+    {   //soft delete undo's
+        $result = parent::restore();
+        Cache::tags(Config::get('entrust-branch.role_user_table'))->flush();
+        return $result;
+    }*/
+
+    /**
+     * Many-to-Many relations with Role.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function branchRoles()
+    {
+        return $this->belongsToMany(Config::get('entrust-branch.role'),
+            Config::get('entrust-branch.role_user_table'),
+            Config::get('entrust-branch.user_foreign_key'),
+            Config::get('entrust-branch.role_foreign_key'));
+    }
+
+    public function branchRolesBy($branch_id)
+    {
+        return $this->branchRoles()->wherePivot('branch_id', $branch_id);
+    }
+
+    /**
+     * Boot the user model
+     * Attach event listener to remove the many-to-many records when trying to delete
+     * Will NOT delete any records if the user model uses soft deletes.
+     *
+     * @return void|bool
+     */
+   /* public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($user) {
+            if (!method_exists(Config::get('auth.model'), 'bootSoftDeletes')) {
+                $user->branchRoles()->sync([]);
+            }
+
+            return true;
+        });
+    }*/
+
+
+    /**
+     * Checks if the user has a role by its name.
+     *
+     * @param string|array $name       Role name or array of role names.
+     * @param bool         $requireAll All roles in the array are required.
+     *
+     * @return bool
+     */
+    public function hasBranchRole($name, Branch $branch, $requireAll = false)
+    {
+        if (is_array($name)) {
+            foreach ($name as $roleName) {
+                $hasRole = $this->hasRole($roleName,$branch);
+
+                if ($hasRole && !$requireAll) {
+                    return true;
+                } elseif (!$hasRole && $requireAll) {
+                    return false;
+                }
+            }
+
+            // If we've made it this far and $requireAll is FALSE, then NONE of the roles were found
+            // If we've made it this far and $requireAll is TRUE, then ALL of the roles were found.
+            // Return the value of $requireAll;
+            return $requireAll;
+        } else {
+            foreach ($this->branchCachedRoles($branch) as $role) {
+                if ($role->name == $name) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user has a permission by its name.
+     *
+     * @param string|array $permission Permission string or array of permissions.
+     * @param bool         $requireAll All permissions in the array are required.
+     *
+     * @return bool
+     */
+    public function canInBranch($permission, Branch $branch, $requireAll = false)
+    {
+        if (is_array($permission)) {
+            foreach ($permission as $permName) {
+                $hasPerm = $this->canInBranch($permName, $branch);
+
+                if ($hasPerm && !$requireAll) {
+                    return true;
+                } elseif (!$hasPerm && $requireAll) {
+                    return false;
+                }
+            }
+
+            // If we've made it this far and $requireAll is FALSE, then NONE of the perms were found
+            // If we've made it this far and $requireAll is TRUE, then ALL of the perms were found.
+            // Return the value of $requireAll;
+            return $requireAll;
+        } else {
+            foreach ($this->branchCachedRoles($branch) as $role) {
+                // Validate against the Permission table
+                foreach ($role->cachedPermissions($branch) as $perm) {
+                    if (str_is( $permission, $perm->name) ) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks role(s) and permission(s).
+     *
+     * @param string|array $roles       Array of roles or comma separated string
+     * @param string|array $permissions Array of permissions or comma separated string.
+     * @param array        $options     validate_all (true|false) or return_type (boolean|array|both)
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return array|bool
+     */
+    public function abilityBranch($roles, $permissions, $branch, $options = [])
+    {
+        // Convert string to array if that's what is passed in.
+        if (!is_array($roles)) {
+            $roles = explode(',', $roles);
+        }
+        if (!is_array($permissions)) {
+            $permissions = explode(',', $permissions);
+        }
+
+        // Set up default values and validate options.
+        if (!isset($options['validate_all'])) {
+            $options['validate_all'] = false;
+        } else {
+            if ($options['validate_all'] !== true && $options['validate_all'] !== false) {
+                throw new InvalidArgumentException();
+            }
+        }
+        if (!isset($options['return_type'])) {
+            $options['return_type'] = 'boolean';
+        } else {
+            if ($options['return_type'] != 'boolean' &&
+                $options['return_type'] != 'array' &&
+                $options['return_type'] != 'both') {
+                throw new InvalidArgumentException();
+            }
+        }
+
+        // Loop through roles and permissions and check each.
+        $checkedRoles = [];
+        $checkedPermissions = [];
+        foreach ($roles as $role) {
+            $checkedRoles[$role] = $this->hasBranchRole($role, $branch);
+        }
+        foreach ($permissions as $permission) {
+            $checkedPermissions[$permission] = $this->canInBranch($permission, $branch);
+        }
+
+        // If validate all and there is a false in either
+        // Check that if validate all, then there should not be any false.
+        // Check that if not validate all, there must be at least one true.
+        if(($options['validate_all'] && !(in_array(false,$checkedRoles) || in_array(false,$checkedPermissions))) ||
+            (!$options['validate_all'] && (in_array(true,$checkedRoles) || in_array(true,$checkedPermissions)))) {
+            $validateAll = true;
+        } else {
+            $validateAll = false;
+        }
+
+        // Return based on option
+        if ($options['return_type'] == 'boolean') {
+            return $validateAll;
+        } elseif ($options['return_type'] == 'array') {
+            return ['roles' => $checkedRoles, 'permissions' => $checkedPermissions];
+        } else {
+            return [$validateAll, ['roles' => $checkedRoles, 'permissions' => $checkedPermissions]];
+        }
+
+    }
+
+    /**
+     * Alias to eloquent many-to-many relation's attach() method.
+     *
+     * @param mixed $role
+     */
+    public function attachBranchRole($role, Branch $branch)
+    {
+        if(is_object($role)) {
+            $role = $role->getKey();
+        }
+
+        if(is_array($role)) {
+            $role = $role['id'];
+        }
+
+        $this->branchRoles()->attach($role, ['branch_id' => $branch->id]);
+    }
+
+    /**
+     * Alias to eloquent many-to-many relation's detach() method.
+     *
+     * @param mixed $role
+     */
+    public function detachBranchRole($role, Branch $branch)
+    {
+        if (is_object($role)) {
+            $role = $role->getKey();
+        }
+
+        if (is_array($role)) {
+            $role = $role['id'];
+        }
+        $this->branchRoles()->newPivotStatementForId($role)
+            ->whereBranchId($branch->id)->delete();
+    }
+
+    /**
+     * Attach multiple roles to a user
+     *
+     * @param mixed $roles
+     */
+    public function attachBranchRoles($roles, Branch $branch)
+    {
+        foreach ($roles as $role) {
+            $this->attachBranchRole($role, $branch);
+        }
+    }
+
+    /**
+     * Detach multiple roles from a user
+     *
+     * @param mixed $roles
+     */
+    public function detachBranchRoles($roles=null, Branch $branch)
+    {
+        if (!$roles) $roles = $this->roles()->get();
+
+        foreach ($roles as $role) {
+            $this->detachBranchRole($role, $branch);
+        }
+    }
+
+}

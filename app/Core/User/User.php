@@ -5,6 +5,8 @@ use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\System\BaseUser;
 
+use Ventamatic\Core\User\EntrustForBranch\EntrustBranchRoleTrait;
+use Ventamatic\Modules\EntrustBranch\EntrustBranchUserTrait;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 
@@ -13,6 +15,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 class User extends BaseUser 
 {
     use EntrustUserTrait;
+    use EntrustBranchUserTrait;
 
     protected $dates = ['deleted_at'];
 
