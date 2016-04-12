@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Ventamatic\User::class,
+            'model' => \Ventamatic\Core\User\User::class,
         ],
 
         // 'users' => [

@@ -1,18 +1,18 @@
 <?php namespace Ventamatic\Core\User;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
-use Ventamatic\Core\User\Security\Role;
-use Venturecraft\Revisionable\RevisionableTrait;
+use Ventamatic\Core\System\BaseUser;
 
-class User extends Authenticatable
+use Zizaco\Entrust\Traits\EntrustUserTrait;
+
+
+
+
+class User extends BaseUser 
 {
-    use RevisionableTrait;
-    
-    use SoftDeletes;
+    use EntrustUserTrait;
 
     protected $dates = ['deleted_at'];
 
@@ -37,10 +37,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     
-    public function roles() {
-        return $this->belongsToMany(Role::class);
-    }
-
+    
     public function buys() {
         return $this->hasMany(Buy::class);
     }
