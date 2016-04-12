@@ -12,9 +12,7 @@ namespace Ventamatic\Core\System;
 class RevisionableBaseModel extends BaseModel
 {
     use \Venturecraft\Revisionable\RevisionableTrait;
+    protected $revisionEnabled = true;
+    protected $revisionCreationsEnabled = true;
 
-    public static function boot()
-    {
-        parent::boot();
-    }
 }
