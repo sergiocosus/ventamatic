@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::post('auth', 'Auth\AuthController@authenticate');
+Route::get('user/me', 'UserController@getUser');
+
+
+
+
+

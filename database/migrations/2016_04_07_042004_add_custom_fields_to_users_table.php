@@ -13,6 +13,7 @@ class AddCustomFieldsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('username');
             $table->string('last_name');
             $table->string('last_name_2');
             $table->string('phone');
