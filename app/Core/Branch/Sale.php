@@ -1,9 +1,9 @@
 <?php namespace Ventamatic\Core\Branch;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ventamatic\Core\External\Client;
 use Ventamatic\Core\Product\Product;
 use Ventamatic\Core\System\RevisionableBaseModel;
-use Ventamatic\Core\ThirdParty\Client;
 use Ventamatic\Core\User\User;
 
 class Sale extends RevisionableBaseModel {

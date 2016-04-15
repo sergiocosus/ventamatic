@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Ventamatic\Core\System\RevisionableBaseModel;
-use Ventamatic\Core\ThirdParty\Supplier;
+use Ventamatic\Core\External\Supplier;
 
 class Brand extends RevisionableBaseModel {
 

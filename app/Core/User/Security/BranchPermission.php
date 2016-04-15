@@ -1,6 +1,6 @@
 <?php namespace Ventamatic\Core\User\Security;
 
-use Ventamatic\Core\Modules\EntrustBranch\EntrustBranchPermission;
+use Ventamatic\Modules\EntrustBranch\EntrustBranchPermission;
 
 class BranchPermission extends EntrustBranchPermission {
 

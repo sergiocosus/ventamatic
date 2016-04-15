@@ -1,4 +1,4 @@
-<?php namespace Ventamatic\Core\Modules\EntrustBranch;
+<?php namespace Ventamatic\Modules\EntrustBranch;
 
 
 use Config;

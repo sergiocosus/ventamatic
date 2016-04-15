@@ -1,4 +1,4 @@
-<?php namespace Ventamatic\Core\ThirdParty;
+<?php namespace Ventamatic\Core\External;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Ventamatic\Core\Branch\Buy;

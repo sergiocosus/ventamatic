@@ -1,4 +1,4 @@
-<?php namespace Ventamatic\Core\Modules\EntrustBranch;
+<?php namespace Ventamatic\Modules\EntrustBranch;
 /**
  * Created by PhpStorm.
  * User: sergio
@@ -6,7 +6,6 @@
  * Time: 12:22 AM
  */
 
-namespace Ventamatic\Core\User\EntrustForBranch;
 
 
 use Cache;

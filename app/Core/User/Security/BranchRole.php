@@ -2,7 +2,7 @@
 
 
 
-use Ventamatic\Core\Modules\EntrustBranch\EntrustBranchRole;
+use Ventamatic\Modules\EntrustBranch\EntrustBranchRole;
 
 class BranchRole extends EntrustBranchRole {
 

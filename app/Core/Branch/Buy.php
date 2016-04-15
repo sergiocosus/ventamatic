@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Ventamatic\Core\Product\Product;
 use Ventamatic\Core\System\RevisionableBaseModel;
-use Ventamatic\Core\ThirdParty\Supplier;
+use Ventamatic\Core\External\Supplier;
 use Ventamatic\Core\User\User;
 
 class Buy extends RevisionableBaseModel {
