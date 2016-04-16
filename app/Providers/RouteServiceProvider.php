@@ -4,6 +4,8 @@ namespace Ventamatic\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Ventamatic\Core\User\User;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -24,9 +26,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        //
-
         parent::boot($router);
+
+        $router->bind('user', function ($value) {
+            if($value == 'me')
+            {
+                return Auth::user();
+            }
+            return User::find($value);
+        });
     }
 
     /**
