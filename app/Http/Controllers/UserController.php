@@ -25,6 +25,11 @@ class UserController extends Controller
         return User::all();
     }
 
+    public function getUser(User $user)
+    {
+        return $user;
+    }
+
     public function post(Request $request)
     {
         /* TODO Fill this method*/

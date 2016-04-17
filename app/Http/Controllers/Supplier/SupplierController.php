@@ -7,14 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class SupplierController extends Controller
 {
-    public function get(Supplier $supplier= null)
+    public function get()
     {
-        if($supplier)
-        {
-            return $supplier;
-        }
-
         return Supplier::all();
+    }
+    
+    public function getSupplier(Supplier $supplier)
+    {
+        return $supplier;
     }
 
     public function post(Request $request)

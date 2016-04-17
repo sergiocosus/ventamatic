@@ -9,14 +9,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class SystemRoleController extends Controller
 {
-    public function get(Role $role = null)
+    public function get()
     {
-        if($role)
-        {
-            return $role;
-        }
-
         return Role::all();
+    }
+
+    public function getRole(Role $role)
+    {
+        return $role;
     }
 
     public function post(Request $request)

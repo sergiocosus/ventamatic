@@ -9,11 +9,11 @@ class RevisionController extends Controller
 {
     public function get(User $user = null)
     {
-        if($user)
-        {
-            return Revision::whereUserId($user->id)->get();
-        }
-
         return Revision::all();
+    }
+
+    public function getUser(User $user)
+    {
+        return Revision::whereUserId($user->id)->get();
     }
 }

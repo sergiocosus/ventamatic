@@ -8,14 +8,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
-    public function get(SupplierCategory $category = null)
+    public function get()
     {
-        if($category)
-        {
-            return $category;
-        }
-
         return SupplierCategory::all();
+    }
+
+    public function getCategory(SupplierCategory $supplierCategory)
+    {
+        return $supplierCategory;
     }
 
     public function post(Request $request)

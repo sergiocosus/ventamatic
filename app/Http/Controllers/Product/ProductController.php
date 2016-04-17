@@ -7,14 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-    public function get(Product $product = null)
+    public function get()
     {
-        if($product)
-        {
-            return $product;
-        }
-
         return Product::all();
+    }
+
+    public function getProduct(Product $product)
+    {
+        return $product;
     }
 
     public function post(Request $request)

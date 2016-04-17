@@ -6,14 +6,14 @@ use Ventamatic\Core\External\Client;
 
 class ClientController extends Controller
 {
-    public function get(Client $client = null)
+    public function get()
     {
-        if($client)
-        {
-            return $client;
-        }
-
         return Client::all();
+    }
+
+    public function getClient(Client $client)
+    {
+        return $client;
     }
 
     public function post(Request $request)

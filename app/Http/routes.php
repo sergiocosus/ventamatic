@@ -26,6 +26,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('','UserController@post');
         
         Route::group(['prefix' => '{user}'],function(){
+            Route::get('','UserController@getUser');
             Route::delete('','UserController@delete');
             Route::put('','UserController@put');
 
@@ -45,7 +46,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('','Branch\BranchController@get');
 
         Route::group(['prefix' => '{branch}'],function(){
-            Route::get('','Branch\BranchController@get');
+            Route::get('','Branch\BranchController@getBranch');
             Route::put('','Branch\BranchController@put');
             
             Route::group(['prefix' => 'sale'],function(){
@@ -68,7 +69,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('','ClientController@post');
 
         Route::group(['prefix' => '{client}'],function() {
-            Route::get('','ClientController@get');
+            Route::get('','ClientController@getClient');
             Route::delete('', 'ClientController@delete');
             Route::put('', 'ClientController@put');
         });
@@ -79,7 +80,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('','Supplier\CategoryController@post');
 
         Route::group(['prefix' => '{supplier}'],function() {
-            Route::get('','Supplier\CategoryController@get');
+            Route::get('','Supplier\CategoryController@getCategory');
             Route::delete('', 'Supplier\CategoryController@delete');
             Route::put('', 'Supplier\CategoryController@put');
         });
@@ -89,7 +90,7 @@ Route::group(['prefix' => 'v1'],function(){
             Route::post('','Supplier\SupplierController@post');
 
             Route::group(['prefix' => '{supplierCategory}'],function() {
-                Route::get('','Supplier\SupplierController@get');
+                Route::get('','Supplier\SupplierController@getSupplier');
                 Route::delete('', 'Supplier\SupplierController@delete');
                 Route::put('', 'Supplier\SupplierController@put');
             });
@@ -101,7 +102,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('','Product\ProductController@post');
 
         Route::group(['prefix' => '{product}'],function() {
-            Route::get('','Product\ProductController@get');
+            Route::get('','Product\ProductController@getProduct');
             Route::delete('', 'Product\ProductController@delete');
             Route::put('', 'Product\ProductController@put');
         });
@@ -111,7 +112,7 @@ Route::group(['prefix' => 'v1'],function(){
             Route::post('','Product\CategoryController@post');
 
             Route::group(['prefix' => '{category}'],function() {
-                Route::get('','Product\CategoryController@get');
+                Route::get('','Product\CategoryController@getCategory');
                 Route::delete('', 'Product\CategoryController@delete');
                 Route::put('', 'Product\CategoryController@put');
             });
@@ -122,7 +123,7 @@ Route::group(['prefix' => 'v1'],function(){
             Route::post('','Product\BrandController@post');
 
             Route::group(['prefix' => '{brand}'],function() {
-                Route::get('','Product\BrandController@get');
+                Route::get('','Product\BrandController@getBrand');
                 Route::delete('', 'Product\BrandController@delete');
                 Route::put('', 'Product\BrandController@put');
             });
@@ -133,7 +134,7 @@ Route::group(['prefix' => 'v1'],function(){
     
     Route::group(['prefix' => 'revision'],function(){
         Route::get('','RevisionController@get');
-        Route::get('{user}','RevisionController@get');
+        Route::get('user/{user}','RevisionController@getUser');
     });
     
 
@@ -141,14 +142,14 @@ Route::group(['prefix' => 'v1'],function(){
     Route::group(['prefix' => 'security'],function(){
         Route::group(['prefix' => 'system'],function(){
             Route::group(['prefix' => 'permission'],function(){
-                Route::get('{permission?}','Security\SystemPermissionController@get');
+                Route::get('{permission?}','Security\SystemPermissionController@getPermission');
             });
             Route::group(['prefix' => 'role'],function(){
                 Route::get('','Security\SystemRoleController@get');
                 Route::post('','Security\SystemRoleController@post');
 
                 Route::group(['prefix' => '{role}'],function() {
-                    Route::get('','Security\SystemRoleController@get');
+                    Route::get('','Security\SystemRoleController@getRole');
                     Route::delete('', 'Security\SystemRoleController@delete');
                     Route::put('', 'Security\SystemRoleController@put');
                     Route::group(['prefix' => 'permission'],function() {
@@ -160,10 +161,10 @@ Route::group(['prefix' => 'v1'],function(){
         });
         Route::group(['prefix' => 'branch'],function(){
             Route::group(['prefix' => 'permission'],function(){
-                Route::get('{branchPermission?}','Security\BranchRoleController@get');
+                Route::get('{branchPermission?}','Security\BranchRoleController@getBranchRole');
             });
             Route::group(['prefix' => 'role'],function(){
-                Route::get('','Security\BranchRoleController@get');
+                Route::get('','Security\BranchRoleController@getBranchRole');
                 Route::delete('', 'Security\BranchRoleController@delete');
                 Route::put('', 'Security\BranchRoleController@put');
                 Route::group(['prefix' => 'permission'],function() {

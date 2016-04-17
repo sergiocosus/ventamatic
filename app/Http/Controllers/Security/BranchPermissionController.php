@@ -7,14 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class BranchPermissionController extends Controller
 {
-    public function get(BranchPermission $branchPermission = null)
+    public function get()
     {
-        if($branchPermission)
-        {
-            return $branchPermission;
-        }
-
         return BranchPermission::all();
+    }
+
+    public function getBrand(BranchPermission $branchPermission)
+    {
+        return $branchPermission;
     }
 
 }

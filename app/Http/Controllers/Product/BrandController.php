@@ -7,14 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class BrandController extends Controller
 {
-    public function get(Brand $brand = null)
+    public function get()
     {
-        if($brand)
-        {
-            return $brand;
-        }
-
         return Brand::all();
+    }
+
+    public function getBrand(Brand $brand)
+    {
+        return $brand;
     }
 
     public function post(Request $request)

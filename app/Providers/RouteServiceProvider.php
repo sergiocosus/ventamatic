@@ -27,14 +27,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         parent::boot($router);
-
-        $router->bind('user', function ($value) {
-            if($value == 'me')
-            {
-                return Auth::user();
-            }
-            return User::find($value);
-        });
+        
     }
 
     /**

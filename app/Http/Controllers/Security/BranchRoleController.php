@@ -7,14 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class BranchRoleController extends Controller
 {
-    public function get(BranchRole $branchRole = null)
+    public function get()
     {
-        if($branchRole)
-        {
-            return $branchRole;
-        }
-
         return BranchRole::all();
+    }
+
+    public function getBranchRole(BranchRole $branchRole)
+    {
+        return $branchRole;
     }
 
     public function post(Request $request)

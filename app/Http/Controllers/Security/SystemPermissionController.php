@@ -6,13 +6,13 @@ use Ventamatic\Http\Controllers\Controller;
 
 class SystemPermissionController extends Controller
 {
-    public function get(Permission $permission = null)
+    public function get()
     {
-        if($permission)
-        {
-            return $permission;
-        }
-
         return Permission::all();
+    }
+
+    public function getPermission(Permission $permission)
+    {
+        return $permission;
     }
 }

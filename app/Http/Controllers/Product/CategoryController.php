@@ -7,14 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
-    public function get(Category $category = null)
+    public function get()
     {
-        if($category)
-        {
-            return $category;
-        }
-
         return Category::all();
+    }
+
+    public function getCategory(Category $category)
+    {
+        return $category;
     }
 
     public function post(Request $request)

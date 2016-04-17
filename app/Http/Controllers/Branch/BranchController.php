@@ -7,19 +7,14 @@ use Ventamatic\Http\Controllers\Controller;
 
 class BranchController extends Controller
 {
-    public function get(Branch $branch = null)
+    public function get()
     {
-        if($branch)
-        {
-            return $branch;
-        }
-        
         return Branch::all();
     }
 
-    public function put(Branch $branch)
+    public function getBranch(Branch $branch)
     {
-        /* TODO Fill this method*/
+        return $branch;
     }
 
 }
