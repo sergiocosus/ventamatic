@@ -1,5 +1,6 @@
 var elixir = require('laravel-elixir');
 
+require('./spec/elixir-extensions');
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -12,5 +13,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+    mix.sass('app.scss')
+        .jasmine('');
+        //.exec('node_modules/jasmine-node/bin/jasmine-node spec/api');
 });

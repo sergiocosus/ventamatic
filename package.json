@@ -1,7 +1,10 @@
 {
   "private": true,
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "dotenv": "^2.0.0",
+    "frisby": "^0.8.5",
+    "gulp": "^3.9.1",
+    "jasmine-node": "^1.14.5"
   },
   "dependencies": {
     "laravel-elixir": "^5.0.0",
