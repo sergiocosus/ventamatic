@@ -1,6 +1,11 @@
 
 var frisby = require('frisby');
+var faker = require('faker');
 var config = require('./config.js');
+var fakeModels = require('./fake-models');
+faker.locale = "es_MX";
+
+var products = [];
 
 frisby.globalSetup({ // globalSetup is for ALL requests
     request: {
@@ -13,11 +18,12 @@ frisby.globalSetup({ // globalSetup is for ALL requests
     }
 });
 
-
 var tests = [
     auth,
     getLoggedUser,
     createProduct,
+    addProductsToInventory,
+    
 ];
 
 function next(){
@@ -62,21 +68,31 @@ function getLoggedUser(){
         });
 }
 
-
 function createProduct(){
+    var product = fakeModels.product();
+    
     return frisby.create('Get')
-        .post('product?token='+config.token,
-            {
-                description : "Papasas Fritas",
-                bar_code : "343432assd4234324",
-                global_minimum : 10,
-                global_price : 23.32,
-                unit_id: 1
-            })
+        .post('product?token='+config.token, product)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSONTypes('product' ,{
             id: Number
+        })
+        .afterJSON(function(body) {
+            products.push(body.product);
+            next();
+        });
+}
+
+function addProductsToInventory(){
+    return frisby.create('Add Products to Inventory')
+        .put('branch/1/inventory/product/'+products[0].id+'?token='+config.token, {
+            quantity : faker.random.number(20)
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success: true
         })
         .afterJSON(function(body) {
             next();

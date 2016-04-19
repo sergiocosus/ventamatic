@@ -13,7 +13,5 @@ require('./spec/elixir-extensions');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss')
-        .jasmine('');
-        //.exec('node_modules/jasmine-node/bin/jasmine-node spec/api');
+    mix.jasmine('');
 });
