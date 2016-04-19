@@ -1,5 +1,6 @@
 <?php namespace Ventamatic\Core\Branch;
 
+use Ventamatic\Core\Product\Product;
 use Ventamatic\Core\System\RevisionableBaseModel;
 
 class Inventory extends RevisionableBaseModel {
@@ -13,7 +14,7 @@ class Inventory extends RevisionableBaseModel {
     }
 
     public function product() {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Product::class);
     }
 
 
