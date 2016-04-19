@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ScheduleStatuesSeeder::class);
         $this->call(UsersSeeder::class);
         $this->call(UnitsSeeder::class);
+        $this->call(BranchSeeder::class);
+
     }
 }
