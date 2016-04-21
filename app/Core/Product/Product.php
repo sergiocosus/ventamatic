@@ -16,7 +16,7 @@ class Product extends RevisionableBaseModel {
 
     protected $softDelete = true;
 
-    protected $fillable = ['id', 'bar_code', 'description', 'global_minimum', 
+    protected $fillable = ['bar_code', 'description', 'global_minimum', 
         'global_price', 'unit_id', 'brand_id'];
 
 
@@ -53,5 +53,10 @@ class Product extends RevisionableBaseModel {
     }
 
 
+    public function getCorrectPrice()
+    {
+        /* TODO change logic for price*/
+        return $this->global_price;
+    }
 
 }

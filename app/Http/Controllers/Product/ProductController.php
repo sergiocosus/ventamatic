@@ -19,7 +19,8 @@ class ProductController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        $product = Product::create($request->all());
+        return compact('product');
     }
 
     public function delete(Request $request, Product $product)

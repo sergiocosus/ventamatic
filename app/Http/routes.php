@@ -11,18 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 
 Route::group(['prefix' => 'api'],function(){
 Route::group(['prefix' => 'v1'],function(){
-
+    Route::get('/', function () {
+        return view('welcome');
+    });
     Route::post('auth', 'Auth\AuthController@authenticate');
 
     Route::group(['prefix' => 'user'],function(){
         Route::get('','UserController@get');
+        Route::get('me','UserController@getMe');
         Route::post('','UserController@post');
         
         Route::group(['prefix' => '{user}'],function(){
@@ -58,7 +59,7 @@ Route::group(['prefix' => 'v1'],function(){
             });
 
             Route::group(['prefix' => 'inventory'],function(){
-                Route::put('','Branch\InventoryController@put');
+                Route::put('product/{product}','Branch\InventoryController@put');
             });
             
         });

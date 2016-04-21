@@ -24,6 +24,11 @@ class UserController extends Controller
     {
         return User::all();
     }
+    
+    public function getMe()
+    {
+        return Auth::user();
+    }
 
     public function getUser(User $user)
     {
@@ -32,27 +37,28 @@ class UserController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        User::create($request->all());
     }
 
     public function put(Request $request, User $user)
     {
-        /* TODO Fill this method*/
+        $user->fill($request->all());
+        $user->save();
     }
 
     public function delete(Request $request,  User $user)
     {
-        /* TODO Fill this method*/
+        $user->delete();
     }
     
     public function putRole(Request $request,  User $user, Role $role)
     {
-        /* TODO Fill this method*/
+        $user->attachRole($role);
     }
     
     public function deleteRole(Request $request, User $user, Role $role)
     {
-        /* TODO Fill this method*/
+        $user->detachRole($role);
     }
     
     public function postSchedule(Request $request, User $user)

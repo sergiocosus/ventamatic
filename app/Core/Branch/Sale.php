@@ -1,5 +1,7 @@
 <?php namespace Ventamatic\Core\Branch;
 
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Ventamatic\Core\External\Client;
 use Ventamatic\Core\Product\Product;
@@ -38,5 +40,42 @@ class Sale extends RevisionableBaseModel {
     public function products() {
         return $this->belongsToMany(Product::class);
     }
+
+
+    public static function doSale(User $user, Client $client, 
+                                  Branch $branch, Array $products)
+    {
+        $sale = new self();
+        $sale->client_id = $client->id;
+        $sale->client()->associate($client);
+        $sale->user()->associate($user);
+        $sale->branch()->associate($branch);
+
+        try {
+            DB::beginTransaction();
+            
+            $branch->reductInventory($products);
+            $sale->save();
+            $sale->attachProducts($products);
+            
+            DB::commit();
+        }
+        catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+       
+    }
     
+    private function attachProducts(Array $products){
+        $productsToAttach = [];
+        foreach ($products as $product)
+        {
+            $productsToAttach[$product->id] = [
+                'price' => $product['product']->getCorrectPrice(),
+                'quantity' => $product['quantity'],
+            ];
+        }
+        $this->products()->attach($productsToAttach);
+    }
 }
