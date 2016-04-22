@@ -14,7 +14,7 @@ class BranchController extends Controller
 
     public function getBranch(Branch $branch)
     {
-        return $branch;
+        return compact('branch');
     }
 
 }

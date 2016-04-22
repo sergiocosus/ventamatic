@@ -2,6 +2,7 @@
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Ventamatic\Core\Product\Product;
 use Ventamatic\Http\Controllers\Controller;
 

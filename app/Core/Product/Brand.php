@@ -12,7 +12,7 @@ class Brand extends RevisionableBaseModel {
 
     protected $softDelete = true;
 
-    protected $fillable = ['id', 'name'];
+    protected $fillable = ['name'];
 
 
     public function suppliers() {

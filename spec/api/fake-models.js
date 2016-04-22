@@ -10,5 +10,15 @@ module.exports = {
             global_price: faker.random.number(100000) / 100,
             unit_id: 1
         }
+    },
+    brand : function () {
+        return {
+            name: faker.commerce.productMaterial()
+        }
+    },
+    category : function () {
+        return {
+            name: faker.commerce.productMaterial()
+        }
     }
 };

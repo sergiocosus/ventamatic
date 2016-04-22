@@ -9,17 +9,20 @@ class BrandController extends Controller
 {
     public function get()
     {
-        return Brand::all();
+        $brand=Brand::all();
+
+        return compact('brand');
     }
 
     public function getBrand(Brand $brand)
     {
-        return $brand;
+        return compact('brand');
     }
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        $brand = Brand::create($request->all());
+        return compact('brand');
     }
 
     public function delete(Request $request, Brand $brand)
@@ -29,7 +32,9 @@ class BrandController extends Controller
 
     public function put(Request $request, Brand $brand)
     {
-        /* TODO Fill this method*/
+        $brand->fill($request->all());
+        $brand->update();
+        return compact('brand');
     }
 
 }
