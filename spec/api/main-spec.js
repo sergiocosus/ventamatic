@@ -30,12 +30,14 @@ var tests = [
     createABrand,
     updateABrand,
     createACategory,
-    getADeletedCategory,
     updateACategory,
+    DeleteCategory,
+    getADeletedCategory,
     createAClient,
     updateAClient,
-    getADeletedClient,
-    DeleteCategory
+    DeleteClient,
+    getADeletedClient
+
 
 ];
 
@@ -182,21 +184,20 @@ function getADeletedCategory(){
         });
 }
 
-/*
- function getADeletedCategory(){
- return frisby.create('delete Category')
- .delete('product/category/'+createdcategory.id+sólotoken{id}2?token='+config.token,{
+function DeleteCategory(){
+    return frisby.create('delete category')
+        .delete('product/category/'+createdCategory.id+'?token='+config.token,{
 
- })
- .expectStatus(500)
- .expectHeaderContains('content-type', 'application/json')
- .expectJSON({
- success:true
- })
- .afterJSON(function(body) {
- next();
- });
- }*/
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
 
 
 
@@ -250,7 +251,7 @@ function createAClient(){
 
 
 function updateAClient(){
-    var clientName = faker.commerce.productName();
+    var clientName = faker.name.firstName();
     return frisby.create('Update a Client')
         .put('client/'+createdClient.id+'?token='+config.token,
             {
@@ -274,7 +275,7 @@ function updateAClient(){
 
 function getADeletedClient(){
     return frisby.create('Get a deleted Client')
-        .get('client/222?token='+config.token,{
+        .get('client/'+createdClient.id+'?token='+config.token,{
             json:false
         })
         .expectStatus(500)
@@ -288,20 +289,20 @@ function getADeletedClient(){
 }
 
 
-/*
-function DeleteCategory(){
- return frisby.create('delete Client')
- .delete('product/category/'+createdCategory.id+'?token='+config.token,{
+function DeleteClient(){
+    return frisby.create('delete client')
+        .delete('client/'+createdClient.id+'?token='+config.token,{
 
- })
- .expectStatus(500)
- .expectHeaderContains('content-type', 'application/json')
- .expectJSON({
- success:true
- })
- .afterJSON(function(body) {
- next();
- });
- }
-*/
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
 

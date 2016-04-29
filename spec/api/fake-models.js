@@ -23,14 +23,14 @@ module.exports = {
     },
     client : function () {
         return {
-            name: faker.commerce.productMaterial(),
-            last_name:faker.commerce.productName(),
-            last_name_2:faker.commerce.productName(),
-            email:faker.commerce.department(),
-            phone:faker.commerce.price(),
-            cellphone:faker.commerce.price(),
-            address:faker.commerce.productName(),
-            rfc:faker.commerce.productAdjective()
+            name: faker.name.firstName(),
+            last_name:faker.name.lastName(),
+            last_name_2:faker.name.lastName(),
+            email:faker.internet.email(),
+            phone:faker.phone.phoneNumber(),
+            cellphone:faker.phone.phoneNumber(),
+            address:faker.address.streetAddress(),
+            rfc:faker.internet.mac()
         }
     }
 };
