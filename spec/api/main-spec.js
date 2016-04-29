@@ -9,6 +9,7 @@ var products = [];
 
 var createdBrand = null;
 var createdCategory = null;
+var createdClient = null;
 
 frisby.globalSetup({ // globalSetup is for ALL requests
     request: {
@@ -29,8 +30,13 @@ var tests = [
     createABrand,
     updateABrand,
     createACategory,
-    getADeletedCategory
-    
+    getADeletedCategory,
+    updateACategory,
+    createAClient,
+    updateAClient,
+    getADeletedClient,
+    DeleteCategory
+
 ];
 
 function next(){
@@ -77,7 +83,7 @@ function getLoggedUser(){
 
 function createProduct(){
     var product = fakeModels.product();
-    
+
     return frisby.create('Get')
         .post('product?token='+config.token, product)
         .expectStatus(200)
@@ -158,7 +164,7 @@ function createACategory(){
             createdCategory = body.category;
             next();
         })
-        //.inspectJSON();
+    //.inspectJSON();
 }
 
 function getADeletedCategory(){
@@ -177,20 +183,20 @@ function getADeletedCategory(){
 }
 
 /*
-function getADeletedCategory(){
-    return frisby.create('delete Category')
-        .delete('product/category/'+createdcategory.id+sólotoken{id}2?token='+config.token,{
+ function getADeletedCategory(){
+ return frisby.create('delete Category')
+ .delete('product/category/'+createdcategory.id+sólotoken{id}2?token='+config.token,{
 
-        })
-        .expectStatus(500)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSON({
-            success:true
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}*/
+ })
+ .expectStatus(500)
+ .expectHeaderContains('content-type', 'application/json')
+ .expectJSON({
+ success:true
+ })
+ .afterJSON(function(body) {
+ next();
+ });
+ }*/
 
 
 
@@ -215,4 +221,87 @@ function updateACategory(){
         });
 }
 
+
+
+function createAClient(){
+    var client = fakeModels.client();
+
+    return frisby.create('Create a Client')
+        .post('client?token='+config.token, client)
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('client' ,{
+            id: Number,
+            name: String,
+            last_name:String,
+            last_name_2:String,
+            email:String,
+            phone:String,
+            cellphone:String,
+            address:String,
+            rfc:String
+        })
+        .afterJSON(function(body) {
+            createdClient = body.client;
+            next();
+        });
+    //.inspectJSON();
+}
+
+
+function updateAClient(){
+    var clientName = faker.commerce.productName();
+    return frisby.create('Update a Client')
+        .put('client/'+createdClient.id+'?token='+config.token,
+            {
+                name:clientName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('client' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('client',{
+            name : clientName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+
+function getADeletedClient(){
+    return frisby.create('Get a deleted Client')
+        .get('client/222?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+/*
+function DeleteCategory(){
+ return frisby.create('delete Client')
+ .delete('product/category/'+createdCategory.id+'?token='+config.token,{
+
+ })
+ .expectStatus(500)
+ .expectHeaderContains('content-type', 'application/json')
+ .expectJSON({
+ success:true
+ })
+ .afterJSON(function(body) {
+ next();
+ });
+ }
+*/
 

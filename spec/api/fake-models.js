@@ -20,5 +20,17 @@ module.exports = {
         return {
             name: faker.commerce.productMaterial()
         }
+    },
+    client : function () {
+        return {
+            name: faker.commerce.productMaterial(),
+            last_name:faker.commerce.productName(),
+            last_name_2:faker.commerce.productName(),
+            email:faker.commerce.department(),
+            phone:faker.commerce.price(),
+            cellphone:faker.commerce.price(),
+            address:faker.commerce.productName(),
+            rfc:faker.commerce.productAdjective()
+        }
     }
 };

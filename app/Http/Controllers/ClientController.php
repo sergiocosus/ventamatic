@@ -18,17 +18,24 @@ class ClientController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        $client = Client::create($request->all());
+        return compact('client');
     }
 
     public function delete(Request $request, Client $client)
     {
-        /* TODO Fill this method*/
+        if($client->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, Client $client)
     {
-        /* TODO Fill this method*/
+        $client->fill($request->all());
+        $client->update();
+        return compact('client');
     }
 
 }
