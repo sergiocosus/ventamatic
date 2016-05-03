@@ -26,12 +26,18 @@ class ProductController extends Controller
 
     public function delete(Request $request, Product $product)
     {
-        /* TODO Fill this method*/
+        if($product->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, Product $product)
     {
-        /* TODO Fill this method*/
+        $product->fill($request->all());
+        $product->update();
+        return compact('product');
     }
 
 }

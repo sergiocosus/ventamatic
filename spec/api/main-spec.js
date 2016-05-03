@@ -7,6 +7,7 @@ faker.locale = "es_MX";
 
 var products = [];
 
+var createdProduct = null;
 var createdBrand = null;
 var createdCategory = null;
 var createdClient = null;
@@ -26,9 +27,12 @@ var tests = [
     auth,
     getLoggedUser,
     createProduct,
+    updateAProduct,
     addProductsToInventory,
     createABrand,
     updateABrand,
+    DeleteBrand,
+    getADeletedBrand,
     createACategory,
     updateACategory,
     DeleteCategory,
@@ -94,7 +98,61 @@ function createProduct(){
             id: Number
         })
         .afterJSON(function(body) {
+            createdProduct= body.product;
             products.push(body.product);
+            next();
+        });
+}
+
+function updateAProduct(){
+    var productName = faker.commerce.productName();
+    return frisby.create('Update a Product')
+        .put('product/'+createdProduct.id+'?token='+config.token,
+            {
+                description:productName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('product' ,{
+            id: Number,
+            description: String
+        })
+        .expectJSON('product',{
+            description : productName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function getADeletedProduct(){
+    return frisby.create('Get a deleted Product')
+        .get('product/'+createdProduct.id+'?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function DeleteProduct(){
+    return frisby.create('delete Product')
+        .delete('product/'+createdProduct.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
             next();
         });
 }
@@ -131,11 +189,11 @@ function createABrand(){
 }
 
 function updateABrand(){
-    var productName = faker.commerce.productMaterial();
+    var brandName = faker.commerce.productMaterial();
     return frisby.create('Update a brand')
         .put('product/brand/'+createdBrand.id+'?token='+config.token,
             {
-                name:productName
+                name:brandName
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
@@ -144,7 +202,39 @@ function updateABrand(){
             name: String
         })
         .expectJSON('brand',{
-            name : productName
+            name : brandName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function getADeletedBrand(){
+    return frisby.create('Get a deleted Brand')
+        .get('product/brand/'+createdBrand.id+'?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function DeleteBrand(){
+    return frisby.create('delete Brand')
+        .delete('product/brand/'+createdBrand.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
         })
         .afterJSON(function(body) {
             next();
@@ -165,13 +255,13 @@ function createACategory(){
         .afterJSON(function(body) {
             createdCategory = body.category;
             next();
-        })
+        });
     //.inspectJSON();
 }
 
 function getADeletedCategory(){
     return frisby.create('Get a deleted Category')
-        .get('product/category/222?token='+config.token,{
+        .get('product/category/'+createdCategory.id+'?token='+config.token,{
             json:false
         })
         .expectStatus(500)

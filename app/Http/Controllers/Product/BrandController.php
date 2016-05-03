@@ -27,7 +27,11 @@ class BrandController extends Controller
 
     public function delete(Request $request, Brand $brand)
     {
-        /* TODO Fill this method*/
+        if($brand->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, Brand $brand)
