@@ -8,9 +8,11 @@ faker.locale = "es_MX";
 var products = [];
 
 var createdProduct = null;
+var createdSupplier = null;
 var createdBrand = null;
 var createdCategory = null;
 var createdClient = null;
+var createdSupplierCategory=null;
 
 frisby.globalSetup({ // globalSetup is for ALL requests
     request: {
@@ -29,6 +31,8 @@ var tests = [
     createProduct,
     updateAProduct,
     addProductsToInventory,
+    DeleteProduct,
+    getADeletedProduct,
     createABrand,
     updateABrand,
     DeleteBrand,
@@ -40,7 +44,10 @@ var tests = [
     createAClient,
     updateAClient,
     DeleteClient,
-    getADeletedClient
+    getADeletedClient,
+    createASupplierCategory,
+    updateASupplierCategory
+
 
 
 ];
@@ -388,6 +395,145 @@ function DeleteClient(){
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
             success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function createASupplierCategory(){
+    var category = fakeModels.category();
+
+    return frisby.create('Create a Supplier Category')
+        .post('supplier/category?token='+config.token, category)
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('category' ,{
+            id: Number
+        })
+        .afterJSON(function(body) {
+            createdSupplierCategory = body.category;
+            next();
+        });
+    //.inspectJSON();
+}
+
+function getADeletedSupplierCategory(){
+    return frisby.create('Get a deleted SupplierCategory')
+        .get('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+function deleteSupplierCategory(){
+    return frisby.create('delete supplier category')
+        .delete('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function updateASupplierCategory(){
+    var categoryName = faker.commerce.productMaterial();
+    return frisby.create('Update a supplier category')
+        .put('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,
+            {
+                name:categoryName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('category' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('category',{
+            name : categoryName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+function createASupplier(){
+    var supplier = fakeModels.supplier();
+
+    return frisby.create('Create a Supplier')
+        .post('supplier?token='+config.token, supplier)
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('supplier' ,{
+            id: Number
+        })
+        .afterJSON(function(body) {
+            createdSupplier = body.supplier;
+            next();
+        });
+    //.inspectJSON();
+}
+
+function getADeletedSupplier(){
+    return frisby.create('Get a deleted Supplier')
+        .get('supplier/'+createdSupplier.id+'?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+function deleteSupplier(){
+    return frisby.create('delete supplier')
+        .delete('supplier/'+createdSupplier.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function updateASupplier(){
+    var supplierName = faker.commerce.productMaterial();
+    return frisby.create('Update a supplier ')
+        .put('supplier/'+createdSupplier.id+'?token='+config.token,
+            {
+                name:supplierName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('supplier' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('supplier',{
+            name : supplierName
         })
         .afterJSON(function(body) {
             next();

@@ -88,12 +88,12 @@ Route::group(['prefix' => 'v1'],function(){
 
         Route::group(['prefix' => 'category'],function(){
             Route::get('','Supplier\CategoryController@get');
-            Route::post('','Supplier\SupplierController@post');
+            Route::post('','Supplier\CategoryController@post');
 
             Route::group(['prefix' => '{supplierCategory}'],function() {
-                Route::get('','Supplier\SupplierController@getSupplier');
-                Route::delete('', 'Supplier\SupplierController@delete');
-                Route::put('', 'Supplier\SupplierController@put');
+                Route::get('','Supplier\CategoryController@getSupplier');
+                Route::delete('', 'Supplier\CategoryController@delete');
+                Route::put('', 'Supplier\CategoryController@put');
             });
         });
     });

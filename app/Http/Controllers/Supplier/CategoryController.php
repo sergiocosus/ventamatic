@@ -20,17 +20,24 @@ class CategoryController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method */
+        $category = SupplierCategory::create($request->all());
+        return compact('category');
     }
 
     public function delete(Request $request, SupplierCategory $category)
     {
-        /* TODO Fill this method */
+        if($category->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, SupplierCategory $category)
     {
-        /* TODO Fill this method */
+        $category->fill($request->all());
+        $category->update();
+        return compact('category');
     }
 
 }

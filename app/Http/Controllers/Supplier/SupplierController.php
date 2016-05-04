@@ -19,17 +19,24 @@ class SupplierController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        $supplier = Supplier::create($request->all());
+        return compact('supplier');
     }
 
     public function delete(Request $request, Supplier $supplier)
     {
-        /* TODO Fill this method*/
+        if($supplier->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, Supplier $supplier)
     {
-        /* TODO Fill this method*/
+        $supplier->fill($request->all());
+        $supplier->update();
+        return compact('supplier');
     }
 
 }
