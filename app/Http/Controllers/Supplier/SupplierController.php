@@ -14,7 +14,7 @@ class SupplierController extends Controller
     
     public function getSupplier(Supplier $supplier)
     {
-        return $supplier;
+        return compact('supplier');
     }
 
     public function post(Request $request)

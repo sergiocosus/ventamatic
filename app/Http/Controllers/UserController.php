@@ -22,17 +22,19 @@ class UserController extends Controller
 
     public function get(Request $request)
     {
-        return User::all();
+        $users =  User::all();
+        return compact('users');
     }
     
     public function getMe()
     {
-        return Auth::user();
+        $user = Auth::user();
+        return compact('user');
     }
 
     public function getUser(User $user)
     {
-        return $user;
+        return compact('user');
     }
 
     public function post(Request $request)

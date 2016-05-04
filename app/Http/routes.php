@@ -77,13 +77,13 @@ Route::group(['prefix' => 'v1'],function(){
     });
     
     Route::group(['prefix' => 'supplier'],function(){ 
-        Route::get('','Supplier\CategoryController@get');
-        Route::post('','Supplier\CategoryController@post');
+        Route::get('','Supplier\SupplierController@get');
+        Route::post('','Supplier\SupplierController@post');
 
         Route::group(['prefix' => '{supplier}'],function() {
-            Route::get('','Supplier\CategoryController@getCategory');
-            Route::delete('', 'Supplier\CategoryController@delete');
-            Route::put('', 'Supplier\CategoryController@put');
+            Route::get('','Supplier\SupplierController@getSupplier');
+            Route::delete('', 'Supplier\SupplierController@delete');
+            Route::put('', 'Supplier\SupplierController@put');
         });
 
         Route::group(['prefix' => 'category'],function(){
@@ -91,10 +91,10 @@ Route::group(['prefix' => 'v1'],function(){
             Route::post('','Supplier\CategoryController@post');
 
             Route::group(['prefix' => '{supplierCategory}'],function() {
-                Route::get('','Supplier\CategoryController@getSupplier');
+                Route::get('','Supplier\CategoryController@getCategory');
                 Route::delete('', 'Supplier\CategoryController@delete');
                 Route::put('', 'Supplier\CategoryController@put');
-            });
+            }); 
         });
     });
     
