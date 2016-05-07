@@ -21,17 +21,24 @@ class SystemRoleController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        $role = Role::create($request->all());
+        return compact('role');
     }
 
     public function delete(Request $request, Role $role)
     {
-        /* TODO Fill this method*/
+        if($role->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, Role $role)
     {
-        /* TODO Fill this method*/
+        $role->fill($request->all());
+        $role->update();
+        return compact('role');
     }
 
     public function putPermission(Role $role, Permission $permission)

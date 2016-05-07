@@ -19,26 +19,33 @@ class BranchRoleController extends Controller
 
     public function post(Request $request)
     {
-        /* TODO Fill this method*/
+        $branchRole = BranchRole::create($request->all());
+        return compact('branchRole');
     }
 
     public function delete(Request $request, BranchRole $branchRole)
     {
-        /* TODO Fill this method*/
+        if($branchRole->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
 
     public function put(Request $request, BranchRole $branchRole)
     {
-        /* TODO Fill this method*/
+        $branchRole->fill($request->all());
+        $branchRole->update();
+        return compact('branchRole');
     }
 
-    public function putPermission(BranchRole $branchRole, 
+    public function putPermission(BranchRole $branchRole,
                                   BranchPermission $branchPermission)
     {
         /* TODO Fill this method*/
     }
 
-    public function deletePermission(BranchRole $branchRole, 
+    public function deletePermission(BranchRole $branchRole,
                                      BranchPermission $branchPermission)
     {
         /* TODO Fill this method*/

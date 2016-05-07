@@ -13,6 +13,7 @@ var createdBrand = null;
 var createdCategory = null;
 var createdClient = null;
 var createdSupplierCategory=null;
+var createdRole=null;
 
 frisby.globalSetup({ // globalSetup is for ALL requests
     request: {
@@ -540,5 +541,145 @@ function updateASupplier(){
         });
 }
 
+//           FIn Supplier
+
+function createARole(){
+    var role = fakeModels.supplier();
+
+    return frisby.create('Create a Role')
+        .post('security?token='+config.token, role)
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('role' ,{
+            id: Number
+        })
+        .afterJSON(function(body) {
+            createdRole = body.role;
+            next();
+        });
+    //.inspectJSON();
+}
+
+function getADeletedRole(){
+    return frisby.create('Get a deleted Role')
+        .get('security/'+createdRole.id+'?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+function deleteRole(){
+    return frisby.create('delete Role')
+        .delete('security/'+createdRole.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
 
 
+function updateARole(){
+    var roleName = faker.commerce.productMaterial();
+    return frisby.create('Update a Role ')
+        .put('security/'+createdRole.id+'?token='+config.token,
+            {
+                name:roleName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('role' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('role',{
+            name : roleName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+//FIN ROLE
+
+function createABranchRole(){
+    var branchRole = fakeModels.supplier();
+
+    return frisby.create('Create a Branch Role')
+        .post('branch?token='+config.token, branchRole)
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('branchRole' ,{
+            id: Number
+        })
+        .afterJSON(function(body) {
+            createdBranchRole = body.supplier;
+            next();
+        });
+    //.inspectJSON();
+}
+
+function getADeleteBranchRole(){
+    return frisby.create('Get a deleted Branch Role')
+        .get('branch/'+createdBranchRole.id+'?token='+config.token,{
+            json:false
+        })
+        .expectStatus(500)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('error' ,{
+            exception: String
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+function deleteBranchRole(){
+    return frisby.create('delete Branch Role')
+        .delete('branch/'+createdBranchRole.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+function updateABranchRole(){
+    var branchRoleName = faker.commerce.productMaterial();
+    return frisby.create('Update a Branch Role ')
+        .put('branch/'+createdBranchRole.id+'?token='+config.token,
+            {
+                name:branchRoleName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('branchRole' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('branchRole',{
+            name : branchRoleName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
