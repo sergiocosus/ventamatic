@@ -87,7 +87,7 @@ function getLoggedUser(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes({
+        .expectJSONTypes('user',{
             id: Number
         })
         .afterJSON(function(body) {
