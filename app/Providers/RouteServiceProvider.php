@@ -5,6 +5,7 @@ namespace Ventamatic\Providers;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Ventamatic\Core\User\User;
 
 class RouteServiceProvider extends ServiceProvider
@@ -27,6 +28,15 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         parent::boot($router);
+
+        $router->bind('user', function ($value) {
+            \Log::info('Value_ '.$value);
+            if($value == 'me'){
+                return $user = JWTAuth::parseToken()->authenticate();
+            } else {
+                return User::findOrFail($value);
+            }
+        });
         
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ventamatic\Http\Controllers;
+namespace Ventamatic\Http\Controllers\User;
 
 use Auth;
 use Illuminate\Http\Request;
@@ -10,6 +10,7 @@ use Log;
 use Ventamatic\Core\User\Schedule;
 use Ventamatic\Core\User\Security\Role;
 use Ventamatic\Core\User\User;
+use Ventamatic\Http\Controllers\Controller;
 use Ventamatic\Http\Requests;
 
 class UserController extends Controller
@@ -24,12 +25,6 @@ class UserController extends Controller
     {
         $users =  User::all();
         return compact('users');
-    }
-    
-    public function getMe()
-    {
-        $user = Auth::user();
-        return compact('user');
     }
 
     public function getUser(User $user)
@@ -62,17 +57,5 @@ class UserController extends Controller
     {
         $user->detachRole($role);
     }
-    
-    public function postSchedule(Request $request, User $user)
-    {
-        /* TODO Fill this method*/
-    }
-    
-    public function patchSchedule(Request $request, User $user, Schedule $schedule)
-    {
-        /* TODO Fill this method*/
-    }
-
-    
     
 }

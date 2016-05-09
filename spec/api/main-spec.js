@@ -82,7 +82,7 @@ function auth(){
 
 function getLoggedUser(){
     return frisby.create('Get')
-        .get('user/1?token='+config.token,{
+        .get('user/me?token='+config.token,{
             json:false
         })
         .expectStatus(200)

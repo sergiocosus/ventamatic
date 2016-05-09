@@ -22,23 +22,23 @@ Route::group(['prefix' => 'v1'],function(){
     Route::post('auth', 'Auth\AuthController@authenticate');
 
     Route::group(['prefix' => 'user'],function(){
-        Route::get('','UserController@get');
-        Route::get('me','UserController@getMe');
-        Route::post('','UserController@post');
+        Route::get('','User\UserController@get');
+        Route::post('','User\UserController@post');
         
         Route::group(['prefix' => '{user}'],function(){
-            Route::get('','UserController@getUser');
-            Route::delete('','UserController@delete');
-            Route::put('','UserController@put');
+            Route::get('','User\UserController@getUser');
+            Route::delete('','User\UserController@delete');
+            Route::put('','User\UserController@put');
 
             Route::group(['prefix' => 'role/{role}'],function(){
-                Route::put('','UserController@putRole');
-                Route::delete('','UserController@deleteRole');
+                Route::put('','User\UserController@putRole');
+                Route::delete('','User\UserController@deleteRole');
             });
             
             Route::group(['prefix' => 'schedule'],function(){
-                Route::post('','UserController@postSchedule');
-                Route::patch('{schedule}','UserController@patchSchedule');
+                Route::get('current','User\ScheduleController@getCurrent');
+                Route::post('','User\ScheduleController@post');
+                Route::patch('{schedule}','User\ScheduleController@patch');
             });
         });
     });
