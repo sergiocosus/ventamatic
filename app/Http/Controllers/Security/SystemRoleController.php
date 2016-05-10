@@ -30,7 +30,7 @@ class SystemRoleController extends Controller
         if($role->delete()){
             return ['success'=>true];
         }else{
-            \Response::json(['success'=>false], 500);
+           return  \Response::json(['success'=>false], 500);
         }
     }
 

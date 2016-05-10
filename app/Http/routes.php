@@ -165,12 +165,16 @@ Route::group(['prefix' => 'v1'],function(){
                 Route::get('{branchPermission?}','Security\BranchRoleController@getBranchRole');
             });
             Route::group(['prefix' => 'role'],function(){
+                Route::get('','Security\BranchRoleController@get');
+                Route::post('','Security\BranchRoleController@post');
+                Route::group(['prefix' => '{branchRole}'],function() {
                 Route::get('','Security\BranchRoleController@getBranchRole');
                 Route::delete('', 'Security\BranchRoleController@delete');
                 Route::put('', 'Security\BranchRoleController@put');
                 Route::group(['prefix' => 'permission'],function() {
-                    Route::put('{branchPermission}','Security\BranchRoleController@putPermission');
+                    Route::put('{branchPermission}', 'Security\BranchRoleController@putPermission');
                     Route::delete('{branchPermission}', 'Security\BranchRoleController@deletePermission');
+                    });
                 });
             });
         });

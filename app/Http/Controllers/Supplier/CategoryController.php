@@ -13,31 +13,31 @@ class CategoryController extends Controller
         return SupplierCategory::all();
     }
 
-    public function getCategory(SupplierCategory $supplierCategory)
+    public function getCategory(SupplierCategory $category)
     {
-        return $supplierCategory;
+        return $category;
     }
 
     public function post(Request $request)
     {
-        $category = SupplierCategory::create($request->all());
-        return compact('category');
+        $supplierCategory = SupplierCategory::create($request->all());
+        return compact('supplierCategory');
     }
 
-    public function delete(Request $request, SupplierCategory $category)
+    public function delete(Request $request, SupplierCategory $supplierCategory)
     {
-        if($category->delete()){
+        if($supplierCategory->delete()){
             return ['success'=>true];
         }else{
-            \Response::json(['success'=>false], 500);
+            return \Response::json(['success'=>false], 500);
         }
     }
 
-    public function put(Request $request, SupplierCategory $category)
+    public function put(Request $request, SupplierCategory $supplierCategory)
     {
-        $category->fill($request->all());
-        $category->update();
-        return compact('category');
+        $supplierCategory->fill($request->all());
+        $supplierCategory->update();
+        return compact('supplierCategory');
     }
 
 }

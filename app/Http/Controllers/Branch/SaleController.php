@@ -3,10 +3,11 @@
 
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Http\Controllers\Controller;
+use Ventamatic\Http\Requests\Request;
 
 class SaleController extends Controller
 {
-    public function post(Branch $branch)
+    public function post(Request $request, Branch $branch)
     {
         /* TODO Fill this method*/
     }

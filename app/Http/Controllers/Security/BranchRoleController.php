@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Http\Controllers\Security;
 
 
+use Illuminate\Http\Request;
 use Ventamatic\Core\User\Security\BranchPermission;
 use Ventamatic\Core\User\Security\BranchRole;
 use Ventamatic\Http\Controllers\Controller;
@@ -28,7 +29,7 @@ class BranchRoleController extends Controller
         if($branchRole->delete()){
             return ['success'=>true];
         }else{
-            \Response::json(['success'=>false], 500);
+           return  \Response::json(['success'=>false], 500);
         }
     }
 

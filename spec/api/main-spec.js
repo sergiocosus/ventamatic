@@ -14,6 +14,7 @@ var createdCategory = null;
 var createdClient = null;
 var createdSupplierCategory=null;
 var createdRole=null;
+var createdBranchRole=null;
 
 frisby.globalSetup({ // globalSetup is for ALL requests
     request: {
@@ -47,9 +48,20 @@ var tests = [
     DeleteClient,
     getADeletedClient,
     createASupplierCategory,
-    updateASupplierCategory
-
-
+    updateASupplierCategory,
+    deleteSupplierCategory,
+    createASupplier,
+    updateASupplier,
+    deleteSupplier,
+    getADeletedSupplier,
+    createARole,
+    updateARole,
+    deleteRole,
+    getADeletedRole,
+    createABranchRole,
+    updateABranchRole,
+    deleteBranchRole,
+    getADeleteBranchRole
 
 ];
 
@@ -410,14 +422,52 @@ function createASupplierCategory(){
         .post('supplier/category?token='+config.token, category)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('category' ,{
+        .expectJSONTypes('supplierCategory' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdSupplierCategory = body.category;
+            createdSupplierCategory = body.supplierCategory;
             next();
         });
     //.inspectJSON();
+}
+
+function updateASupplierCategory(){
+    var categoryName = faker.commerce.productMaterial();
+    return frisby.create('Update a supplier category')
+        .put('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,
+            {
+                name:categoryName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('supplierCategory' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('supplierCategory',{
+            name : categoryName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
+}
+
+
+
+function deleteSupplierCategory(){
+    return frisby.create('delete supplier category')
+        .delete('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,{
+
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success:true
+        })
+        .afterJSON(function(body) {
+            next();
+        });
 }
 
 function getADeletedSupplierCategory(){
@@ -435,42 +485,8 @@ function getADeletedSupplierCategory(){
         });
 }
 
-function deleteSupplierCategory(){
-    return frisby.create('delete supplier category')
-        .delete('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,{
-
-        })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSON({
-            success:true
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
 
 
-function updateASupplierCategory(){
-    var categoryName = faker.commerce.productMaterial();
-    return frisby.create('Update a supplier category')
-        .put('supplier/category/'+createdSupplierCategory.id+'?token='+config.token,
-            {
-                name:categoryName
-            })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('category' ,{
-            id: Number,
-            name: String
-        })
-        .expectJSON('category',{
-            name : categoryName
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
 
 function createASupplier(){
     var supplier = fakeModels.supplier();
@@ -487,6 +503,28 @@ function createASupplier(){
             next();
         });
     //.inspectJSON();
+}
+
+
+function updateASupplier(){
+    var supplierName = faker.commerce.productMaterial();
+    return frisby.create('Update a supplier ')
+        .put('supplier/'+createdSupplier.id+'?token='+config.token,
+            {
+                name:supplierName
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('supplier' ,{
+            id: Number,
+            name: String
+        })
+        .expectJSON('supplier',{
+            name : supplierName
+        })
+        .afterJSON(function(body) {
+            next();
+        });
 }
 
 function getADeletedSupplier(){
@@ -520,34 +558,13 @@ function deleteSupplier(){
 }
 
 
-function updateASupplier(){
-    var supplierName = faker.commerce.productMaterial();
-    return frisby.create('Update a supplier ')
-        .put('supplier/'+createdSupplier.id+'?token='+config.token,
-            {
-                name:supplierName
-            })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('supplier' ,{
-            id: Number,
-            name: String
-        })
-        .expectJSON('supplier',{
-            name : supplierName
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
-
 //           FIn Supplier
 
 function createARole(){
-    var role = fakeModels.supplier();
+    var roleSup = fakeModels.supplier();
 
     return frisby.create('Create a Role')
-        .post('security?token='+config.token, role)
+        .post('security/system/role?token='+config.token, roleSup)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSONTypes('role' ,{
@@ -562,7 +579,7 @@ function createARole(){
 
 function getADeletedRole(){
     return frisby.create('Get a deleted Role')
-        .get('security/'+createdRole.id+'?token='+config.token,{
+        .get('security/system/role/'+createdRole.id+'?token='+config.token,{
             json:false
         })
         .expectStatus(500)
@@ -577,7 +594,7 @@ function getADeletedRole(){
 
 function deleteRole(){
     return frisby.create('delete Role')
-        .delete('security/'+createdRole.id+'?token='+config.token,{
+        .delete('security/system/role/'+createdRole.id+'?token='+config.token,{
 
         })
         .expectStatus(200)
@@ -594,7 +611,7 @@ function deleteRole(){
 function updateARole(){
     var roleName = faker.commerce.productMaterial();
     return frisby.create('Update a Role ')
-        .put('security/'+createdRole.id+'?token='+config.token,
+        .put('security/system/role/'+createdRole.id+'?token='+config.token,
             {
                 name:roleName
             })
@@ -616,17 +633,17 @@ function updateARole(){
 //FIN ROLE
 
 function createABranchRole(){
-    var branchRole = fakeModels.supplier();
+    var branchRoleBR = fakeModels.supplier();
 
     return frisby.create('Create a Branch Role')
-        .post('branch?token='+config.token, branchRole)
+        .post('security/branch/role?token='+config.token, branchRoleBR)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSONTypes('branchRole' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdBranchRole = body.supplier;
+            createdBranchRole = body.branchRole;
             next();
         });
     //.inspectJSON();
@@ -634,7 +651,7 @@ function createABranchRole(){
 
 function getADeleteBranchRole(){
     return frisby.create('Get a deleted Branch Role')
-        .get('branch/'+createdBranchRole.id+'?token='+config.token,{
+        .get('security/branch/role/'+createdBranchRole.id+'?token='+config.token,{
             json:false
         })
         .expectStatus(500)
@@ -649,7 +666,7 @@ function getADeleteBranchRole(){
 
 function deleteBranchRole(){
     return frisby.create('delete Branch Role')
-        .delete('branch/'+createdBranchRole.id+'?token='+config.token,{
+        .delete('security/branch/role/'+createdBranchRole.id+'?token='+config.token,{
 
         })
         .expectStatus(200)
@@ -664,9 +681,9 @@ function deleteBranchRole(){
 
 
 function updateABranchRole(){
-    var branchRoleName = faker.commerce.productMaterial();
+    var branchRoleName = faker.commerce.productAdjective();
     return frisby.create('Update a Branch Role ')
-        .put('branch/'+createdBranchRole.id+'?token='+config.token,
+        .put('security/branch/role/'+createdBranchRole.id+'?token='+config.token,
             {
                 name:branchRoleName
             })
@@ -682,4 +699,46 @@ function updateABranchRole(){
         .afterJSON(function(body) {
             next();
         });
+}
+
+
+
+
+function createASale(){
+   // var branchRoleBR = fakeModels.supplier();
+
+    return frisby.create('Create a Branch Role')
+        .post('branch/{branch_id}/sale?token='+config.token,
+            {
+               client_id: 33,
+                payment_type_id: 1,
+                card_payment_id: null,
+                total: 234.23,
+                client_payment: 500,
+                products: [
+                    {
+                        product_id: 1,
+                        quantity: 322,
+                    },
+                    {
+                        product_id: 2,
+                        quantity: 322,
+                    },
+                    {
+                        product_id: 4,
+                        quantity: 322,
+                    }
+                ]
+
+            })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('branchRole' ,{
+            id: Number
+        })
+        .afterJSON(function(body) {
+            createdBranchRole = body.branchRole;
+            next();
+        });
+    //.inspectJSON();
 }
