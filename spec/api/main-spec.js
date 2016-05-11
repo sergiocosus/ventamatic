@@ -3,9 +3,14 @@ var frisby = require('frisby');
 var faker = require('faker');
 var config = require('./config.js');
 var fakeModels = require('./fake-models');
+var TestRunner = require('./test-runner');
+
+var auth = require('./services/auth');
+var users = require('./services/users');
+var product = require('./services/products');
+
 faker.locale = "es_MX";
 
-var products = [];
 
 var createdProduct = null;
 var createdSupplier = null;
@@ -27,14 +32,14 @@ frisby.globalSetup({ // globalSetup is for ALL requests
     }
 });
 
-var tests = [
-    auth,
-    getLoggedUser,
-    createProduct,
-    updateAProduct,
-    addProductsToInventory,
-    DeleteProduct,
-    getADeletedProduct,
+TestRunner.tests = [
+    auth.auth,
+    users.getLoggedUser,
+    product.createProduct,
+    product.updateAProduct,
+    product.addProductsToInventory,
+    product.DeleteProduct,
+    product.getADeletedProduct,
     createABrand,
     updateABrand,
     DeleteBrand,
@@ -65,132 +70,12 @@ var tests = [
 
 ];
 
-function next(){
-    var test = tests.shift();
-    if(test){
-        test().toss();
-    }
-}
-
-next();
-
-function auth(){
-    return frisby.create('Auth Ventamatic APi')
-        .post('auth',
-            config.userCredentials
-        )
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes({
-            token: String
-        })
-        .afterJSON(function(body) {
-            config.token = body.token;
-            next();
-        });
-}
+TestRunner.next();
 
 
 
-function getLoggedUser(){
-    return frisby.create('Get')
-        .get('user/me?token='+config.token,{
-            json:false
-        })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('user',{
-            id: Number
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
-
-function createProduct(){
-    var product = fakeModels.product();
-
-    return frisby.create('Get')
-        .post('product?token='+config.token, product)
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('product' ,{
-            id: Number
-        })
-        .afterJSON(function(body) {
-            createdProduct= body.product;
-            products.push(body.product);
-            next();
-        });
-}
-
-function updateAProduct(){
-    var productName = faker.commerce.productName();
-    return frisby.create('Update a Product')
-        .put('product/'+createdProduct.id+'?token='+config.token,
-            {
-                description:productName
-            })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('product' ,{
-            id: Number,
-            description: String
-        })
-        .expectJSON('product',{
-            description : productName
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
 
 
-function getADeletedProduct(){
-    return frisby.create('Get a deleted Product')
-        .get('product/'+createdProduct.id+'?token='+config.token,{
-            json:false
-        })
-        .expectStatus(500)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
-
-
-function DeleteProduct(){
-    return frisby.create('delete Product')
-        .delete('product/'+createdProduct.id+'?token='+config.token,{
-
-        })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSON({
-            success:true
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
-
-function addProductsToInventory(){
-    return frisby.create('Add Products to Inventory')
-        .put('branch/1/inventory/product/'+products[0].id+'?token='+config.token, {
-            quantity : faker.random.number(20)
-        })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSON({
-            success: true
-        })
-        .afterJSON(function(body) {
-            next();
-        });
-}
 
 function createABrand(){
     var brand = fakeModels.brand();
@@ -204,7 +89,7 @@ function createABrand(){
         })
         .afterJSON(function(body) {
             createdBrand = body.brand;
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -225,7 +110,7 @@ function updateABrand(){
             name : brandName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -241,7 +126,7 @@ function getADeletedBrand(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -257,7 +142,7 @@ function DeleteBrand(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -274,7 +159,7 @@ function createACategory(){
         })
         .afterJSON(function(body) {
             createdCategory = body.category;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
@@ -290,7 +175,7 @@ function getADeletedCategory(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -305,7 +190,7 @@ function DeleteCategory(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -328,7 +213,7 @@ function updateACategory(){
             name : categoryName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -354,7 +239,7 @@ function createAClient(){
         })
         .afterJSON(function(body) {
             createdClient = body.client;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
@@ -377,7 +262,7 @@ function updateAClient(){
             name : clientName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -394,7 +279,7 @@ function getADeletedClient(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -410,7 +295,7 @@ function DeleteClient(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -427,7 +312,7 @@ function createASupplierCategory(){
         })
         .afterJSON(function(body) {
             createdSupplierCategory = body.supplierCategory;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
@@ -449,7 +334,7 @@ function updateASupplierCategory(){
             name : categoryName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -466,7 +351,7 @@ function deleteSupplierCategory(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -481,7 +366,7 @@ function getADeletedSupplierCategory(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -500,7 +385,7 @@ function createASupplier(){
         })
         .afterJSON(function(body) {
             createdSupplier = body.supplier;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
@@ -523,7 +408,7 @@ function updateASupplier(){
             name : supplierName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -538,7 +423,7 @@ function getADeletedSupplier(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -553,7 +438,7 @@ function deleteSupplier(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -572,7 +457,7 @@ function createARole(){
         })
         .afterJSON(function(body) {
             createdRole = body.role;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
@@ -588,7 +473,7 @@ function getADeletedRole(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -603,7 +488,7 @@ function deleteRole(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -625,7 +510,7 @@ function updateARole(){
             name : roleName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -644,7 +529,7 @@ function createABranchRole(){
         })
         .afterJSON(function(body) {
             createdBranchRole = body.branchRole;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
@@ -660,7 +545,7 @@ function getADeleteBranchRole(){
             exception: String
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -675,7 +560,7 @@ function deleteBranchRole(){
             success:true
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -697,7 +582,7 @@ function updateABranchRole(){
             name : branchRoleName
         })
         .afterJSON(function(body) {
-            next();
+            TestRunner.next();  
         });
 }
 
@@ -738,7 +623,7 @@ function createASale(){
         })
         .afterJSON(function(body) {
             createdBranchRole = body.branchRole;
-            next();
+            TestRunner.next();  
         });
     //.inspectJSON();
 }
