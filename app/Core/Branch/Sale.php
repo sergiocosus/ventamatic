@@ -42,40 +42,59 @@ class Sale extends RevisionableBaseModel {
     }
 
 
-    public static function doSale(User $user, Client $client, 
-                                  Branch $branch, Array $products)
+    public static function doSale(User $user,
+                                  Client $client,
+                                  Branch $branch,
+                                  PaymentType $paymentType,
+                                  Array $products,
+                                  $total, $client_payment, $card_payment_id = null)
     {
         $sale = new self();
-        $sale->client_id = $client->id;
         $sale->client()->associate($client);
         $sale->user()->associate($user);
         $sale->branch()->associate($branch);
+        $sale->paymentType()->associate($paymentType);
+
+        $sale->card_payment_id=$card_payment_id;
+        $sale->total=$total;
+        $sale->client_payment=$client_payment;
 
         try {
             DB::beginTransaction();
             
             $branch->reductInventory($products);
             $sale->save();
-            $sale->attachProducts($products);
-            
+            $calculatedTotal = $sale->attachProducts($products);
+
+            if($total != $calculatedTotal){
+                throw new Exception('El total no concuerda');
+            }
             DB::commit();
         }
         catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
+        return $sale;
        
     }
     
     private function attachProducts(Array $products){
         $productsToAttach = [];
-        foreach ($products as $product)
+        $total = 0;
+        foreach ($products as $product_data)
         {
-            $productsToAttach[$product->id] = [
-                'price' => $product['product']->getCorrectPrice(),
-                'quantity' => $product['quantity'],
-            ];
+            /** @var Product $product */
+            $product = Product::findOrFail($product_data['product_id']);
+
+            $price = $product->getCorrectPrice();
+            $quantity = $product_data['quantity'];
+
+            $total += $price * $quantity;
+
+            $productsToAttach[$product->id] = compact('price', 'quantity');
         }
         $this->products()->attach($productsToAttach);
+        return $total;
     }
 }

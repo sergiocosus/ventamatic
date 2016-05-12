@@ -48,11 +48,11 @@ class Branch extends RevisionableBaseModel {
         foreach ($products as $productData)
         {
             /** @var Product $product */
-            $product = $productData['product'];
+            $product_id = $productData['product_id'];
             $quantity = $productData['quantity'];
             
             /** @var Inventory $inventory */
-            $inventory = $this->inventories()->whereProductId($product->id);
+            $inventory = $this->inventories()->whereProductId($product_id)->first();
             if($inventory->quantity >= $quantity)
             {
                 $inventory->quantity -= $quantity;

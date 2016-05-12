@@ -3,14 +3,11 @@ var config = require('../config.js');
 var fakeModels = require('../fake-models');
 var faker = require('faker');
 var TestRunner = require('../test-runner');
-var products = [];
 
 module.exports = {
-    products: products,
-    
     createProduct: function(){
         var product = fakeModels.product();
-    
+
         return frisby.create('Get')
             .post('product', product)
             .expectStatus(200)
@@ -19,8 +16,7 @@ module.exports = {
                 id: Number
             })
             .afterJSON(function(body) {
-                createdProduct= body.product;
-                products.push(body.product);
+                TestRunner.products.push(body.product);
                 TestRunner.next();
             });
     },
@@ -28,7 +24,7 @@ module.exports = {
     updateAProduct: function(){
         var productName = faker.commerce.productName();
         return frisby.create('Update a Product')
-            .put('product/'+createdProduct.id,
+            .put('product/'+TestRunner.lastProduct().id,
                 {
                     description:productName
                 })
@@ -48,7 +44,7 @@ module.exports = {
     addProductsToInventory: function(){
         var that = this;
         return frisby.create('Add Products to Inventory')
-            .put('branch/1/inventory/product/'+products[0].id, {
+            .put('branch/1/inventory/product/'+TestRunner.lastProduct().id, {
                 quantity : faker.random.number(20)
             })
             .expectStatus(200)
@@ -62,7 +58,7 @@ module.exports = {
     },
     getADeletedProduct: function(){
         return frisby.create('Get a deleted Product')
-            .get('product/'+createdProduct.id,{
+            .get('product/'+TestRunner.lastDeletedProduct().id,{
                 json:false
             })
             .expectStatus(500)
@@ -78,7 +74,7 @@ module.exports = {
 
     DeleteProduct: function(){
         return frisby.create('delete Product')
-            .delete('product/'+createdProduct.id,{
+            .delete('product/'+TestRunner.lastProduct().id,{
         
             })
             .expectStatus(200)
@@ -87,6 +83,7 @@ module.exports = {
                 success:true
             })
             .afterJSON(function(body) {
+                TestRunner.deleteProduct();
                 TestRunner.next();
             });
     }

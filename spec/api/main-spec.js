@@ -8,6 +8,7 @@ var TestRunner = require('./test-runner');
 var auth = require('./services/auth');
 var users = require('./services/users');
 var product = require('./services/products');
+var sale = require('./services/sale');
 
 faker.locale = "es_MX";
 
@@ -66,7 +67,13 @@ TestRunner.tests = [
     createABranchRole,
     updateABranchRole,
     deleteBranchRole,
-    getADeleteBranchRole
+    getADeleteBranchRole,
+
+
+    product.createProduct,
+    product.addProductsToInventory,
+
+    //sale.createSale
 
 ];
 
@@ -221,6 +228,7 @@ function updateACategory(){
 
 function createAClient(){
     var client = fakeModels.client();
+    TestRunner.clients.push(client);
 
     return frisby.create('Create a Client')
         .post('client?token='+config.token, client)
@@ -589,41 +597,4 @@ function updateABranchRole(){
 
 
 
-function createASale(){
-   // var branchRoleBR = fakeModels.supplier();
 
-    return frisby.create('Create a Branch Role')
-        .post('branch/{branch_id}/sale?token='+config.token,
-            {
-               client_id: 33,
-                payment_type_id: 1,
-                card_payment_id: null,
-                total: 234.23,
-                client_payment: 500,
-                products: [
-                    {
-                        product_id: 1,
-                        quantity: 322,
-                    },
-                    {
-                        product_id: 2,
-                        quantity: 322,
-                    },
-                    {
-                        product_id: 4,
-                        quantity: 322,
-                    }
-                ]
-
-            })
-        .expectStatus(200)
-        .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('branchRole' ,{
-            id: Number
-        })
-        .afterJSON(function(body) {
-            createdBranchRole = body.branchRole;
-            TestRunner.next();  
-        });
-    //.inspectJSON();
-}

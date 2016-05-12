@@ -60,6 +60,7 @@ Route::group(['prefix' => 'v1'],function(){
 
             Route::group(['prefix' => 'inventory'],function(){
                 Route::put('product/{product}','Branch\InventoryController@put');
+                Route::get('product/{product}','Branch\InventoryController@get');
             });
             
         });
