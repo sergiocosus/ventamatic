@@ -44,6 +44,19 @@ module.exports = {
             address:faker.address.streetAddress(),
             rfc:faker.internet.mac()
         }
+    },
+    user : function(){
+        return {
+            name: faker.name.firstName(),
+            last_name:faker.name.lastName(),
+            last_name_2:faker.name.lastName(),
+            email:faker.internet.email(),
+            password:faker.internet.password(),
+            phone:faker.phone.phoneNumber(),
+            cellphone:faker.phone.phoneNumber(),
+            address:faker.address.streetAddress(),
+            rfc:faker.internet.mac()
+        }
     }
 
 };

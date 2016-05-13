@@ -8,6 +8,8 @@ module.exports = {
     },
     clients: [],
 
+    inventory: [],
+
     products: [],
     lastProduct : function(){
         if(this.products.length)

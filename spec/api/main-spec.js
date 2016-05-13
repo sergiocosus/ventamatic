@@ -9,6 +9,8 @@ var auth = require('./services/auth');
 var users = require('./services/users');
 var product = require('./services/products');
 var sale = require('./services/sale');
+var inventory = require('./services/inventory');
+
 
 faker.locale = "es_MX";
 
@@ -21,6 +23,7 @@ var createdClient = null;
 var createdSupplierCategory=null;
 var createdRole=null;
 var createdBranchRole=null;
+var createdUser=null;
 
 frisby.globalSetup({ // globalSetup is for ALL requests
     request: {
@@ -36,6 +39,7 @@ frisby.globalSetup({ // globalSetup is for ALL requests
 TestRunner.tests = [
     auth.auth,
     users.getLoggedUser,
+
     product.createProduct,
     product.updateAProduct,
     product.addProductsToInventory,
