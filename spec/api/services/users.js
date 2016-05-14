@@ -32,7 +32,7 @@ module.exports = {
                 last_name:String,
                 last_name_2:String,
                 email:String,
-                password:String,
+                password:undefined,
                 phone:String,
                 cellphone:String,
                 address:String,

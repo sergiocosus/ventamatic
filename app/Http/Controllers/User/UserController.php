@@ -34,7 +34,8 @@ class UserController extends Controller
 
     public function post(Request $request)
     {
-        User::create($request->all());
+        $user = User::create($request->all());
+        return compact('user');
     }
 
     public function put(Request $request, User $user)
