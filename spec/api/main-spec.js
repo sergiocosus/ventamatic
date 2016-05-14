@@ -39,7 +39,7 @@ frisby.globalSetup({ // globalSetup is for ALL requests
 TestRunner.tests = [
     auth.auth,
     users.getLoggedUser,
-
+    users.createUser,
     product.createProduct,
     product.updateAProduct,
     product.addProductsToInventory,
