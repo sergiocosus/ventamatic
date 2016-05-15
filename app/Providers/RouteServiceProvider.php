@@ -30,7 +30,6 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot($router);
 
         $router->bind('user', function ($value) {
-            \Log::info('Value_ '.$value);
             if($value == 'me'){
                 return $user = JWTAuth::parseToken()->authenticate();
             } else {

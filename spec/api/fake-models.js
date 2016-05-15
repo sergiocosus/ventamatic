@@ -48,6 +48,7 @@ module.exports = {
     user : function(){
         return {
             name: faker.name.firstName(),
+            username: faker.random.uuid(),
             last_name:faker.name.lastName(),
             last_name_2:faker.name.lastName(),
             email:faker.internet.email(),
