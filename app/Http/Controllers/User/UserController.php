@@ -42,11 +42,16 @@ class UserController extends Controller
     {
         $user->fill($request->all());
         $user->save();
+        return compact('user');
     }
 
-    public function delete(Request $request,  User $user)
+    public function delete(User $user)
     {
-        $user->delete();
+        if($user->delete()){
+            return ['success'=>true];
+        }else{
+            \Response::json(['success'=>false], 500);
+        }
     }
     
     public function putRole(Request $request,  User $user, Role $role)
