@@ -20,4 +20,11 @@ class InventoryController extends Controller
     {
         return $product->inventories()->whereBranchId($branch->id)->first();
     }
+
+    public function getAll(Branch $branch)
+    {
+
+        $inventories=$branch->inventories;
+        return compact('inventories');
+    }
 }

@@ -4,24 +4,65 @@ var fakeModels = require('../fake-models');
 var faker = require('faker');
 var TestRunner = require('../test-runner');
 
+var LocalRunner={
+    next:function () {
+        var test = this.tests.shift();
+        if (test) {
+            test().toss();
+        }else{
+            TestRunner.next();
+        }
+    },
+    tests : [
+        createProduct,
+        createProduct,
+        createProduct,
+        createProduct,
+        function(){return addProductsToInventory(0,11)},
+        function(){return addProductsToInventory(1,11)},
+        function(){return addProductsToInventory(2,11)},
+        function(){return addProductsToInventory(3,11)}
+    ],
+    products: []
+};
+
 module.exports = {
+    prepareInventoryToSale: function(){
+        LocalRunner.next();
+    },
     createSale: function(){
-        // var branchRoleBR = fakeModels.supplier();
-        var client = TestRunner.clients[0];
-       var productos= TestRunner.products;
-        var products = [
-            {
-                product_id: 1,
-                quantity: faker.random.number(15)
-            },
-            {
-                product_id: 2,
-                quantity: faker.random.number(15)
-            },
-        ];
+
+        console.log("MAOOO1");
+        var client = TestRunner.createdClient;
+        console.log("MAOOO2"+client.id);
+        var products= LocalRunner.products;
+        var inventories=TestRunner.inventories;
+        var createdSale=null;
+
+
+        console.log("MAOOO"+client.id);
         var total = 0;
-        for( var product in products){
-            total += product.quantity * product.price;
+        var productsToSale = [
+            {
+                product_id: products[0].id,
+                quantity: 3
+            },
+            {
+                product_id: products[1].id,
+                quantity: faker.random.number(2)
+            },
+            {
+                product_id: products[2].id,
+                quantity: faker.random.number(2)
+            },
+            {
+                product_id: products[3].id,
+                quantity: faker.random.number(2)
+            }
+        ];
+
+        for( var i=0; i < productsToSale.length; i++){
+            total += productsToSale[i].quantity * products[i].price;
         }
 
         return frisby.create('Create a Sale')
@@ -30,33 +71,54 @@ module.exports = {
                     client_id: client.id,
                     payment_type_id: 1,
                     card_payment_id: null,
-                    total: 234.23,
-                    client_payment: 500,
-                    products: [
-                        {
-                            product_id: 1,
-                            quantity: faker.random.number(15)
-                        },
-                        {
-                            product_id: 2,
-                            quantity: faker.random.number(15)
-                        },
-                        {
-                            product_id: 3,
-                            quantity: faker.random.number(15)
-                        }
-                    ]
+                    total: total,
+                    client_payment: 1000,
+                    products: productsToSale
 
                 })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('branchRole' ,{
+            .expectJSONTypes('sale' ,{
                 id: Number
             })
             .afterJSON(function(body) {
-                createdBranchRole = body.branchRole;
+                createdSale = body.sale;
                 TestRunner.next();
             });
         //.inspectJSON();
     }
 };
+
+
+function addProductsToInventory (product_number, quantity){
+    var that = this;
+
+    return frisby.create('Add Products to Inventory')
+        .put('branch/1/inventory/product/'+LocalRunner.products[product_number].id, {
+            quantity : quantity
+        })
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSON({
+            success: true
+        })
+        .afterJSON(function(body) {
+            LocalRunner.next();
+        });
+}
+
+function createProduct (){
+    var product = fakeModels.product();
+
+    return frisby.create('Get')
+        .post('product', product)
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .expectJSONTypes('product' ,{
+            id: Number
+        })
+        .afterJSON(function(body) {
+            LocalRunner.products.push(body.product);
+            LocalRunner.next();
+        });
+}

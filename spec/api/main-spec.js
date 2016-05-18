@@ -40,6 +40,9 @@ TestRunner.tests = [
     auth.auth,
     users.getLoggedUser,
     users.createUser,
+    users.updateAUser,
+    users.deleteUser,
+    users.getADeletedUser,
     product.createProduct,
     product.updateAProduct,
     product.addProductsToInventory,
@@ -54,9 +57,7 @@ TestRunner.tests = [
     DeleteCategory,
     getADeletedCategory,
     createAClient,
-    updateAClient,
-    DeleteClient,
-    getADeletedClient,
+
     createASupplierCategory,
     updateASupplierCategory,
     deleteSupplierCategory,
@@ -72,12 +73,11 @@ TestRunner.tests = [
     updateABranchRole,
     deleteBranchRole,
     getADeleteBranchRole,
-
-
+    inventory.getInventory,
     product.createProduct,
     product.addProductsToInventory,
-
-    //sale.createSale
+    sale.prepareInventoryToSale,
+    sale.createSale
 
 ];
 
@@ -100,7 +100,7 @@ function createABrand(){
         })
         .afterJSON(function(body) {
             createdBrand = body.brand;
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -121,7 +121,7 @@ function updateABrand(){
             name : brandName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -137,7 +137,7 @@ function getADeletedBrand(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -153,7 +153,7 @@ function DeleteBrand(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -170,7 +170,7 @@ function createACategory(){
         })
         .afterJSON(function(body) {
             createdCategory = body.category;
-            TestRunner.next();  
+            TestRunner.next();
         });
     //.inspectJSON();
 }
@@ -186,7 +186,7 @@ function getADeletedCategory(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -201,7 +201,7 @@ function DeleteCategory(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -224,7 +224,7 @@ function updateACategory(){
             name : categoryName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -251,7 +251,9 @@ function createAClient(){
         })
         .afterJSON(function(body) {
             createdClient = body.client;
-            TestRunner.next();  
+            TestRunner.createdClient=body.client;
+
+            TestRunner.next();
         });
     //.inspectJSON();
 }
@@ -274,7 +276,7 @@ function updateAClient(){
             name : clientName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -291,7 +293,7 @@ function getADeletedClient(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -307,7 +309,7 @@ function DeleteClient(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -324,7 +326,7 @@ function createASupplierCategory(){
         })
         .afterJSON(function(body) {
             createdSupplierCategory = body.supplierCategory;
-            TestRunner.next();  
+            TestRunner.next();
         });
     //.inspectJSON();
 }
@@ -346,7 +348,7 @@ function updateASupplierCategory(){
             name : categoryName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -363,7 +365,7 @@ function deleteSupplierCategory(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -378,7 +380,7 @@ function getADeletedSupplierCategory(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -397,7 +399,7 @@ function createASupplier(){
         })
         .afterJSON(function(body) {
             createdSupplier = body.supplier;
-            TestRunner.next();  
+            TestRunner.next();
         });
     //.inspectJSON();
 }
@@ -420,7 +422,7 @@ function updateASupplier(){
             name : supplierName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -435,7 +437,7 @@ function getADeletedSupplier(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -450,7 +452,7 @@ function deleteSupplier(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -469,7 +471,7 @@ function createARole(){
         })
         .afterJSON(function(body) {
             createdRole = body.role;
-            TestRunner.next();  
+            TestRunner.next();
         });
     //.inspectJSON();
 }
@@ -485,7 +487,7 @@ function getADeletedRole(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -500,7 +502,7 @@ function deleteRole(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -522,7 +524,7 @@ function updateARole(){
             name : roleName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -541,7 +543,7 @@ function createABranchRole(){
         })
         .afterJSON(function(body) {
             createdBranchRole = body.branchRole;
-            TestRunner.next();  
+            TestRunner.next();
         });
     //.inspectJSON();
 }
@@ -557,7 +559,7 @@ function getADeleteBranchRole(){
             exception: String
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -572,7 +574,7 @@ function deleteBranchRole(){
             success:true
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 
@@ -594,7 +596,7 @@ function updateABranchRole(){
             name : branchRoleName
         })
         .afterJSON(function(body) {
-            TestRunner.next();  
+            TestRunner.next();
         });
 }
 

@@ -8,28 +8,19 @@ var TestRunner = require('../test-runner');
 module.exports = {
     getInventory: function(){
 
-        var inventory_obtained;
-        var client = TestRunner.clients[0];
-        var productos= TestRunner.products;
-
-
-        var total = 0;
-        for( productos in producto){
-            total += producto.quantity * producto.price;
-        }
 
         return frisby.create('Get a inventory')
-            .get('branch/1/inventory')
-
+            .get('branch/1/inventory',{
+                json:false
+            })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('inventory' ,{
+            .expectJSONTypes('inventories' ,[{
                 id: Number
-            })
+            }])
             .afterJSON(function(body) {
-                inventory_obtained = body.inventory;
+                TestRunner.inventories=body.inventories;
                 TestRunner.next();
             });
-        //.inspectJSON();
     }
 };

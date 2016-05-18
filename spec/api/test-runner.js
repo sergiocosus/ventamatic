@@ -3,12 +3,17 @@ module.exports = {
     next : function() {
         var test = this.tests.shift();
         if(test){
-            test().toss();
+            var preparedTest = test();
+            if(preparedTest){
+                preparedTest.toss();
+            }
         }
     },
     clients: [],
 
-    inventory: [],
+    inventories: [],
+
+    createdClient:null,
 
     products: [],
     lastProduct : function(){
