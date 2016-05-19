@@ -8,12 +8,13 @@ class ClientController extends Controller
 {
     public function get()
     {
-        return Client::all();
+        $clients =  Client::all();
+        return compact('clients');
     }
 
     public function getClient(Client $client)
     {
-        return $client;
+        return compact('client');
     }
 
     public function post(Request $request)
