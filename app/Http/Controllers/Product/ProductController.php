@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function get()
     {
-        $products = Product::all();
+        $products = Product::with('categories', 'unit', 'brand')->get();
         return compact('products');
     }
 
