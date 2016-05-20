@@ -10,12 +10,13 @@ class ProductController extends Controller
 {
     public function get()
     {
-        return Product::all();
+        $products = Product::all();
+        return compact('products');
     }
 
     public function getProduct(Product $product)
     {
-        return $product;
+        return compact('product');
     }
 
     public function post(Request $request)
@@ -24,7 +25,7 @@ class ProductController extends Controller
         return compact('product');
     }
 
-    public function delete(Request $request, Product $product)
+    public function delete(Product $product)
     {
         if($product->delete()){
             return ['success'=>true];
