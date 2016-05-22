@@ -9,7 +9,9 @@ class SupplierController extends Controller
 {
     public function get()
     {
-        return Supplier::all();
+        $suppliers = Supplier::with('supplierCategory')->get();
+
+        return compact('suppliers');
     }
     
     public function getSupplier(Supplier $supplier)
