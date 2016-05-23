@@ -169,7 +169,7 @@ function lessInventory(){
         productsToSale.forEach(function(productToSale){
             if(inventory.product_id == productToSale.product_id){
                 if(inventory.quantity<productToSale.quantity)
-                inventory.quantity -= productToSale.quantity;
+                    inventory.quantity -= productToSale.quantity;
                 console.log(inventory);
                 console.log(productToSale);
             }

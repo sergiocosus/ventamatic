@@ -43,41 +43,49 @@ TestRunner.tests = [
     users.updateAUser,
     users.deleteUser,
     users.getADeletedUser,
+
     product.createProduct,
     product.updateAProduct,
     product.addProductsToInventory,
     product.DeleteProduct,
     product.getADeletedProduct,
+
     createABrand,
     updateABrand,
     DeleteBrand,
     getADeletedBrand,
+
     createACategory,
     updateACategory,
     DeleteCategory,
     getADeletedCategory,
-    createAClient,
 
+    createAClient,
+//Pruebas para los clientes
     createASupplierCategory,
     updateASupplierCategory,
     deleteSupplierCategory,
+
     createASupplier,
     updateASupplier,
     deleteSupplier,
     getADeletedSupplier,
+
     createARole,
     updateARole,
     deleteRole,
     getADeletedRole,
+
     createABranchRole,
     updateABranchRole,
     deleteBranchRole,
     getADeleteBranchRole,
+
     inventory.getInventory,
     product.createProduct,
     product.addProductsToInventory,
-    sale.prepareInventoryToSale,
-    sale.createSale
+    sale.prepareInventoryToSale
+
 
 ];
 
@@ -389,7 +397,7 @@ function getADeletedSupplierCategory(){
 
 function createASupplier(){
     var supplier = fakeModels.supplier();
-
+//supplier.supplier_category_id =
     return frisby.create('Create a Supplier')
         .post('supplier?token='+config.token, supplier)
         .expectStatus(200)

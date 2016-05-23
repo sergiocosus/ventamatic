@@ -6,9 +6,7 @@ var TestRunner = require('../test-runner');
 
 
 module.exports = {
-    getInventory: function(){
-
-
+    getInventory: function(callback){
         return frisby.create('Get a inventory')
             .get('branch/1/inventory',{
                 json:false
@@ -20,7 +18,13 @@ module.exports = {
             }])
             .afterJSON(function(body) {
                 TestRunner.inventories=body.inventories;
-                TestRunner.next();
+                if(callback){
+                    callback();
+                } else {
+                    TestRunner.next();
+                }
             });
     }
+
+
 };

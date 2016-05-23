@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Core\Branch;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Ventamatic\Core\Product\Product;
 use Ventamatic\Core\System\RevisionableBaseModel;
 use Ventamatic\Core\External\Supplier;
@@ -37,6 +38,61 @@ class Buy extends RevisionableBaseModel {
 
     public function products() {
         return $this->belongsToMany(Product::class);
+    }
+
+    public static function doBuy(User $user,
+                                  Branch $branch,
+                                  PaymentType $paymentType,
+                                  Array $products,
+                                  $total, $client_payment, $card_payment_id = null)
+    {
+        $buy = new self();
+        $buy->client()->associate($client);
+        $buy->user()->associate($user);
+        $buy->branch()->associate($branch);
+        $buy->paymentType()->associate($paymentType);
+
+        $buy->card_payment_id=$card_payment_id;
+        $buy->total=$total;
+        $buy->client_payment=$client_payment;
+
+        try {
+            DB::beginTransaction();
+
+            $branch->reductInventory($products);
+            $buy->save();
+            $calculatedTotal = $buy->attachProducts($products);
+
+            if($total != $calculatedTotal){
+                throw new Exception('El total no concuerda');
+            }
+            DB::commit();
+        }
+        catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return $buy;
+
+    }
+
+    private function attachProducts(Array $products){
+        $productsToAttach = [];
+        $total = 0;
+        foreach ($products as $product_data)
+        {
+            /** @var Product $product */
+            $product = Product::findOrFail($product_data['product_id']);
+
+            $price = $product->getCorrectPrice();
+            $quantity = $product_data['quantity'];
+
+            $total += $price * $quantity;
+
+            $productsToAttach[$product->id] = compact('price', 'quantity');
+        }
+        $this->products()->attach($productsToAttach);
+        return $total;
     }
     
 

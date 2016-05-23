@@ -23,8 +23,8 @@ class InventoryController extends Controller
 
     public function getAll(Branch $branch)
     {
-
         $inventories=$branch->inventories;
-        return compact('inventories');
+        return \Response::json(
+            compact('inventories'), 200,[],JSON_NUMERIC_CHECK);
     }
 }
