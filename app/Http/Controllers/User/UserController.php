@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function get(Request $request)
     {
-        $users =  User::all();
+        $users = User::all();
         return compact('users');
     }
 
