@@ -103,6 +103,7 @@ Route::group(['prefix' => 'v1'],function(){
     Route::group(['prefix' => 'product'],function(){
         Route::get('','Product\ProductController@get');
         Route::post('','Product\ProductController@post');
+        Route::get('search','Product\ProductController@getSearch');
 
         Route::group(['prefix' => '{product}'],function() {
             Route::get('','Product\ProductController@getProduct');

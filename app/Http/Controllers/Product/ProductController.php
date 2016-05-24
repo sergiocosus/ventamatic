@@ -41,4 +41,11 @@ class ProductController extends Controller
         return compact('product');
     }
 
+    public function getSearch(Request $request)
+    {
+        $products = Product::search($request->get('search'))->get();
+
+        return compact('products');
+    }
+
 }
