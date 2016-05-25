@@ -92,11 +92,11 @@ function createSale(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('sale' ,{
+        .expectJSONTypes('data.sale' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdSale = body.sale;
+            createdSale = body.data.sale;
 
             LocalRunner.next();
         });
@@ -128,11 +128,11 @@ function createProduct (){
         .post('product', product)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('product' ,{
+        .expectJSONTypes('data.product' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            LocalRunner.products.push(body.product);
+            LocalRunner.products.push(body.data.product);
             LocalRunner.next();
         });
 }
@@ -155,9 +155,9 @@ function checkInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('inventories' , inventories)
+        .expectJSON('data.inventories' , inventories)
         .afterJSON(function(body) {
-            TestRunner.inventories=body.inventories;
+            TestRunner.inventories=body.data.inventories;
             LocalRunner.next();
         });
 }
@@ -182,9 +182,9 @@ function lessInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('inventories' , inventories)
+        .expectJSON('data.inventories' , inventories)
         .afterJSON(function(body) {
-            TestRunner.inventories=body.inventories;
+            TestRunner.inventories=body.data.inventories;
             LocalRunner.next();
         });
 

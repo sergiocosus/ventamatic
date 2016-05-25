@@ -36,6 +36,14 @@ class Product extends RevisionableBaseModel {
         ],
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'unit_id' => 'integer',
+        'brand_id' => 'integer',
+        'global_minimum' => 'double',
+        'global_price' => 'double',
+    ];
+
     public function brand() {
         return $this->belongsTo(Brand::class);
     }

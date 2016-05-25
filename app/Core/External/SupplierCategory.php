@@ -13,6 +13,9 @@ class SupplierCategory extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'name'];
 
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function suppliers() {
         return $this->hasMany(Supplier::class);

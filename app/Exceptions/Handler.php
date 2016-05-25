@@ -7,9 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Ventamatic\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -48,11 +48,10 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         if ( $request->wantsJson() ) {
-            return Response::json( [
-                'error' => [
-                    'exception' => class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage(),
-                ]
-            ], 500 );
+            \Log::error($e);
+            return Response::error(500,  'Exception: '. class_basename( $e ) . 
+                ' in ' . basename( $e->getFile() ) . ' line ' . 
+                $e->getLine() . ': ' . $e->getMessage());
         }
         return parent::render($request, $e);
     }

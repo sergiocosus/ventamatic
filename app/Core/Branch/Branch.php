@@ -17,6 +17,9 @@ class Branch extends RevisionableBaseModel {
     protected $fillable = ['name', 'description', 'address', 'title_ticket', 
         'header_ticket', 'footer_ticket', 'image_hash'];
 
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function products() {
         return $this->belongsToMany(Product::class);

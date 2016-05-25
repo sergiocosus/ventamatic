@@ -21,11 +21,11 @@ module.exports = {
 
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('branchRole' ,{
+            .expectJSONTypes('data.branchRole' ,{
                 id: Number
             })
             .afterJSON(function(body) {
-                createdBranchRole = body.branchRole;
+                createdBranchRole = body.data.branchRole;
                 TestRunner.next();
             });
         //.inspectJSON();

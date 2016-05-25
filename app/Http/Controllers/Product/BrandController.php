@@ -11,26 +11,26 @@ class BrandController extends Controller
     {
         $brand=Brand::all();
 
-        return compact('brand');
+        return $this->success(compact('brand'));
     }
 
     public function getBrand(Brand $brand)
     {
-        return compact('brand');
+        return $this->success(compact('brand'));
     }
 
     public function post(Request $request)
     {
         $brand = Brand::create($request->all());
-        return compact('brand');
+        return $this->success(compact('brand'));
     }
 
     public function delete(Request $request, Brand $brand)
     {
         if($brand->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
 
@@ -38,7 +38,7 @@ class BrandController extends Controller
     {
         $brand->fill($request->all());
         $brand->update();
-        return compact('brand');
+        return $this->success(compact('brand'));
     }
 
 }

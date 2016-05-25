@@ -11,26 +11,26 @@ class SupplierController extends Controller
     {
         $suppliers = Supplier::with('supplierCategory')->get();
 
-        return compact('suppliers');
+        return $this->success(compact('suppliers'));
     }
     
     public function getSupplier(Supplier $supplier)
     {
-        return compact('supplier');
+        return $this->success(compact('supplier'));
     }
 
     public function post(Request $request)
     {
         $supplier = Supplier::create($request->all());
-        return compact('supplier');
+        return $this->success(compact('supplier'));
     }
 
     public function delete(Request $request, Supplier $supplier)
     {
         if($supplier->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
 
@@ -38,7 +38,8 @@ class SupplierController extends Controller
     {
         $supplier->fill($request->all());
         $supplier->update();
-        return compact('supplier');
+        
+        return $this->success(compact('supplier'));
     }
 
 }

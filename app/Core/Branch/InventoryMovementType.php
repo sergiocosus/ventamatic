@@ -13,7 +13,10 @@ class InventoryMovementType extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'name'];
 
-
+    protected $casts = [
+        'id' => 'integer',
+    ];
+    
     public function inventoryMovements() {
         return $this->hasMany(InventoryMovement::class);
     }

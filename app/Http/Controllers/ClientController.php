@@ -9,26 +9,26 @@ class ClientController extends Controller
     public function get()
     {
         $clients =  Client::all();
-        return compact('clients');
+        return $this->success(compact('clients'));
     }
 
     public function getClient(Client $client)
     {
-        return compact('client');
+        return $this->success(compact('client'));
     }
 
     public function post(Request $request)
     {
         $client = Client::create($request->all());
-        return compact('client');
+        return $this->success(compact('client'));
     }
 
     public function delete(Request $request, Client $client)
     {
         if($client->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
 
@@ -36,7 +36,8 @@ class ClientController extends Controller
     {
         $client->fill($request->all());
         $client->update();
-        return compact('client');
+        
+        return $this->success(compact('client'));
     }
 
 }

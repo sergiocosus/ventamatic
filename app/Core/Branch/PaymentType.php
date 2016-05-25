@@ -6,6 +6,9 @@ class PaymentType extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'name'];
 
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function buys() {
         return $this->hasMany(Buy::class);

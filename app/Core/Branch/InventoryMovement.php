@@ -16,6 +16,16 @@ class InventoryMovement extends RevisionableBaseModel {
     protected $fillable = ['id', 'user_id', 'branch_id', 'product_id', 
         'inventory_movement_type_id', 'batch', 'quantity', 'cost'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'brand_id' => 'integer',
+        'product_id' => 'integer',
+        'inventory_movement_type_id' => 'integer',
+        'batch' => 'integer',
+        'quantity' => 'double',
+        'cost' => 'double',
+    ];
 
     public function branch() {
         return $this->belongsTo(Branch::class);

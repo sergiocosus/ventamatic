@@ -13,11 +13,11 @@ module.exports = {
             })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('inventories' ,[{
+            .expectJSONTypes('data.inventories' ,[{
                 id: Number
             }])
             .afterJSON(function(body) {
-                TestRunner.inventories=body.inventories;
+                TestRunner.inventories=body.data.inventories;
                 if(callback){
                     callback();
                 } else {

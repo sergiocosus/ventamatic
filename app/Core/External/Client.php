@@ -15,6 +15,9 @@ class Client extends RevisionableBaseModel {
     protected $fillable = ['id', 'name', 'last_name', 'last_name_2', 'email', 
         'phone', 'cellphone', 'address', 'rfc'];
 
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function sales() {
         return $this->hasMany(Sale::class);

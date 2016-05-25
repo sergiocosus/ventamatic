@@ -12,11 +12,11 @@ module.exports = {
             .post('product', product)
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('product' ,{
+            .expectJSONTypes('data.product' ,{
                 id: Number
             })
             .afterJSON(function(body) {
-                TestRunner.products.push(body.product);
+                TestRunner.products.push(body.data.product);
                 TestRunner.next();
             });
     },
@@ -30,11 +30,11 @@ module.exports = {
                 })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('product' ,{
+            .expectJSONTypes('data.product' ,{
                 id: Number,
                 description: String
             })
-            .expectJSON('product',{
+            .expectJSON('data.product',{
                 description : productName
             })
             .afterJSON(function(body) {
@@ -63,9 +63,7 @@ module.exports = {
             })
             .expectStatus(500)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('error' ,{
-                exception: String
-            })
+            .expectJSONTypes('status', String)
             .afterJSON(function(body) {
                 TestRunner.next();
             });
@@ -74,13 +72,11 @@ module.exports = {
 
     DeleteProduct: function(){
         return frisby.create('delete Product')
-            .delete('product/'+TestRunner.lastProduct().id,{
-        
-            })
+            .delete('product/'+TestRunner.lastProduct().id,{})
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
             .expectJSON({
-                success:true
+                status:'success'
             })
             .afterJSON(function(body) {
                 TestRunner.deleteProduct();

@@ -12,7 +12,7 @@ module.exports = {
             })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('user',{
+            .expectJSONTypes('data.user',{
                 id: Number
             })
             .afterJSON(function(body) {
@@ -26,7 +26,7 @@ module.exports = {
             .post('user', user)
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
-            .expectJSONTypes('user' ,{
+            .expectJSONTypes('data.user' ,{
                 id: Number,
                 name: String,
                 last_name:String,
@@ -39,7 +39,7 @@ module.exports = {
                 rfc:String
             })
             .afterJSON(function(body) {
-                createdUser = body.user;
+                createdUser = body.data.user;
                 TestRunner.next();
             });
     },
@@ -54,11 +54,11 @@ module.exports = {
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('user' ,{
+        .expectJSONTypes('data.user' ,{
             id: Number,
             name: String
         })
-        .expectJSON('user',{
+        .expectJSON('data.user',{
             name : userName
         })
         .afterJSON(function(body) {
@@ -68,13 +68,11 @@ module.exports = {
 
     deleteUser:function(){
     return frisby.create('Delete user')
-        .delete('user/'+createdUser.id,{
-
-        })
+        .delete('user/'+createdUser.id,{})
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -88,11 +86,9 @@ module.exports = {
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
-}
+    }
 };

@@ -22,15 +22,15 @@ class SystemRoleController extends Controller
     public function post(Request $request)
     {
         $role = Role::create($request->all());
-        return compact('role');
+        return $this->success(compact('role'));
     }
 
     public function delete(Request $request, Role $role)
     {
         if($role->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-           return  \Response::json(['success'=>false], 500);
+           return $this->error();
         }
     }
 
@@ -38,7 +38,7 @@ class SystemRoleController extends Controller
     {
         $role->fill($request->all());
         $role->update();
-        return compact('role');
+        return $this->success(compact('role'));
     }
 
     public function putPermission(Role $role, Permission $permission)

@@ -9,12 +9,13 @@ class BranchController extends Controller
 {
     public function get()
     {
-        return Branch::all();
+        $branches = Branch::all();
+        return $this->success(compact('branches'));
     }
 
     public function getBranch(Branch $branch)
     {
-        return compact('branch');
+        return $this->success(compact('branch'));
     }
 
 }

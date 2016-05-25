@@ -21,15 +21,15 @@ class BranchRoleController extends Controller
     public function post(Request $request)
     {
         $branchRole = BranchRole::create($request->all());
-        return compact('branchRole');
+        return $this->success(compact('branchRole'));
     }
 
     public function delete(Request $request, BranchRole $branchRole)
     {
         if($branchRole->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-           return  \Response::json(['success'=>false], 500);
+           return  $this->error();
         }
     }
 
@@ -37,7 +37,7 @@ class BranchRoleController extends Controller
     {
         $branchRole->fill($request->all());
         $branchRole->update();
-        return compact('branchRole');
+        return $this->success(compact('branchRole'));
     }
 
     public function putPermission(BranchRole $branchRole,

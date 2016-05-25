@@ -24,12 +24,12 @@ class UserController extends Controller
     public function get(Request $request)
     {
         $users = User::all();
-        return compact('users');
+        return $this->success(compact('users'));
     }
 
     public function getUser(User $user)
     {
-        return compact('user');
+        return $this->success(compact('user'));
     }
 
     public function post(Request $request)
@@ -38,22 +38,22 @@ class UserController extends Controller
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
-        return compact('user');
+        return $this->success(compact('user'));
     }
 
     public function put(Request $request, User $user)
     {
         $user->fill($request->all());
         $user->save();
-        return compact('user');
+        return $this->success(compact('user'));
     }
 
     public function delete(User $user)
     {
         if($user->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
     

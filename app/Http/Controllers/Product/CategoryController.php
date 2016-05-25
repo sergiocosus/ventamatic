@@ -14,21 +14,22 @@ class CategoryController extends Controller
 
     public function getCategory(Category $category)
     {
-        return $category;
+        return $this->success(compact('category'));
     }
 
     public function post(Request $request)
     {
         $category = Category::create($request->all());
-        return compact('category');
+        
+        return $this->success(compact('category'));
     }
 
     public function delete(Request $request, Category $category)
     {
         if($category->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
 
@@ -36,7 +37,8 @@ class CategoryController extends Controller
     {
         $category->fill($request->all());
         $category->update();
-        return compact('category');
+        
+        return $this->success(compact('category'));
     }
 
 }

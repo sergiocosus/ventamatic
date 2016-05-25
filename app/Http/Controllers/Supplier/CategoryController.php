@@ -21,15 +21,15 @@ class CategoryController extends Controller
     public function post(Request $request)
     {
         $supplierCategory = SupplierCategory::create($request->all());
-        return compact('supplierCategory');
+        return $this->success(compact('supplierCategory'));
     }
 
     public function delete(Request $request, SupplierCategory $supplierCategory)
     {
         if($supplierCategory->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            return \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
 
@@ -37,7 +37,7 @@ class CategoryController extends Controller
     {
         $supplierCategory->fill($request->all());
         $supplierCategory->update();
-        return compact('supplierCategory');
+        return $this->success(compact('supplierCategory'));
     }
 
 }

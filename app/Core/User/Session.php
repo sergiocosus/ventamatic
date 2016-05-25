@@ -14,7 +14,11 @@ class Session extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'user_id'];
 
-
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+    ];
+    
     public function user() {
         return $this->belongsTo(User::class);
     }

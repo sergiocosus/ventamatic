@@ -16,6 +16,10 @@ class Supplier extends RevisionableBaseModel {
     protected $fillable = ['id', 'name', 'last_name', 'last_name_2', 'email', 
         'phone', 'cellphone', 'address', 'rfc', 'supplier_category_id'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'supplier_category_id' => 'integer'
+    ];
 
     public function supplierCategory() {
         return $this->belongsTo(SupplierCategory::class);

@@ -33,6 +33,6 @@ class BuyController extends Controller
             $clientPayment,
             $cardPaymentId);
 
-        return compact('sale');
+        return $this->success(compact('sale'));
     }
 }

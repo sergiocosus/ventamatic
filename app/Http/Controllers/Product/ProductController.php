@@ -11,26 +11,28 @@ class ProductController extends Controller
     public function get()
     {
         $products = Product::with('categories', 'unit', 'brand')->get();
-        return compact('products');
+        
+        return $this->success(compact('products'));
     }
 
     public function getProduct(Product $product)
     {
-        return compact('product');
+        return $this->success(compact('product'));
     }
 
     public function post(Request $request)
     {
         $product = Product::create($request->all());
-        return compact('product');
+        
+        return $this->success(compact('product'));
     }
 
     public function delete(Product $product)
     {
         if($product->delete()){
-            return ['success'=>true];
+            return $this->success();
         }else{
-            \Response::json(['success'=>false], 500);
+            return $this->error();
         }
     }
 
@@ -38,14 +40,14 @@ class ProductController extends Controller
     {
         $product->fill($request->all());
         $product->update();
-        return compact('product');
+        return $this->success(compact('product'));
     }
 
     public function getSearch(Request $request)
     {
         $products = Product::search($request->get('search'))->get();
 
-        return compact('products');
+        return $this->success(compact('products'));
     }
 
 }

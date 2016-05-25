@@ -14,7 +14,10 @@ class Brand extends RevisionableBaseModel {
 
     protected $fillable = ['name'];
 
-
+    protected $casts = [
+        'id' => 'integer',
+    ];
+    
     public function suppliers() {
         return $this->belongsToMany(Supplier::class);
     }

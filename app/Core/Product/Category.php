@@ -13,6 +13,9 @@ class Category extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'name'];
 
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function products() {
         return $this->belongsToMany(Product::class);

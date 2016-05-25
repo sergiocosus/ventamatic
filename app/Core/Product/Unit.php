@@ -13,7 +13,10 @@ class Unit extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'name', 'abbreviation'];
 
-
+    protected $casts = [
+        'id' => 'integer',
+    ];
+    
     public function products() {
         return $this->hasMany(Product::class);
     }

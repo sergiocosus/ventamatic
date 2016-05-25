@@ -43,7 +43,7 @@ TestRunner.tests = [
     users.updateAUser,
     users.deleteUser,
     users.getADeletedUser,
-
+    
     product.createProduct,
     product.updateAProduct,
     product.addProductsToInventory,
@@ -54,12 +54,12 @@ TestRunner.tests = [
     updateABrand,
     DeleteBrand,
     getADeletedBrand,
-
+   
     createACategory,
     updateACategory,
     DeleteCategory,
     getADeletedCategory,
-
+    
     createAClient,
 //Pruebas para los clientes
     createASupplierCategory,
@@ -103,11 +103,11 @@ function createABrand(){
         .post('product/brand?token='+config.token, brand)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('brand' ,{
+        .expectJSONTypes('data.brand' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdBrand = body.brand;
+            createdBrand = body.data.brand;
             TestRunner.next();
         });
 }
@@ -121,11 +121,11 @@ function updateABrand(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('brand' ,{
+        .expectJSONTypes('data.brand' ,{
             id: Number,
             name: String
         })
-        .expectJSON('brand',{
+        .expectJSON('data.brand',{
             name : brandName
         })
         .afterJSON(function(body) {
@@ -141,9 +141,7 @@ function getADeletedBrand(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -158,7 +156,7 @@ function DeleteBrand(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -173,11 +171,11 @@ function createACategory(){
         .post('product/category?token='+config.token, category)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('category' ,{
+        .expectJSONTypes('data.category' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdCategory = body.category;
+            createdCategory = body.data.category;
             TestRunner.next();
         });
     //.inspectJSON();
@@ -190,9 +188,7 @@ function getADeletedCategory(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status' , String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -206,7 +202,7 @@ function DeleteCategory(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -224,11 +220,11 @@ function updateACategory(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('category' ,{
+        .expectJSONTypes('data.category' ,{
             id: Number,
             name: String
         })
-        .expectJSON('category',{
+        .expectJSON('data.category',{
             name : categoryName
         })
         .afterJSON(function(body) {
@@ -246,7 +242,7 @@ function createAClient(){
         .post('client?token='+config.token, client)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('client' ,{
+        .expectJSONTypes('data.client' ,{
             id: Number,
             name: String,
             last_name:String,
@@ -258,8 +254,8 @@ function createAClient(){
             rfc:String
         })
         .afterJSON(function(body) {
-            createdClient = body.client;
-            TestRunner.createdClient=body.client;
+            createdClient = body.data.client;
+            TestRunner.createdClient=body.data.client;
 
             TestRunner.next();
         });
@@ -276,11 +272,11 @@ function updateAClient(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('client' ,{
+        .expectJSONTypes('data.client' ,{
             id: Number,
             name: String
         })
-        .expectJSON('client',{
+        .expectJSON('data.client',{
             name : clientName
         })
         .afterJSON(function(body) {
@@ -297,9 +293,7 @@ function getADeletedClient(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -314,7 +308,7 @@ function DeleteClient(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -329,11 +323,11 @@ function createASupplierCategory(){
         .post('supplier/category?token='+config.token, category)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('supplierCategory' ,{
+        .expectJSONTypes('data.supplierCategory' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdSupplierCategory = body.supplierCategory;
+            createdSupplierCategory = body.data.supplierCategory;
             TestRunner.next();
         });
     //.inspectJSON();
@@ -348,11 +342,11 @@ function updateASupplierCategory(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('supplierCategory' ,{
+        .expectJSONTypes('data.supplierCategory' ,{
             id: Number,
             name: String
         })
-        .expectJSON('supplierCategory',{
+        .expectJSON('data.supplierCategory',{
             name : categoryName
         })
         .afterJSON(function(body) {
@@ -370,7 +364,7 @@ function deleteSupplierCategory(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -384,9 +378,7 @@ function getADeletedSupplierCategory(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -402,11 +394,11 @@ function createASupplier(){
         .post('supplier?token='+config.token, supplier)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('supplier' ,{
+        .expectJSONTypes('data.supplier' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdSupplier = body.supplier;
+            createdSupplier = body.data.supplier;
             TestRunner.next();
         });
     //.inspectJSON();
@@ -422,11 +414,11 @@ function updateASupplier(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('supplier' ,{
+        .expectJSONTypes('data.supplier' ,{
             id: Number,
             name: String
         })
-        .expectJSON('supplier',{
+        .expectJSON('data.supplier',{
             name : supplierName
         })
         .afterJSON(function(body) {
@@ -441,9 +433,7 @@ function getADeletedSupplier(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -457,7 +447,7 @@ function deleteSupplier(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -474,11 +464,11 @@ function createARole(){
         .post('security/system/role?token='+config.token, roleSup)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('role' ,{
+        .expectJSONTypes('data.role' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdRole = body.role;
+            createdRole = body.data.role;
             TestRunner.next();
         });
     //.inspectJSON();
@@ -491,9 +481,7 @@ function getADeletedRole(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -507,7 +495,7 @@ function deleteRole(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -524,11 +512,11 @@ function updateARole(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('role' ,{
+        .expectJSONTypes('data.role' ,{
             id: Number,
             name: String
         })
-        .expectJSON('role',{
+        .expectJSON('data.role',{
             name : roleName
         })
         .afterJSON(function(body) {
@@ -546,11 +534,11 @@ function createABranchRole(){
         .post('security/branch/role?token='+config.token, branchRoleBR)
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('branchRole' ,{
+        .expectJSONTypes('data.branchRole' ,{
             id: Number
         })
         .afterJSON(function(body) {
-            createdBranchRole = body.branchRole;
+            createdBranchRole = body.data.branchRole;
             TestRunner.next();
         });
     //.inspectJSON();
@@ -563,9 +551,7 @@ function getADeleteBranchRole(){
         })
         .expectStatus(500)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('error' ,{
-            exception: String
-        })
+        .expectJSONTypes('status', String)
         .afterJSON(function(body) {
             TestRunner.next();
         });
@@ -579,7 +565,7 @@ function deleteBranchRole(){
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success:true
+            status:'success'
         })
         .afterJSON(function(body) {
             TestRunner.next();
@@ -596,11 +582,11 @@ function updateABranchRole(){
             })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSONTypes('branchRole' ,{
+        .expectJSONTypes('data.branchRole' ,{
             id: Number,
             name: String
         })
-        .expectJSON('branchRole',{
+        .expectJSON('data.branchRole',{
             name : branchRoleName
         })
         .afterJSON(function(body) {

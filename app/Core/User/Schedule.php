@@ -8,7 +8,16 @@ class Schedule extends RevisionableBaseModel {
     protected $fillable = ['id', 'user_id', 'branch_id', 'initial_amount', 
         'system_amount', 'final_amount', 'schedule_status_id'];
 
-
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'branch_id' => 'integer',
+        'schedule_status_id' => 'integer',
+        'initial_amount' => 'double',
+        'system_amount' => 'double',
+        'final_amount' => 'double',
+    ];
+    
     public function branch() {
         return $this->belongsTo(Branch::class);
     }

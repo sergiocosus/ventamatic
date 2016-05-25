@@ -39,7 +39,10 @@ class User extends BaseUser
     protected $hidden = [
         'password', 'remember_token',
     ];
-    
+
+    protected $casts = [
+        'id' => 'integer',
+    ];
     
     public function buys() {
         return $this->hasMany(Buy::class);

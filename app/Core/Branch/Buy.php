@@ -19,6 +19,17 @@ class Buy extends RevisionableBaseModel {
         'ieps', 'total', 'user_id', 'supplier_id', 'branch_id',
         'supplier_bill_id'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'payment_type_id' => 'integer',
+        'user_id' => 'integer',
+        'supplier_id' => 'integer',
+        'branch_id' => 'integer',
+        'card_payment_id' => 'integer',
+        'iva' => 'double',
+        'ieps' => 'double',
+        'total' => 'double',
+    ];
 
     public function branch() {
         return $this->belongsTo(Branch::class);

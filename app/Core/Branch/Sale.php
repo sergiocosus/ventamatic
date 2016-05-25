@@ -20,6 +20,16 @@ class Sale extends RevisionableBaseModel {
         'client_payment', 'total', 'user_id', 
         'client_id', 'branch_id'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'payment_type_id' => 'integer',
+        'user_id' => 'integer',
+        'client_id' => 'integer',
+        'branch_id' => 'integer',
+        'card_payment_id' => 'integer',
+        'client_payment' => 'double',
+        'total' => 'double',
+    ];
 
     public function branch() {
         return $this->belongsTo(Branch::class);

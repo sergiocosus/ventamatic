@@ -6,6 +6,9 @@ class ScheduleStatus extends RevisionableBaseModel {
 
     protected $fillable = ['id', 'name'];
 
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function schedules() {
         return $this->hasMany(Schedule::class);
