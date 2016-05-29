@@ -104,6 +104,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('','Product\ProductController@get');
         Route::post('','Product\ProductController@post');
         Route::get('search','Product\ProductController@getSearch');
+        Route::get('bar-code','Product\ProductController@getBarCode');
 
         Route::group(['prefix' => '{product}'],function() {
             Route::get('','Product\ProductController@getProduct');

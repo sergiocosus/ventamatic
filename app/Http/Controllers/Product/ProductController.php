@@ -49,5 +49,15 @@ class ProductController extends Controller
 
         return $this->success(compact('products'));
     }
+    
+    public function getBarCode(Request $request){
+        if($bar_code = $request->get('bar_code')) {
+            $product = Product::with('categories', 'unit', 'brand')
+                ->whereBarCode($bar_code)->first();
+
+            return $this->success(compact('product'));
+        }
+        
+    }
 
 }
