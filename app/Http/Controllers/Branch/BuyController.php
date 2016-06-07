@@ -3,7 +3,15 @@
 
 use Illuminate\Http\Request;
 use Ventamatic\Core\Branch\Branch;
+use Ventamatic\Core\Branch\Buy;
+use Ventamatic\Core\Branch\PaymentType;
+use Ventamatic\Core\External\Supplier;
 use Ventamatic\Http\Controllers\Controller;
+use Auth;
+use DB;
+
+
+
 
 class BuyController extends Controller
 {
@@ -14,25 +22,34 @@ class BuyController extends Controller
 
     public function post(Request $request, Branch $branch)
     {
-        \Log::alert("HolaSale");
-        $client = Client::findOrFail($request->get('client_id'));
-        \Log::alert($client->id);
+        \Log::alert("HolaBuy");
+        $supplier = Supplier::findOrFail($request->get('supplier_id'));
+        \Log::alert($supplier->id);
+        /** @var PaymentType $paymentType */
         $paymentType = PaymentType::findOrFail($request->get('payment_type_id'));
+        \Log::alert($paymentType);
         $cardPaymentId = $request->get('card_payment_id');
+        \Log::alert($cardPaymentId);
         $total = $request->get('total');
-        $clientPayment=$request->get('client_payment');
+        \Log::alert($total);
+        $ieps=$request->get('ieps');
+        \Log::alert($ieps);
+        $iva=$request->get('iva');
+        \Log::alert($iva);
         $products = $request->get('products');
-
-        $sale  = Sale::doSale(
+        \Log::alert($products);
+        \Log::alert('Hola');
+        $buy  = Buy::doBuy(
             Auth::user(),
-            $client,
+            $supplier,
             $branch,
             $paymentType,
             $products,
+            $ieps,
+            $iva,
             $total,
-            $clientPayment,
             $cardPaymentId);
 
-        return $this->success(compact('sale'));
+        return $this->success(compact('buy'));
     }
 }

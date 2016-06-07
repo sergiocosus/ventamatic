@@ -9,6 +9,7 @@ var auth = require('./services/auth');
 var users = require('./services/users');
 var product = require('./services/products');
 var sale = require('./services/sale');
+var buy = require('./services/buy');
 var inventory = require('./services/inventory');
 
 
@@ -68,8 +69,7 @@ TestRunner.tests = [
 
     createASupplier,
     updateASupplier,
-    deleteSupplier,
-    getADeletedSupplier,
+
 
     createARole,
     updateARole,
@@ -84,7 +84,8 @@ TestRunner.tests = [
     inventory.getInventory,
     product.createProduct,
     product.addProductsToInventory,
-    sale.prepareInventoryToSale
+    sale.prepareInventoryToSale,
+    buy.prepareInventoryToBuy
 
 
 ];
@@ -399,6 +400,7 @@ function createASupplier(){
         })
         .afterJSON(function(body) {
             createdSupplier = body.data.supplier;
+            TestRunner.createdSupplier=body.data.supplier;
             TestRunner.next();
         });
     //.inspectJSON();

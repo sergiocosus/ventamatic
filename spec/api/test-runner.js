@@ -15,6 +15,8 @@ module.exports = {
 
     createdClient:null,
 
+    createdSupplier:null,
+
     products: [],
     lastProduct : function(){
         if(this.products.length)

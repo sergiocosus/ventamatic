@@ -74,9 +74,7 @@ function createSale(){
 
     for( var i=0; i < productsToSale.length; i++){
         total += productsToSale[i].quantity * products[i].global_price;
-        console.log("Total: "+total);
-        console.log("Cantidad: "+productsToSale[i].quantity);
-        console.log("Precio: "+products[i].global_price)
+
     }
 
     return frisby.create('Create a Sale')
