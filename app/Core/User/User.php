@@ -43,7 +43,7 @@ class User extends BaseUser
     protected $casts = [
         'id' => 'integer',
     ];
-    
+
     public function buys() {
         return $this->hasMany(Buy::class);
     }

@@ -2,11 +2,12 @@
 
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\System\RevisionableBaseModel;
+use DB;
+use Exception;
 
 class Schedule extends RevisionableBaseModel {
     
-    protected $fillable = ['id', 'user_id', 'branch_id', 'initial_amount', 
-        'system_amount', 'final_amount', 'schedule_status_id'];
+    protected $fillable = ['initial_amount'];
 
     protected $casts = [
         'id' => 'integer',
@@ -28,6 +29,35 @@ class Schedule extends RevisionableBaseModel {
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public static function doSchedule(User $user, Branch $branch,
+                                      ScheduleStatus $scheduleStatus,
+                                      $initial_amount)
+    {
+
+        \Log::alert('Inicio Schedule');
+        $schedule = new self();
+        $schedule->user()->associate($user);
+        $schedule->branch()->associate($branch);
+        $schedule->scheduleStatus()->associate($scheduleStatus);
+        try {
+            DB::beginTransaction();
+
+        $schedule->initial_amount=$initial_amount;
+        \Log::alert('initial_amount'.$initial_amount);
+
+        $schedule->save();
+            \Log::alert('fin de schedule:'.$schedule);
+            DB::commit();
+        }
+        catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return $schedule;
+
+
     }
 
 

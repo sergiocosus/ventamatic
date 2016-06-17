@@ -37,8 +37,8 @@ Route::group(['prefix' => 'v1'],function(){
             
             Route::group(['prefix' => 'schedule'],function(){
                 Route::get('current','User\ScheduleController@getCurrent');
-                Route::post('','User\ScheduleController@post');
-                Route::patch('{schedule}','User\ScheduleController@patch');
+                Route::post('{branch}','User\ScheduleController@post');
+                Route::patch('','User\ScheduleController@patch');
             });
         });
     });
@@ -186,4 +186,3 @@ Route::group(['prefix' => 'v1'],function(){
 
 });
 });
-

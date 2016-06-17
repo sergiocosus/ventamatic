@@ -95,6 +95,7 @@ function createSale(){
         })
         .afterJSON(function(body) {
             createdSale = body.data.sale;
+            TestRunner.total_sale=total;
 
             LocalRunner.next();
         });

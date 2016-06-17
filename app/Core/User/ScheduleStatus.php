@@ -3,7 +3,8 @@
 use Ventamatic\Core\System\RevisionableBaseModel;
 
 class ScheduleStatus extends RevisionableBaseModel {
-
+    const INITIAL = 1;
+    const FINAL=3;
     protected $fillable = ['id', 'name'];
 
     protected $casts = [

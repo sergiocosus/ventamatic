@@ -28,6 +28,12 @@ module.exports = {
             name: faker.commerce.productMaterial()
         }
     },
+    schedule : function () {
+        return {
+            initial_amount: faker.random.number(20)
+
+        }
+    },
     category : function () {
         return {
             name: faker.commerce.productMaterial()

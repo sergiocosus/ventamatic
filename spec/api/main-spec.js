@@ -10,6 +10,7 @@ var users = require('./services/users');
 var product = require('./services/products');
 var sale = require('./services/sale');
 var buy = require('./services/buy');
+var schedule = require('./services/schedule');
 var inventory = require('./services/inventory');
 
 
@@ -84,7 +85,9 @@ TestRunner.tests = [
     inventory.getInventory,
     product.createProduct,
     product.addProductsToInventory,
+    schedule.createASchedule,
     sale.prepareInventoryToSale,
+    schedule.endASchedule,
     buy.prepareInventoryToBuy
 
 

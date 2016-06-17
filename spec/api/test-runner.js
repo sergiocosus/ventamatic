@@ -17,6 +17,8 @@ module.exports = {
 
     createdSupplier:null,
 
+    total_sale:null,
+
     products: [],
     lastProduct : function(){
         if(this.products.length)

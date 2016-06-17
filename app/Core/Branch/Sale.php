@@ -76,7 +76,7 @@ class Sale extends RevisionableBaseModel {
             $branch->reductInventory($products);
             $sale->save();
             $calculatedTotal = $sale->attachProducts($products);
-
+            \Log::alert('fin de Sale Total'.$calculatedTotal);
             if($total != $calculatedTotal){
                 throw new Exception('El total no concuerda');
             }

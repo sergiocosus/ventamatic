@@ -40,6 +40,7 @@ module.exports = {
             })
             .afterJSON(function(body) {
                 createdUser = body.data.user;
+                TestRunner.createdUser=body.data.user;
                 TestRunner.next();
             });
     },
