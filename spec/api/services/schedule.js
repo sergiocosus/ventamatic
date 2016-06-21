@@ -13,9 +13,6 @@ var initialAmount=1000;
 module.exports = {
 
     createASchedule: function () {
-        console.log("create a Schedule");
-
-        // var schedule = fakeModels.schedule();
         return frisby.create('Create a Schedule')
             .post('user/me/schedule/1', {
                 initial_amount: initialAmount

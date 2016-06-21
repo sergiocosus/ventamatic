@@ -45,7 +45,7 @@ function createBuy(){
     var supplier = TestRunner.createdSupplier;
 
     var products= LocalRunner.products;
-    inventories=TestRunner.inventories;
+    inventories=TestRunner.inventoryProducts;
     var createdBuy=null;
 
     var total = 0;
@@ -107,13 +107,13 @@ function addProductsToInventory (product_number, quantity){
     var that = this;
 
     return frisby.create('Add Products to Inventory')
-        .put('branch/1/inventory/product/'+LocalRunner.products[product_number].id, {
+        .put('branch/1/inventory/'+LocalRunner.products[product_number].id, {
             quantity : quantity
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success: true
+            status:'success'
         })
         .afterJSON(function(body) {
             LocalRunner.next();
@@ -157,9 +157,9 @@ function lessInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('data.inventories' , inventories)
+        .expectJSON('data.products' , inventories)
         .afterJSON(function(body) {
-            TestRunner.inventories=body.data.inventories;
+            TestRunner.inventoryProducts=body.data.products;
             LocalRunner.next();
         });
 

@@ -35,7 +35,7 @@ var LocalRunner={
     nuevoInventario:[]
 };
 var productsToSale;
-var inventories;
+var inventoriesProduct;
 
 module.exports = {
     prepareInventoryToSale: function(){
@@ -49,7 +49,7 @@ function createSale(){
     var client = TestRunner.createdClient;
 
     var products= LocalRunner.products;
-    inventories=TestRunner.inventories;
+    inventoriesProduct=TestRunner.inventoryProducts;
     var createdSale=null;
 
     var total = 0;
@@ -107,13 +107,13 @@ function addProductsToInventory (product_number, quantity){
     var that = this;
 
     return frisby.create('Add Products to Inventory')
-        .put('branch/1/inventory/product/'+LocalRunner.products[product_number].id, {
+        .put('branch/1/inventory/'+LocalRunner.products[product_number].id, {
             quantity : quantity
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSON({
-            success: true
+            status:'success'
         })
         .afterJSON(function(body) {
             LocalRunner.next();
@@ -137,13 +137,11 @@ function createProduct (){
 }
 
 function checkInventory(){
-    inventories.forEach(function(inventory){
-        delete inventory.updated_at;
+    inventoriesProduct.forEach(function(inventoryProduct){
+        delete inventoryProduct.updated_at;
         productsToSale.forEach(function(productToSale){
-            if(inventory.product_id == productToSale.product_id){
-                inventory.quantity -= productToSale.quantity;
-                console.log(inventory);
-                console.log(productToSale);
+            if(inventoryProduct.id == productToSale.product_id){
+                inventoryProduct.inventories[0].quantity -= productToSale.quantity;
             }
         });
     });
@@ -154,16 +152,16 @@ function checkInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('data.inventories' , inventories)
+        .expectJSON('data.products' , inventoriesProduct)
         .afterJSON(function(body) {
-            TestRunner.inventories=body.data.inventories;
+            TestRunner.inventoryProducts=body.data.products;
             LocalRunner.next();
         });
 }
 
 function lessInventory(){
 
-    inventories.forEach(function(inventory){
+    inventoriesProduct.forEach(function(inventory){
         delete inventory.updated_at;
         productsToSale.forEach(function(productToSale){
             if(inventory.product_id == productToSale.product_id){
@@ -181,9 +179,9 @@ function lessInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('data.inventories' , inventories)
+        .expectJSON('data.products' , inventoriesProduct)
         .afterJSON(function(body) {
-            TestRunner.inventories=body.data.inventories;
+            TestRunner.inventoryProducts=body.data.products;
             LocalRunner.next();
         });
 

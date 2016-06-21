@@ -44,13 +44,13 @@ module.exports = {
     addProductsToInventory: function(){
         var that = this;
         return frisby.create('Add Products to Inventory')
-            .put('branch/1/inventory/product/'+TestRunner.lastProduct().id, {
+            .put('branch/1/inventory/'+TestRunner.lastProduct().id, {
                 quantity : faker.random.number(20)
             })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')
             .expectJSON({
-                success: true
+                status: 'success'
             })
             .afterJSON(function(body) {
                 TestRunner.next();

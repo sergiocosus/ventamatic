@@ -54,8 +54,11 @@ class ProductController extends Controller
         if($bar_code = $request->get('bar_code')) {
             $product = Product::with('categories', 'unit', 'brand')
                 ->whereBarCode($bar_code)->first();
-
-            return $this->success(compact('product'));
+            if($product){
+                return $this->success(compact('product'));
+            } else {
+                return $this->error(400, \Lang::get('products.not_found_bar_code',compact('bar_code')));
+            }
         }
         
     }

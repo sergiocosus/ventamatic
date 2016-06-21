@@ -20,9 +20,7 @@ class SaleController extends Controller
 
     public function post(Request $request, Branch $branch)
     {
-        \Log::alert("HolaSale");
         $client = Client::findOrFail($request->get('client_id'));
-        \Log::alert($client->id);
         $paymentType = PaymentType::findOrFail($request->get('payment_type_id'));
         $cardPaymentId = $request->get('card_payment_id');
         $total = $request->get('total');

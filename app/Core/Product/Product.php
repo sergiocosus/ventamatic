@@ -72,6 +72,11 @@ class Product extends RevisionableBaseModel {
         return $this->hasMany(Inventory::class);
     }
 
+    public function inventory(Branch $branch)
+    {
+        return $this->inventories()->whereBranchId($branch->id);
+    }
+
     public function inventoryMovements() {
         return $this->hasMany(InventoryMovement::class);
     }
@@ -83,4 +88,12 @@ class Product extends RevisionableBaseModel {
         return $this->global_price;
     }
 
+    
+    public function scopeHasInBranch($query, Branch $branch){
+        return $query->whereHas('inventories',function($query) use ($branch){
+            $query->where('branch_id', $branch->id);
+        })->with(['inventories' => function($query) use ($branch){
+            $query->where('branch_id', $branch->id);
+        }]);
+    }
 }

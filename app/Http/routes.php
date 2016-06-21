@@ -60,8 +60,10 @@ Route::group(['prefix' => 'v1'],function(){
 
             Route::group(['prefix' => 'inventory'],function(){
                 Route::get('','Branch\InventoryController@getAll');
-                Route::put('product/{product}','Branch\InventoryController@put');
-                Route::get('product/{product}','Branch\InventoryController@get');
+                Route::get('search','Branch\InventoryController@getSearch');
+                Route::get('bar-code','Branch\InventoryController@getBarCode');
+                Route::put('{product}','Branch\InventoryController@put');
+                Route::get('{product}','Branch\InventoryController@get');
             });
             
         });
@@ -106,12 +108,6 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('search','Product\ProductController@getSearch');
         Route::get('bar-code','Product\ProductController@getBarCode');
 
-        Route::group(['prefix' => '{product}'],function() {
-            Route::get('','Product\ProductController@getProduct');
-            Route::delete('', 'Product\ProductController@delete');
-            Route::put('', 'Product\ProductController@put');
-        });
-        
         Route::group(['prefix' => 'category'],function(){
             Route::get('','Product\CategoryController@get');
             Route::post('','Product\CategoryController@post');
@@ -122,7 +118,7 @@ Route::group(['prefix' => 'v1'],function(){
                 Route::put('', 'Product\CategoryController@put');
             });
         });
-        
+
         Route::group(['prefix' => 'brand'],function(){
             Route::get('','Product\BrandController@get');
             Route::post('','Product\BrandController@post');
@@ -133,6 +129,14 @@ Route::group(['prefix' => 'v1'],function(){
                 Route::put('', 'Product\BrandController@put');
             });
         });
+
+        Route::group(['prefix' => '{product}'],function() {
+            Route::get('','Product\ProductController@getProduct');
+            Route::delete('', 'Product\ProductController@delete');
+            Route::put('', 'Product\ProductController@put');
+        });
+        
+
     });
     
 

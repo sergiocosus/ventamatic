@@ -13,18 +13,55 @@ class InventoryController extends Controller
     public function put(Request $request, Branch $branch, Product $product)
     {
         $branch->alterInventory($product,$request);
-        return ['success' => true];
+        
+        return $this->success();
     }
 
-    public function get(Product $product, Branch $branch)
+    public function get(Branch $branch, Product $product)
     {
-        return $product->inventories()->whereBranchId($branch->id)->first();
+        $inventory = $product->inventories()
+            ->whereBranchId($branch->id)
+            ->notDeletedProduct()
+            ->with('product')
+            ->first();
+        
+        return $this->success(compact('inventory'));
     }
 
     public function getAll(Branch $branch)
     {
-        $inventories=$branch->inventories;
-        
+        $inventories = Inventory::whereBranchId($branch->id)
+            ->notDeletedProduct()
+            ->with('product')
+            ->get();
+
         return $this->success(compact('inventories'));
+    }
+
+    public function getSearch(Request $request, Branch $branch)
+    {
+        $search = $request->get('search');
+        $inventories = Inventory::whereBranchId($branch->id)
+            ->search($search)
+            ->notDeletedProduct()
+            ->with('product')
+            ->get();
+
+        return $this->success(compact('inventories'));
+    }
+
+    public function getBarCode(Request $request, Branch $branch){
+        if($bar_code = $request->get('bar_code')) {
+            $inventory = Inventory::whereBranchId($branch->id)
+                ->notDeletedProduct()
+                ->whereProductBarCode($bar_code)
+                ->with('product')
+                ->first();
+            if($inventory){
+                return $this->success(compact('inventory'));
+            } else {
+                return $this->error(400, \Lang::get('products.not_found_bar_code',compact('bar_code')));
+            }
+        }
     }
 }

@@ -9,7 +9,9 @@ class CategoryController extends Controller
 {
     public function get()
     {
-        return Category::all();
+        $categories = Category::all(); 
+        
+        return $this->success(compact('categories')); 
     }
 
     public function getCategory(Category $category)
