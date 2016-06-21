@@ -32,7 +32,9 @@ class ScheduleController extends Controller
     public function post(Request $request, User $user, Branch $branch)
     {
 
-       /* TODO validar que un usuario no pueda crear más turnos si ya tiene uno con status 1*/
+        $schedule = $user->getScheduleInInitialStatus();
+
+        if(!$schedule){
         $initial_amount = $request->get('initial_amount');
         \Log::alert($initial_amount);
         $schedule_status = ScheduleStatus::findOrFail(ScheduleStatus::INITIAL);
@@ -45,16 +47,18 @@ class ScheduleController extends Controller
             $schedule_status,
             $initial_amount);
         return $this->success(compact('schedule'));
-
+    }
+        else{
+            return new Exception('vale pito');
+        }
     }
 
     public function patch(Request $request, User $user)
     {
         /* TODO validar que el costo final coincida con el sistema */
+
         \Log::alert('Inicio patch Schedule');
-        $schedule = $user->schedules()
-            ->whereScheduleStatusId(ScheduleStatus::INITIAL)
-            ->first();
+        $schedule = $user->getScheduleInInitialStatus();
 
         \Log::alert('Schedule con id inicial:' . $schedule);
         if ($schedule) {
@@ -72,13 +76,19 @@ class ScheduleController extends Controller
             \Log::alert('total Schedule:' . $total);
             try {
                 DB::beginTransaction();
-                $schedule->system_amount = $total;
                 $calculated_cash=$schedule->initial_amount + $total;
-                $schedule->final_amount = $request->get('final_amount');
-                $schedule->schedule_status_id=ScheduleStatus::FINAL;
+                $final_amount=$request->get('final_amount');
+                if($calculated_cash==$final_amount) {
+                    $schedule->schedule_status_id=ScheduleStatus::FINAL;
+                }else{
+                    $schedule->schedule_status_id=ScheduleStatus::WARNING;
+                }
+                $schedule->system_amount = $total;
+                $schedule->final_amount = $final_amount;
                 $schedule->update();
                 \Log::alert('fin schedule 2:'.$schedule);
                 DB::commit();
+
             } catch (Exception $e) {
                 DB::rollBack();
                 throw $e;
