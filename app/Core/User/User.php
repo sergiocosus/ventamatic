@@ -63,4 +63,13 @@ class User extends BaseUser
     public function sessions() {
         return $this->hasMany(Session::class);
     }
+
+    public function getScheduleInInitialStatus()
+    {
+        return $this->schedules()
+            ->whereScheduleStatusId(ScheduleStatus::INITIAL)
+            ->first();
+    }
+
+
 }
