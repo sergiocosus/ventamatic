@@ -96,6 +96,6 @@ class ScheduleController extends Controller
             return $this->success(compact('schedule'));
 
         }
-        return 'Error haciendo schedule';
+        return $this->error(500, 'Error en el turno');
     }
 }

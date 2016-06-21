@@ -35,7 +35,7 @@ var LocalRunner={
     nuevoInventario:[]
 };
 var productsToSale;
-var inventoriesProduct;
+var inventories;
 
 module.exports = {
     prepareInventoryToSale: function(){
@@ -49,7 +49,7 @@ function createSale(){
     var client = TestRunner.createdClient;
 
     var products= LocalRunner.products;
-    inventoriesProduct=TestRunner.inventoryProducts;
+    inventories=TestRunner.inventories;
     var createdSale=null;
 
     var total = 0;
@@ -137,7 +137,7 @@ function createProduct (){
 }
 
 function checkInventory(){
-    inventoriesProduct.forEach(function(inventoryProduct){
+    inventories.forEach(function(inventoryProduct){
         delete inventoryProduct.updated_at;
         productsToSale.forEach(function(productToSale){
             if(inventoryProduct.id == productToSale.product_id){
@@ -152,16 +152,16 @@ function checkInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('data.products' , inventoriesProduct)
+        .expectJSON('data.inventories' , inventories)
         .afterJSON(function(body) {
-            TestRunner.inventoryProducts=body.data.products;
+            TestRunner.inventories=body.data.inventories;
             LocalRunner.next();
         });
 }
 
 function lessInventory(){
 
-    inventoriesProduct.forEach(function(inventory){
+    inventories.forEach(function(inventory){
         delete inventory.updated_at;
         productsToSale.forEach(function(productToSale){
             if(inventory.product_id == productToSale.product_id){
@@ -179,9 +179,9 @@ function lessInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('data.products' , inventoriesProduct)
+        .expectJSON('data.inventories' , inventories)
         .afterJSON(function(body) {
-            TestRunner.inventoryProducts=body.data.products;
+            TestRunner.inventories=body.data.inventories;
             LocalRunner.next();
         });
 

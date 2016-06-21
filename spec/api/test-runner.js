@@ -11,7 +11,7 @@ module.exports = {
     },
     clients: [],
 
-    inventoryProducts: [],
+    inventories: [],
 
     createdClient:null,
 

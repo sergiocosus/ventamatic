@@ -45,7 +45,7 @@ function createBuy(){
     var supplier = TestRunner.createdSupplier;
 
     var products= LocalRunner.products;
-    inventories=TestRunner.inventoryProducts;
+    inventories=TestRunner.inventories;
     var createdBuy=null;
 
     var total = 0;
@@ -157,9 +157,9 @@ function lessInventory(){
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
-        .expectJSON('data.products' , inventories)
+        .expectJSON('data.inventories' , inventories)
         .afterJSON(function(body) {
-            TestRunner.inventoryProducts=body.data.products;
+            TestRunner.inventories=body.data.inventories;
             LocalRunner.next();
         });
 
