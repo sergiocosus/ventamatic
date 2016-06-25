@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitsSeeder::class);
         $this->call(BranchSeeder::class);
         $this->call(InventoryMovementTypeSeeder::class);
-
+        $this->call(ClientSeeder::class);
     }
 }
