@@ -23,31 +23,35 @@ use DB;
 
 class ScheduleController extends Controller
 {
-    public function getCurrent()
+    public function getCurrent(User $user)
     {
-        /* TODO Fill this method*/
-
+        $schedule = $user->getScheduleInInitialStatus();
+        if($schedule){
+            $schedule->load('branch');
+            return $this->success(compact('schedule'));
+        } else {
+            return $this->error(400,\Lang::get('schedule.no_schedule'));
+        }
     }
 
     public function post(Request $request, User $user, Branch $branch)
     {
-
         $schedule = $user->getScheduleInInitialStatus();
 
         if(!$schedule){
-        $initial_amount = $request->get('initial_amount');
-        \Log::alert($initial_amount);
-        $schedule_status = ScheduleStatus::findOrFail(ScheduleStatus::INITIAL);
-        \Log::alert($schedule_status);
+            $initial_amount = $request->get('initial_amount');
+            \Log::alert($initial_amount);
+            $schedule_status = ScheduleStatus::findOrFail(ScheduleStatus::INITIAL);
+            \Log::alert($schedule_status);
 
+            $schedule = Schedule::doSchedule(
+                $user,
+                $branch,
+                $schedule_status,
+                $initial_amount);
 
-        $schedule = Schedule::doSchedule(
-            $user,
-            $branch,
-            $schedule_status,
-            $initial_amount);
-        return $this->success(compact('schedule'));
-    }
+            return $this->success(compact('schedule'));
+        }
         else{
             return new Exception('vale pito');
         }
@@ -88,7 +92,6 @@ class ScheduleController extends Controller
                 $schedule->update();
                 \Log::alert('fin schedule 2:'.$schedule);
                 DB::commit();
-
             } catch (Exception $e) {
                 DB::rollBack();
                 throw $e;
