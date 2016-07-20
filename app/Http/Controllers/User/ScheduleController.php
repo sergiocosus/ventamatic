@@ -23,6 +23,11 @@ use DB;
 
 class ScheduleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function getCurrent(User $user)
     {
         $schedule = $user->getScheduleInInitialStatus();
@@ -53,7 +58,7 @@ class ScheduleController extends Controller
             return $this->success(compact('schedule'));
         }
         else{
-            return new Exception('vale pito');
+            return $this->error(400,\Lang::get('schedule.no_schedule'));
         }
     }
 
@@ -98,7 +103,8 @@ class ScheduleController extends Controller
             }
             return $this->success(compact('schedule'));
 
+        } else {
+            return $this->error(400,\Lang::get('schedule.no_schedule'));
         }
-        return $this->error(500, 'Error en el turno');
     }
 }

@@ -7,6 +7,10 @@ use Ventamatic\Core\User\User;
 
 class RevisionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
     public function get(User $user = null)
     {
         return Revision::all();

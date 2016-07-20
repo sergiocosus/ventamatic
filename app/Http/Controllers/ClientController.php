@@ -6,6 +6,10 @@ use Ventamatic\Core\External\Client;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
     public function get()
     {
         $clients =  Client::all();

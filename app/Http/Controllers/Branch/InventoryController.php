@@ -10,6 +10,11 @@ use Ventamatic\Http\Controllers\Controller;
 
 class InventoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function put(Request $request, Branch $branch, Product $product)
     {
         $branch->alterInventory($product,$request);

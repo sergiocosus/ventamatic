@@ -8,6 +8,11 @@ use Ventamatic\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function get()
     {
         $products = Product::with('categories', 'unit', 'brand')->get();

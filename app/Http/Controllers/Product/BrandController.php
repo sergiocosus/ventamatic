@@ -7,6 +7,11 @@ use Ventamatic\Http\Controllers\Controller;
 
 class BrandController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function get()
     {
         $brand=Brand::all();
