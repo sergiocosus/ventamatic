@@ -9,6 +9,11 @@ use Ventamatic\Http\Controllers\Controller;
 
 class SystemRoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function get()
     {
         return Role::all();

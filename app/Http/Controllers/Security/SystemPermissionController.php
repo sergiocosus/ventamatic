@@ -6,6 +6,11 @@ use Ventamatic\Http\Controllers\Controller;
 
 class SystemPermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function get()
     {
         return Permission::all();

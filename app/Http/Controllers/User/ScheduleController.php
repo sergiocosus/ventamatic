@@ -23,6 +23,11 @@ use DB;
 
 class ScheduleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function getCurrent(User $user)
     {
         $schedule = $user->getScheduleInInitialStatus();
@@ -51,8 +56,8 @@ class ScheduleController extends Controller
                 $initial_amount);
 
             return $this->success(compact('schedule'));
-        } else {
-            return new Exception('vale pito');
+        } else{
+            return $this->error(400,\Lang::get('schedule.no_schedule'));
         }
     }
 

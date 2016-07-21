@@ -7,6 +7,11 @@ use Ventamatic\Http\Controllers\Controller;
 
 class BranchController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
     public function get()
     {
         $branches = Branch::all();
