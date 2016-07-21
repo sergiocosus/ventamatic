@@ -23,6 +23,9 @@ class InventoryController extends Controller
             ->whereBranchId($branch->id)
             ->notDeletedProduct()
             ->with('product')
+            ->with('product.brand')
+            ->with('product.categories')
+            ->with('product.unit')
             ->first();
         
         return $this->success(compact('inventory'));
@@ -33,6 +36,9 @@ class InventoryController extends Controller
         $inventories = Inventory::whereBranchId($branch->id)
             ->notDeletedProduct()
             ->with('product')
+            ->with('product.brand')
+            ->with('product.categories')
+            ->with('product.unit')
             ->get();
 
         return $this->success(compact('inventories'));
