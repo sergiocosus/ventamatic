@@ -2,6 +2,7 @@
 
 use DB;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Ventamatic\Core\External\Client;
 use Ventamatic\Core\Product\Product;
@@ -50,6 +51,15 @@ class Sale extends RevisionableBaseModel {
     public function products() {
         return $this->belongsToMany(Product::class)
             ->withPivot('quantity','price');
+    }
+
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        if ($parent instanceof Product) {
+            return new ProductSalePivot($parent, $attributes, $table, $exists);
+        }
+
+        return parent::newPivot($parent, $attributes, $table, $exists);
     }
 
 

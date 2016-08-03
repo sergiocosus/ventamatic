@@ -1,11 +1,13 @@
 <?php namespace Ventamatic\Core\Product;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Branch\Inventory;
 use Ventamatic\Core\Branch\InventoryMovement;
+use Ventamatic\Core\Branch\ProductSalePivot;
 use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\System\RevisionableBaseModel;
 
@@ -79,6 +81,15 @@ class Product extends RevisionableBaseModel {
 
     public function inventoryMovements() {
         return $this->hasMany(InventoryMovement::class);
+    }
+
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        if ($parent instanceof Sale) {
+            return new ProductSalePivot($parent, $attributes, $table, $exists);
+        }
+
+        return parent::newPivot($parent, $attributes, $table, $exists);
     }
 
 

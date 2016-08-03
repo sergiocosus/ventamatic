@@ -23,4 +23,12 @@ class BranchController extends Controller
         return $this->success(compact('branch'));
     }
 
+    public function put(Request $request, Branch $branch)
+    {
+        $branch->fill($request->all());
+        $branch->save();
+
+        return $this->success(compact('branch'));
+    }
+
 }

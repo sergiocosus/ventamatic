@@ -34,7 +34,7 @@ module.exports = {
     var total_amount = TestRunner.total_sale + initialAmount;
     console.log("end a Schedule2"+total_amount);
     return frisby.create('End a Schedule')
-        .patch('user/me/schedule', {
+        .put('user/me/schedule', {
             final_amount: total_amount
         })
         .expectStatus(200)

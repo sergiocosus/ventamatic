@@ -41,6 +41,12 @@ class SaleController extends Controller
             $clientPayment,
             $cardPaymentId);
 
+        $sale->load([
+            'products',
+            'client',
+            'paymentType',
+        ]);
+
         return $this->success(compact('sale'));
     }
 }
