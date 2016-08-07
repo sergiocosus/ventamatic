@@ -45,6 +45,7 @@ class SaleController extends Controller
             'products',
             'client',
             'paymentType',
+            'user'
         ]);
 
         return $this->success(compact('sale'));
