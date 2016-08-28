@@ -64,6 +64,7 @@ Route::group(['prefix' => 'v1'],function(){
                 Route::get('bar-code','Branch\InventoryController@getBarCode');
                 Route::put('{product}','Branch\InventoryController@put');
                 Route::get('{product}','Branch\InventoryController@get');
+                Route::patch('{product}','Branch\InventoryController@addInventoryMovement');
             });
             
         });

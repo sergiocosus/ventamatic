@@ -35,10 +35,6 @@ class InventoryMovementTypeSeeder extends Seeder
             ],
             [
                 'id' => 6,
-                'name' => 'Traslado'
-            ],
-            [
-                'id' => 7,
                 'name' => 'Ajuste'
             ],
         ];

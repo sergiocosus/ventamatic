@@ -17,8 +17,14 @@ class InventoryController extends Controller
 
     public function put(Request $request, Branch $branch, Product $product)
     {
-        $branch->alterInventory($product,$request);
+        $branch->buyInventory($product,$request);
         
+        return $this->success();
+    }
+
+    public function patch(Request $request, Branch $branch, Product $product, $inventory_movement_type)
+    {
+        $branch->addInventoryMovement($user,$product,$request,$inventory_movement_type);
         return $this->success();
     }
 
