@@ -67,32 +67,8 @@ class Branch extends RevisionableBaseModel {
             }
         }
     }
-
-    public function addInventory(Array $products)
-    {
-        \Log::alert('en add Inventory');
-        foreach ($products as $productData)
-        {
-            \Log::alert('en add Inventory2');
-            /** @var Product $product */
-            $product_id = $productData['product_id'];
-            \Log::alert('en add Inventory3:'.$product_id);
-            $quantity = $productData['quantity'];
-            \Log::alert('en add Inventory4:'.$quantity);
-
-            /** @var Inventory $inventory */
-            $inventory = $this->inventories()->whereProductId($product_id)->first();
-            \Log::alert('en add Inventory5:'.$inventory);
-
-                $inventory->quantity += $quantity;
-            \Log::alert('en add Inventory6');
-                $inventory->save();
-            \Log::alert('en add Inventory7');
-
-        }
-    }
     
-    public function alterInventory(Product $product, $data)
+    public function alterInventory(Product $product, $quantity)
     {
         /** @var Inventory $inventory */
         $inventory = $this->inventories()->whereProductId($product->id)->first();
@@ -103,7 +79,7 @@ class Branch extends RevisionableBaseModel {
             $inventory->product()->associate($product);
             $inventory->quantity = 0;
         }
-        $inventory->quantity += $data->json('quantity');
+        $inventory->quantity += $quantity;
         return $inventory->save();
     }
     
