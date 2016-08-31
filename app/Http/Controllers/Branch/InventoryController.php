@@ -22,6 +22,12 @@ class InventoryController extends Controller
         return $this->success();
     }
 
+    public function patch(Request $request, Branch $branch, Product $product, $inventory_movement_type)
+    {
+        $branch->addInventoryMovement($user,$product,$request,$inventory_movement_type);
+        return $this->success();
+    }
+
     public function get(Branch $branch, Product $product)
     {
         $inventory = $product->inventories()
