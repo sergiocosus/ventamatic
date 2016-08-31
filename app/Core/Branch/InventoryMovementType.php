@@ -6,11 +6,13 @@ use Ventamatic\Core\System\RevisionableBaseModel;
 class InventoryMovementType extends RevisionableBaseModel {
 
     const PROMOCION = 1;
-    const TRASLADO=2;
-    const CONVERSION=3;
+    const TRASLADO = 2;
+    const CONVERSION = 3;
     const CONCESION = 4;
-    const CADUCADO=5;
-    const AJUSTE=6;
+    const CADUCADO = 5;
+    const AJUSTE = 6;
+    const COMPRA = 7;
+    const VENTA = 8;
 
     use SoftDeletes;
 

@@ -1,7 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sergio
- * Date: 28/08/16
- * Time: 10:50 PM
- */
+
+return [
+    'insufficient_inventory' => 'No hay suficiente cantidad para el ":product" :requested < :existent',
+];

@@ -6,6 +6,7 @@ use Ventamatic\Core\System\RevisionableBaseModel;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\InventoryMovementType;
 use Ventamatic\Core\User\Schedule;
+use Ventamatic\Core\User\User;
 use Ventamatic\Exceptions\InventoryException;
 use Auth;
 
@@ -75,132 +76,77 @@ class Branch extends RevisionableBaseModel {
         }
     }
 
-    public function lessInventory(Product $product, $data)
-    {
-        /** @var Inventory $inventory */
-        $inventory = $this->inventories()->whereProductId($product->id)->first();
-        if(!$inventory)
-        {
-            $inventory = new Inventory();
-            $inventory->branch()->associate($this);
-            $inventory->product()->associate($product);
-            $inventory->quantity = 0;
-        }
-
-        $inventory_movement_type=InventoryMovementType::CADUCADO;
-
-        $this->addInventoryMovement(Auth::user(),$product,$data,$inventory_movement_type);
-
-        $inventory->quantity -= $data->json('quantity');
-        return $inventory->save();
-    }
-
-    public function addInventory(Array $products)
-    {
-
-        foreach ($products as $productData)
-        {
-
-            /** @var Product $product */
-            $product_id = $productData['product_id'];
-            $quantity = $productData['quantity'];
-            /** @var Inventory $inventory */
-            $inventory = $this->inventories()->whereProductId($product_id)->first();
-            $inventory->quantity += $quantity;
-            $inventory->save();
-
-
-        }
-    }
-
-    public function buyInventory(Product $product, $data)
-
     public function alterInventory(Product $product, $quantity)
     {
         /** @var Inventory $inventory */
         $inventory = $this->inventories()->whereProductId($product->id)->first();
-        if(!$inventory)
-        {
+        if (!$inventory) {
             $inventory = new Inventory();
             $inventory->branch()->associate($this);
             $inventory->product()->associate($product);
             $inventory->quantity = 0;
         }
+
+        if ($inventory->quantity + $quantity < 0) {
+            throw new InventoryException(\Lang::get('inventory.insufficient_inventory',
+                [
+                    'product' => $product->description,
+                    'requested' => $quantity,
+                    'existent' => $inventory->quantity
+                ]
+            ));
+        }
+
         $inventory->quantity += $quantity;
 
 
+
         return $inventory->save();
     }
 
-    public function alterInventory(Product $product, $data, $inventory_movement)
+    public function addInventoryMovement(User $user, Product $product, $data)
     {
-        /** @var Inventory $inventory */
-        $inventory = $this->inventories()->whereProductId($product->id)->first();
-        if(!$inventory)
-        {
-            $inventory = new Inventory();
-            $inventory->branch()->associate($this);
-            $inventory->product()->associate($product);
-            $inventory->quantity = 0;
+        /** @var InventoryMovementType $inventoryMovementType */
+        $inventoryMovementType = InventoryMovementType::findOrFail(
+            $data['inventory_movement_type_id']
+        );
+
+        $quantity = $data['quantity'];
+
+        $batch = 1;
+        $lastInventoryMovementBatch = InventoryMovement::orderBy('id','desc')->first(['batch']);
+        if($lastInventoryMovementBatch) {
+            $batch += $lastInventoryMovementBatch->batch;
         }
-            //    $this->addInventoryMovement(Auth::user(),$product,$data,$inventory_movement_type);
 
-        if($operator == SUMA_INVENTARIO){
-        $inventory->quantity += $data->json('quantity');
-        }
-        if($operator == RESTA_INVENTARIO){
-        $inventory->quantity -= $data->json('quantity');
-        }
-        return $inventory->save();
-    }
-
-    public function addInventoryMovement($user,$product,$data,$inventory_movement_type)
-    {
-        $inventory_movement= new InventoryMovement();
-
-        $inventory_last= InventoryMovement::orderBy('id','desc')->first(['batch']);
-        $inventory_movement->user()->associate($user);
-        $inventory_movement->branch()->associate($this);
-        $inventory_movement->product()->associate($product);
-
-        switch($inventory_movement_type){
-
+        switch($inventoryMovementType->id){
+            case InventoryMovementType::COMPRA:
             case InventoryMovementType::PROMOCION:
-                $inventory_type=InventoryMovementType::findOrFail(InventoryMovementType::PROMOCION);
-                $this->alterInventory($product,$data, SUMA_INVENTARIO);
-                $this->alterInventory($product,$data, RESTA_INVENTARIO);
+                InventoryMovement::createMovement($user, $this, $product,
+                    $inventoryMovementType, $quantity, $batch);
             break;
 
             case InventoryMovementType::TRASLADO:
-                $inventory_type=InventoryMovementType::findOrFail(InventoryMovementType::TRASLADO);
-                $this->alterInventory($product,$data, RESTA_INVENTARIO);
-                $this->alterInventory($product,$data, SUMA_INVENTARIO);
+                InventoryMovement::createMovement($user, $this, $product,
+                    $inventoryMovementType, -$quantity, $batch);
+                InventoryMovement::createMovement($user,
+                    Branch::find($data['destiny_branch_id']), $product,
+                    $inventoryMovementType, $quantity, $batch);
             break;
 
-            case InventoryMovementType::CONVERSION:
-                $inventory_type=InventoryMovementType::findOrFail(InventoryMovementType::CONVERSION);
-            break;
-
+            //case InventoryMovementType::CONVERSION:
             case InventoryMovementType::CONCESION:
-                $inventory_type=InventoryMovementType::findOrFail(InventoryMovementType::CONCESION);
-            break;
-
             case InventoryMovementType::CADUCADO:
-                $inventory_type=InventoryMovementType::findOrFail(InventoryMovementType::CADUCADO);
-                $this->alterInventory($product, $data, RESTA_INVENTARIO);
+            case InventoryMovementType::VENTA:
+                InventoryMovement::createMovement($user, $this, $product,
+                    $inventoryMovementType, -$quantity, $batch);
             break;
 
             case InventoryMovementType::AJUSTE:
-                $inventory_type = InventoryMovementType::findorFail(InventoryMovementType::AJUSTE);
-                $this->alterInventory($product, $data, RESTA_INVENTARIO);
+                InventoryMovement::createMovement($user, $this, $product,
+                    $inventoryMovementType, $quantity, $batch);
             break;
         }
-
-        $inventory_movement->inventoryMovementType()->associate($inventory_type);
-        $inventory_movement->batch =  $inventory_last + 1;
-        $inventory_movement->quantity = $data->json('quantity');
-        $inventory_movement->cost = $product->cost;
-        $inventory_movement->save();
     }
 
 }

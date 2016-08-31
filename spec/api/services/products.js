@@ -45,7 +45,8 @@ module.exports = {
         var that = this;
         return frisby.create('Add Products to Inventory')
             .put('branch/1/inventory/'+TestRunner.lastProduct().id, {
-                quantity : faker.random.number(20)
+                quantity : faker.random.number(20),
+                inventory_movement_type_id: 1
             })
             .expectStatus(200)
             .expectHeaderContains('content-type', 'application/json')

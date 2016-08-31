@@ -37,6 +37,14 @@ class InventoryMovementTypeSeeder extends Seeder
                 'id' => 6,
                 'name' => 'Ajuste'
             ],
+            [
+                'id' => 7,
+                'name' => 'Compra'
+            ],
+            [
+                'id' => 8,
+                'name' => 'Venta'
+            ],
         ];
         
         foreach ($data as $movementType)

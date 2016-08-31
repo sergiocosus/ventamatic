@@ -108,7 +108,8 @@ function addProductsToInventory (product_number, quantity){
 
     return frisby.create('Add Products to Inventory')
         .put('branch/1/inventory/'+LocalRunner.products[product_number].id, {
-            quantity : quantity
+            quantity : quantity,
+            inventory_movement_type_id: 1
         })
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')

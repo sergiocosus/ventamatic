@@ -17,15 +17,12 @@ class InventoryController extends Controller
 
     public function put(Request $request, Branch $branch, Product $product)
     {
-        $branch->alterInventory($product,$request->get('quantity'));
-        
-        return $this->success();
-    }
+        $branch->addInventoryMovement(
+            \Auth::user(),
+            $product,
+            $request->all());
 
-    public function patch(Request $request, Branch $branch, Product $product, $inventory_movement_type)
-    {
-        $branch->addInventoryMovement($user,$product,$request,$inventory_movement_type);
-        return $this->success();
+        return $this->get($branch, $product);
     }
 
     public function get(Branch $branch, Product $product)
