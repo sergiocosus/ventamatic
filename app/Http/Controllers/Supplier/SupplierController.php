@@ -21,12 +21,14 @@ class SupplierController extends Controller
     
     public function getSupplier(Supplier $supplier)
     {
+        $supplier->load('supplierCategory');
         return $this->success(compact('supplier'));
     }
 
     public function post(Request $request)
     {
         $supplier = Supplier::create($request->all());
+        $supplier->load('supplierCategory');
         return $this->success(compact('supplier'));
     }
 
@@ -43,7 +45,9 @@ class SupplierController extends Controller
     {
         $supplier->fill($request->all());
         $supplier->update();
-        
+
+        $supplier->load('supplierCategory');
+
         return $this->success(compact('supplier'));
     }
 

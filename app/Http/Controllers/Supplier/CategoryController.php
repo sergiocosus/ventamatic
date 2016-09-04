@@ -15,34 +15,38 @@ class CategoryController extends Controller
 
     public function get()
     {
-        return SupplierCategory::all();
+        $supplier_categories = SupplierCategory::all();
+
+        return $this->success(compact('supplier_categories'));
     }
 
     public function getCategory(SupplierCategory $category)
     {
-        return $category;
+        return $this->success(compact('category'));
     }
 
     public function post(Request $request)
     {
-        $supplierCategory = SupplierCategory::create($request->all());
-        return $this->success(compact('supplierCategory'));
+        $supplier_category = SupplierCategory::create($request->all());
+
+        return $this->success(compact('supplier_category'));
     }
 
-    public function delete(Request $request, SupplierCategory $supplierCategory)
+    public function delete(Request $request, SupplierCategory $supplier_category)
     {
-        if($supplierCategory->delete()){
+        if($supplier_category->delete()){
             return $this->success();
         }else{
             return $this->error();
         }
     }
 
-    public function put(Request $request, SupplierCategory $supplierCategory)
+    public function put(Request $request, SupplierCategory $supplier_category)
     {
-        $supplierCategory->fill($request->all());
-        $supplierCategory->update();
-        return $this->success(compact('supplierCategory'));
+        $supplier_category->fill($request->all());
+        $supplier_category->update();
+
+        return $this->success(compact('supplier_category'));
     }
 
 }
