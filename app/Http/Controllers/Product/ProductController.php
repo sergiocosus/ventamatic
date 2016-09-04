@@ -4,13 +4,20 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Ventamatic\Core\Product\Product;
+use Ventamatic\Core\Product\ProductService;
 use Ventamatic\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-    public function __construct()
+    /**
+     * @var ProductService
+     */
+    private $productService;
+
+    public function __construct(ProductService $productService)
     {
         $this->middleware('jwt.auth');
+        $this->productService = $productService;
     }
 
     public function get()
@@ -22,13 +29,15 @@ class ProductController extends Controller
 
     public function getProduct(Product $product)
     {
+        $product->load('categories', 'unit', 'brand');
+
         return $this->success(compact('product'));
     }
 
     public function post(Request $request)
     {
-        $product = Product::create($request->all());
-        
+        $product = $this->productService->create($request->all());
+
         return $this->success(compact('product'));
     }
 
@@ -43,8 +52,8 @@ class ProductController extends Controller
 
     public function put(Request $request, Product $product)
     {
-        $product->fill($request->all());
-        $product->update();
+        $product = $this->productService->update($product, $request->all());
+
         return $this->success(compact('product'));
     }
 
@@ -65,7 +74,6 @@ class ProductController extends Controller
                 return $this->error(400, \Lang::get('products.not_found_bar_code',compact('bar_code')));
             }
         }
-        
     }
 
 }

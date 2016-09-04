@@ -14,9 +14,9 @@ class BrandController extends Controller
 
     public function get()
     {
-        $brand=Brand::all();
+        $brands = Brand::all();
 
-        return $this->success(compact('brand'));
+        return $this->success(compact('brands'));
     }
 
     public function getBrand(Brand $brand)
