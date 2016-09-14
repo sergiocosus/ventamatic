@@ -13,11 +13,13 @@ class SystemPermissionController extends Controller
 
     public function get()
     {
-        return Permission::all();
+        $permissions = Permission::all();
+
+        return $this->success(compact('permissions'));
     }
 
     public function getPermission(Permission $permission)
     {
-        return $permission;
+        return $this->success(compact('permission'));
     }
 }

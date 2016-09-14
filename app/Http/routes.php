@@ -152,7 +152,8 @@ Route::group(['prefix' => 'v1'],function(){
     Route::group(['prefix' => 'security'],function(){
         Route::group(['prefix' => 'system'],function(){
             Route::group(['prefix' => 'permission'],function(){
-                Route::get('{permission?}','Security\SystemPermissionController@getPermission');
+                Route::get('','Security\SystemPermissionController@get');
+                Route::get('{permission}','Security\SystemPermissionController@getPermission');
             });
             Route::group(['prefix' => 'role'],function(){
                 Route::get('','Security\SystemRoleController@get');

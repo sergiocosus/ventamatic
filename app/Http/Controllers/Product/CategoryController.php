@@ -14,6 +14,8 @@ class CategoryController extends Controller
 
     public function get()
     {
+        $this->can('category-get');
+
         $categories = Category::all(); 
         
         return $this->success(compact('categories')); 
@@ -21,11 +23,15 @@ class CategoryController extends Controller
 
     public function getCategory(Category $category)
     {
+        $this->can('category-get-detail');
+
         return $this->success(compact('category'));
     }
 
     public function post(Request $request)
     {
+        $this->can('category-create');
+
         $category = Category::create($request->all());
         
         return $this->success(compact('category'));
@@ -33,6 +39,8 @@ class CategoryController extends Controller
 
     public function delete(Request $request, Category $category)
     {
+        $this->can('category-delete');
+
         if($category->delete()){
             return $this->success();
         }else{
@@ -42,6 +50,8 @@ class CategoryController extends Controller
 
     public function put(Request $request, Category $category)
     {
+        $this->can('category-edit');
+
         $category->fill($request->all());
         $category->update();
         

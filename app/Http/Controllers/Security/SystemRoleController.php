@@ -16,22 +16,39 @@ class SystemRoleController extends Controller
 
     public function get()
     {
-        return Role::all();
+        $this->can('role-get');
+
+        $roles = Role::all();
+
+        return $this->success(compact('roles'));
     }
 
     public function getRole(Role $role)
     {
-        return $role;
+        $this->can('role-get-detail');
+
+        $role->load('permissions');
+
+        return $this->success(compact('role'));
     }
 
     public function post(Request $request)
     {
+        $this->can('role-create');
+
         $role = Role::create($request->all());
+
+        $role->permissions()
+            ->sync($request->get('permissions',[]));
+        $role->load('permissions');
+
         return $this->success(compact('role'));
     }
 
     public function delete(Request $request, Role $role)
     {
+        $this->can('role-delete');
+
         if($role->delete()){
             return $this->success();
         }else{
@@ -41,8 +58,15 @@ class SystemRoleController extends Controller
 
     public function put(Request $request, Role $role)
     {
+        $this->can('role-edit');
+
         $role->fill($request->all());
         $role->update();
+
+        $role->permissions()
+            ->sync($request->get('permissions',[]));
+        $role->load('permissions');
+
         return $this->success(compact('role'));
     }
 

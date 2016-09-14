@@ -59,6 +59,11 @@ class Handler extends ExceptionHandler
                     return Response::error(10,$message);
                 }
             }
+
+            if ($e instanceof PermissionException) {
+                return Response::error(100, 'No cuenta con permiso para: '.$e->getMessage());
+            }
+
             return Response::error(500, 'Exception: ' . class_basename($e) .
                 ' in ' . basename($e->getFile()) . ' line ' .
                 $e->getLine() . ': ' . $e->getMessage());
@@ -72,7 +77,7 @@ class Handler extends ExceptionHandler
             case Product::class:
                 return \Lang::get('products.not_found_id');
             default:
-                return null;
+                return 'No se encontró: '.$e->getModel();
         }
     }
 }

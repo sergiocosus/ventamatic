@@ -14,6 +14,8 @@ class SupplierController extends Controller
 
     public function get()
     {
+        $this->can('supplier-get');
+
         $suppliers = Supplier::get();
 
         return $this->success(compact('suppliers'));
@@ -21,12 +23,16 @@ class SupplierController extends Controller
     
     public function getSupplier(Supplier $supplier)
     {
+        $this->can('supplier-get-detail');
+
         $supplier->load('supplierCategory', 'brands');
         return $this->success(compact('supplier'));
     }
 
     public function post(Request $request)
     {
+        $this->can('supplier-create');
+
         $supplier = Supplier::create($request->all());
         $supplier->brands()
             ->sync($request->get('brands', []));
@@ -37,6 +43,8 @@ class SupplierController extends Controller
 
     public function delete(Request $request, Supplier $supplier)
     {
+        $this->can('supplier-delete');
+
         if($supplier->delete()){
             return $this->success();
         }else{
@@ -46,6 +54,8 @@ class SupplierController extends Controller
 
     public function put(Request $request, Supplier $supplier)
     {
+        $this->can('supplier-edit');
+
         $supplier->fill($request->all());
         $supplier->update();
         $supplier->brands()

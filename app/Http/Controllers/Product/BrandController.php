@@ -14,6 +14,8 @@ class BrandController extends Controller
 
     public function get()
     {
+        $this->can('brand-get');
+
         $brands = Brand::all();
 
         return $this->success(compact('brands'));
@@ -21,17 +23,23 @@ class BrandController extends Controller
 
     public function getBrand(Brand $brand)
     {
+        $this->can('brand-get-detail');
+
         return $this->success(compact('brand'));
     }
 
     public function post(Request $request)
     {
+        $this->can('brand-create');
+
         $brand = Brand::create($request->all());
         return $this->success(compact('brand'));
     }
 
     public function delete(Request $request, Brand $brand)
     {
+        $this->can('brand-delete');
+
         if($brand->delete()){
             return $this->success();
         }else{
@@ -41,6 +49,8 @@ class BrandController extends Controller
 
     public function put(Request $request, Brand $brand)
     {
+        $this->can('brand-edit');
+
         $brand->fill($request->all());
         $brand->update();
         return $this->success(compact('brand'));

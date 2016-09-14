@@ -6,6 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Ventamatic\Exceptions\PermissionException;
 use Ventamatic\Http\Response;
 
 class Controller extends BaseController
@@ -25,5 +26,10 @@ class Controller extends BaseController
     protected function error($code = 500, $message = "",  $data = null)
     {
         return Response::error($code, $message, $data);
+    }
+
+    protected function can($permission_name)
+    {
+        PermissionException::check($permission_name);
     }
 }

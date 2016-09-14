@@ -22,6 +22,8 @@ class ProductController extends Controller
 
     public function get()
     {
+        $this->can('product-get');
+
         $products = Product::with('categories', 'unit', 'brand')->get();
         
         return $this->success(compact('products'));
@@ -29,6 +31,8 @@ class ProductController extends Controller
 
     public function getProduct(Product $product)
     {
+        $this->can('product-get-detail');
+
         $product->load('categories', 'unit', 'brand');
 
         return $this->success(compact('product'));
@@ -36,6 +40,8 @@ class ProductController extends Controller
 
     public function post(Request $request)
     {
+        $this->can('product-create');
+
         $product = $this->productService->create($request->all());
 
         return $this->success(compact('product'));
@@ -43,6 +49,8 @@ class ProductController extends Controller
 
     public function delete(Product $product)
     {
+        $this->can('product-delete');
+
         if($product->delete()){
             return $this->success();
         }else{
@@ -52,6 +60,8 @@ class ProductController extends Controller
 
     public function put(Request $request, Product $product)
     {
+        $this->can('product-edit');
+
         $product = $this->productService->update($product, $request->all());
 
         return $this->success(compact('product'));
@@ -59,12 +69,16 @@ class ProductController extends Controller
 
     public function getSearch(Request $request)
     {
+        $this->can('product-get');
+
         $products = Product::search($request->get('search'))->get();
 
         return $this->success(compact('products'));
     }
     
     public function getBarCode(Request $request){
+        $this->can('product-get');
+
         if($bar_code = $request->get('bar_code')) {
             $product = Product::with('categories', 'unit', 'brand')
                 ->whereBarCode($bar_code)->first();
