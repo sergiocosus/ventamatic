@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Ventamatic\Core\User\Security\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -11,18 +12,16 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            [
-                'name' => 'admin',
-                'display_name' => 'Administrador',
-                'description' => 'Control total sobre el sistema',
-            ],
+        $role = new Role();
+        $role->name = 'admin';
+        $role->display_name = 'Administrador';
+        $role->description = 'Control total sobre el sistema';
+        $role->protected = true;
 
-        ];
+        $role->save();
 
-        foreach ($data as $role)
-        {
-            \Ventamatic\Core\User\Security\Role::create($role);
-        }
+        $permissions = \Ventamatic\Core\User\Security\Permission::all();
+
+        $role->attachPermissions($permissions);
     }
 }

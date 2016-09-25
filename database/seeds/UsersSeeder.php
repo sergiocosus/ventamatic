@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Ventamatic\Core\User\Security\BranchRole;
+use Ventamatic\Core\User\Security\Role;
 use Ventamatic\Core\User\User;
 
 class UsersSeeder extends Seeder
@@ -12,10 +14,19 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'username' => 'admin',
-            'password' => bcrypt('admin2000'),
-        ]);
-        
+        $user = new User();
+        $user->username = 'admin';
+        $user->password = bcrypt('admin2000');
+        $user->save();
+
+
+        $user->attachRole(Role::whereName('admin')->first());
+
+        $branches = \Ventamatic\Core\Branch\Branch::all();
+        $branchRole = BranchRole::whereName('admin')->first();
+        foreach ($branches as $branch) {
+            $user->attachBranchRole($branchRole, $branch);
+        }
+
     }
 }

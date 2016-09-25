@@ -2,6 +2,7 @@
 
 
 
+use Ventamatic\Exceptions\PermissionException;
 use Ventamatic\Modules\EntrustBranch\EntrustBranchRole;
 
 class BranchRole extends EntrustBranchRole {
@@ -10,7 +11,12 @@ class BranchRole extends EntrustBranchRole {
 
 
     public function branchPermissions() {
-        return $this->belongsToMany(BranchPermission::class);
+        return $this->belongsToMany(BranchPermission::class,'branch_permission_role');
     }
 
+    public function isProtected(){
+        if($this->protected) {
+            throw new PermissionException('Protected role');
+        }
+    }
 }

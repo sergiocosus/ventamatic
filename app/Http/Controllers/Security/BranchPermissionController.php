@@ -12,14 +12,16 @@ class BranchPermissionController extends Controller
         $this->middleware('jwt.auth');
     }
 
-    public function get()
+    public function getAll()
     {
-        return BranchPermission::all();
+        $branch_permissions = BranchPermission::all();
+
+        return $this->success(compact('branch_permissions'));
     }
 
-    public function getBrand(BranchPermission $branchPermission)
+    public function get(BranchPermission $branch_permission)
     {
-        return $branchPermission;
+        return $this->success(compact('branch_permission'));
     }
 
 }

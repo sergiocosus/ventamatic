@@ -73,6 +73,7 @@ class UserController extends Controller
     public function delete(User $user)
     {
         $this->can('user-delete');
+        $user->dieIfAdmin();
 
         if($user->delete()){
             return $this->success();

@@ -40,33 +40,7 @@ class PermissionSeeder extends Seeder
                 'description' => '',
             ],
 
-            //Roles
 
-            [
-                'name' => 'role-get',
-                'display_name' => 'Obtener roles',
-                'description' => '',
-            ],
-            [
-                'name' => 'role-get-detail',
-                'display_name' => 'Obtener detalle del rol',
-                'description' => '',
-            ],
-            [
-                'name' => 'role-create',
-                'display_name' => 'Crear rol',
-                'description' => '',
-            ],
-            [
-                'name' => 'role-delete',
-                'display_name' => 'Eliminar rol',
-                'description' => '',
-            ],
-            [
-                'name' => 'role-edit',
-                'display_name' => 'Editar rol',
-                'description' => '',
-            ],
 
             // Productos
 
@@ -221,12 +195,68 @@ class PermissionSeeder extends Seeder
                 'description' => '',
             ],
 
-          /*
+            // Roles
+
             [
-                'name' => '',
-                'display_name' => '',
+                'name' => 'role-get',
+                'display_name' => 'Obtener roles',
                 'description' => '',
-            ],*/
+            ],
+            [
+                'name' => 'role-get-detail',
+                'display_name' => 'Obtener detalle del rol',
+                'description' => '',
+            ],
+            [
+                'name' => 'role-create',
+                'display_name' => 'Crear rol',
+                'description' => '',
+            ],
+            [
+                'name' => 'role-delete',
+                'display_name' => 'Eliminar rol',
+                'description' => '',
+            ],
+            [
+                'name' => 'role-edit',
+                'display_name' => 'Editar rol',
+                'description' => '',
+            ],
+
+            // Branch role
+
+            [
+                'name' => 'branch-role-get',
+                'display_name' => 'Obtener roles de sucursal',
+                'description' => '',
+            ],
+            [
+                'name' => 'branch-role-get-detail',
+                'display_name' => 'Obtener detalle del rol de sucursal',
+                'description' => '',
+            ],
+            [
+                'name' => 'branch-role-create',
+                'display_name' => 'Crear rol de sucursal',
+                'description' => '',
+            ],
+            [
+                'name' => 'branch-role-delete',
+                'display_name' => 'Eliminar rol de sucursal',
+                'description' => '',
+            ],
+            [
+                'name' => 'branch-role-edit',
+                'display_name' => 'Editar rol de sucursal',
+                'description' => '',
+            ],
+
+            //Roles to users
+            [
+                'name' => 'user-role-assign',
+                'display_name' => 'Asignar rol a usuarios',
+                'description' => '',
+            ],
         ];
 
         foreach ($data as $movementType)

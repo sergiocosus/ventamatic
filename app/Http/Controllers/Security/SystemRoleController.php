@@ -39,7 +39,7 @@ class SystemRoleController extends Controller
         $role = Role::create($request->all());
 
         $role->permissions()
-            ->sync($request->get('permissions',[]));
+            ->sync($request->get('permissions'));
         $role->load('permissions');
 
         return $this->success(compact('role'));
@@ -47,6 +47,7 @@ class SystemRoleController extends Controller
 
     public function delete(Request $request, Role $role)
     {
+        $role->isProtected();
         $this->can('role-delete');
 
         if($role->delete()){
@@ -58,6 +59,7 @@ class SystemRoleController extends Controller
 
     public function put(Request $request, Role $role)
     {
+        $role->isProtected();
         $this->can('role-edit');
 
         $role->fill($request->all());

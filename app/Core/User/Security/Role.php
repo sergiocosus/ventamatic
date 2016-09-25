@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Core\User\Security;
 
 use Ventamatic\Core\User\User;
+use Ventamatic\Exceptions\PermissionException;
 use Zizaco\Entrust\EntrustRole;
 
 class Role extends EntrustRole {
@@ -9,6 +10,7 @@ class Role extends EntrustRole {
 
     protected $casts = [
         'id' => 'integer',
+        'protected' => 'boolean',
     ];
 
     public function permissions() {
@@ -18,6 +20,11 @@ class Role extends EntrustRole {
     public function users() {
         return $this->belongsToMany(User::class);
     }
-    
+
+    public function isProtected(){
+        if($this->protected) {
+            throw new PermissionException('Protected role');
+        }
+    }
 
 }

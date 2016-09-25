@@ -172,18 +172,20 @@ Route::group(['prefix' => 'v1'],function(){
         });
         Route::group(['prefix' => 'branch'],function(){
             Route::group(['prefix' => 'permission'],function(){
-                Route::get('{branchPermission?}','Security\BranchRoleController@getBranchRole');
+                Route::get('','Security\BranchPermissionController@getAll');
+                Route::get('{permission}','Security\BranchPermissionController@get');
             });
             Route::group(['prefix' => 'role'],function(){
                 Route::get('','Security\BranchRoleController@get');
                 Route::post('','Security\BranchRoleController@post');
-                Route::group(['prefix' => '{branchRole}'],function() {
-                Route::get('','Security\BranchRoleController@getBranchRole');
-                Route::delete('', 'Security\BranchRoleController@delete');
-                Route::put('', 'Security\BranchRoleController@put');
-                Route::group(['prefix' => 'permission'],function() {
-                    Route::put('{branchPermission}', 'Security\BranchRoleController@putPermission');
-                    Route::delete('{branchPermission}', 'Security\BranchRoleController@deletePermission');
+
+                Route::group(['prefix' => '{branch_role}'],function() {
+                    Route::get('','Security\BranchRoleController@getBranchRole');
+                    Route::delete('', 'Security\BranchRoleController@delete');
+                    Route::put('', 'Security\BranchRoleController@put');
+                    Route::group(['prefix' => 'permission'],function() {
+                        Route::put('{branchPermission}', 'Security\BranchRoleController@putPermission');
+                        Route::delete('{branchPermission}', 'Security\BranchRoleController@deletePermission');
                     });
                 });
             });

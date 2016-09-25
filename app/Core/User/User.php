@@ -6,6 +6,7 @@ use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\System\BaseUser;
 
 use Ventamatic\Core\User\EntrustForBranch\EntrustBranchRoleTrait;
+use Ventamatic\Exceptions\PermissionException;
 use Ventamatic\Modules\EntrustBranch\EntrustBranchUserTrait;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
@@ -71,5 +72,10 @@ class User extends BaseUser
             ->first();
     }
 
+    public function dieIfAdmin() {
+        if($this->hasRole('admin')) {
+            throw new PermissionException('Protected admin user');
+        }
+    }
 
 }

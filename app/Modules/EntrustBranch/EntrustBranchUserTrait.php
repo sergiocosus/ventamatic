@@ -88,7 +88,7 @@ trait EntrustBranchUserTrait
     {
         if (is_array($name)) {
             foreach ($name as $roleName) {
-                $hasRole = $this->hasRole($roleName,$branch);
+                $hasRole = $this->hasBranchRole($roleName,$branch);
 
                 if ($hasRole && !$requireAll) {
                     return true;

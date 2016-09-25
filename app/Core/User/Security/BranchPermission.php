@@ -8,7 +8,7 @@ class BranchPermission extends EntrustBranchPermission {
 
 
     public function branchRoles() {
-        return $this->belongsToMany(BranchRole::class);
+        return $this->belongsToMany(BranchRole::class, 'branch_permission_role');
     }
     
 }
