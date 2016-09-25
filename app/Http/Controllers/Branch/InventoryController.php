@@ -57,6 +57,7 @@ class InventoryController extends Controller
         $search = $request->get('search');
         $inventories = Inventory::whereBranchId($branch->id)
             ->search($search)
+            ->groupBy('inventories.id')
             ->notDeletedProduct()
             ->with('product')
             ->get();

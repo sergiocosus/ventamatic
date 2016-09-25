@@ -71,7 +71,9 @@ class ProductController extends Controller
     {
         $this->can('product-get');
 
-        $products = Product::search($request->get('search'))->get();
+        $products = Product::search($request->get('search'))
+            ->groupBy('products.id')
+            ->get();
 
         return $this->success(compact('products'));
     }
