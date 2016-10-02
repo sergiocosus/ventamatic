@@ -20,6 +20,8 @@ class SaleController extends Controller
 
     public function post(Request $request, Branch $branch)
     {
+        $this->canOnBranch('sale', $branch);
+
         if (!Auth::user()->getScheduleInInitialStatus()) {
             return $this->error(400,\Lang::get('schedule.no_schedule'));
         }

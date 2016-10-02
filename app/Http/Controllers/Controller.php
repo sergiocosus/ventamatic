@@ -6,6 +6,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Ventamatic\Core\Branch\Branch;
+use Ventamatic\Exceptions\BranchPermissionException;
 use Ventamatic\Exceptions\PermissionException;
 use Ventamatic\Http\Response;
 
@@ -31,5 +33,10 @@ class Controller extends BaseController
     protected function can($permission_name)
     {
         PermissionException::check($permission_name);
+    }
+
+    protected function canOnBranch($permission_name, Branch $branch)
+    {
+        BranchPermissionException::check($permission_name, $branch);
     }
 }

@@ -15,6 +15,8 @@ class BranchRoleController extends Controller
 
     public function get()
     {
+        $this->can('branch-role-get');
+
         $branch_roles = BranchRole::all();
 
         return $this->success(compact('branch_roles'));
@@ -22,6 +24,8 @@ class BranchRoleController extends Controller
 
     public function getBranchRole(BranchRole $branch_role)
     {
+        $this->can('branch-role-get-detail');
+
         $branch_role->load('branchPermissions');
 
         return $this->success(compact('branch_role'));
@@ -29,6 +33,8 @@ class BranchRoleController extends Controller
 
     public function post(Request $request)
     {
+        $this->can('branch-role-create');
+
         $branch_role = BranchRole::create($request->all());
 
         $branch_role->branchPermissions()
@@ -38,6 +44,8 @@ class BranchRoleController extends Controller
 
     public function delete(Request $request, BranchRole $branch_role)
     {
+        $this->can('branch-role-delete');
+
         $branch_role->isProtected();
 
         if($branch_role->delete()){
@@ -49,6 +57,8 @@ class BranchRoleController extends Controller
 
     public function put(Request $request, BranchRole $branch_role)
     {
+        $this->can('branch-role-edit');
+
         $branch_role->isProtected();
         $branch_role->fill($request->all());
         $branch_role->update();

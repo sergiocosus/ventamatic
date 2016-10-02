@@ -6,6 +6,8 @@ use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\System\BaseUser;
 
 use Ventamatic\Core\User\EntrustForBranch\EntrustBranchRoleTrait;
+use Ventamatic\Core\User\Security\BranchPermission;
+use Ventamatic\Core\User\Security\Permission;
 use Ventamatic\Exceptions\PermissionException;
 use Ventamatic\Modules\EntrustBranch\EntrustBranchUserTrait;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
@@ -13,7 +15,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 
 
-class User extends BaseUser 
+class User extends BaseUser
 {
     use EntrustUserTrait;
     use EntrustBranchUserTrait;
@@ -52,7 +54,7 @@ class User extends BaseUser
     public function inventoryMovements() {
         return $this->hasMany(InventoryMovement::class);
     }
-    
+
     public function sales() {
         return $this->hasMany(Sale::class);
     }
@@ -72,10 +74,28 @@ class User extends BaseUser
             ->first();
     }
 
-    public function dieIfAdmin() {
-        if($this->hasRole('admin')) {
+    public function dieIfProtecte() {
+        if($this->protected) {
             throw new PermissionException('Protected admin user');
         }
+    }
+
+    public function getPermissionsAttribute(){
+        return Permission::whereHas('roles',function($q){
+           $q->whereHas('users', function($q){
+               $q->whereId($this->id);
+           });
+        })->get();
+    }
+
+
+    public function getBranchPermissionsAttribute(){
+        return BranchPermission::whereHas('branchRoles',function($q){
+            $q->whereHas('users', function($q){
+                $q->whereId($this->id);
+            });
+        })->with('')
+            ->get();
     }
 
 }

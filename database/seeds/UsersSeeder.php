@@ -17,6 +17,7 @@ class UsersSeeder extends Seeder
         $user = new User();
         $user->username = 'admin';
         $user->password = bcrypt('admin2000');
+        $user->protected = true;
         $user->save();
 
 

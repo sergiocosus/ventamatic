@@ -41,6 +41,8 @@ class ScheduleController extends Controller
 
     public function post(Request $request, User $user, Branch $branch)
     {
+        $this->canOnBranch('sale', $branch);
+
         $schedule = $user->getScheduleInInitialStatus();
 
         if (!$schedule) {

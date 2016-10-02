@@ -64,6 +64,10 @@ class Handler extends ExceptionHandler
                 return Response::error(100, 'No cuenta con permiso para: '.$e->getMessage());
             }
 
+            if ($e instanceof BranchPermissionException) {
+                return Response::error(200, 'No cuenta con permiso en la sucursal para: '.$e->getMessage());
+            }
+
             return Response::error(500, 'Exception: ' . class_basename($e) .
                 ' in ' . basename($e->getFile()) . ' line ' .
                 $e->getLine() . ': ' . $e->getMessage());

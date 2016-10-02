@@ -17,6 +17,8 @@ class InventoryController extends Controller
 
     public function put(Request $request, Branch $branch, Product $product)
     {
+        $this->canOnBranch('inventory-edit', $branch);
+
         $branch->addInventoryMovement(
             \Auth::user(),
             $product,
@@ -27,6 +29,8 @@ class InventoryController extends Controller
 
     public function get(Branch $branch, Product $product)
     {
+        $this->canOnBranch('inventory-get-detail', $branch);
+
         $inventory = $product->inventories()
             ->whereBranchId($branch->id)
             ->notDeletedProduct()
@@ -41,6 +45,8 @@ class InventoryController extends Controller
 
     public function getAll(Branch $branch)
     {
+        $this->canOnBranch('inventory-get', $branch);
+
         $inventories = Inventory::whereBranchId($branch->id)
             ->notDeletedProduct()
             ->with('product')
@@ -54,6 +60,8 @@ class InventoryController extends Controller
 
     public function getSearch(Request $request, Branch $branch)
     {
+        $this->canOnBranch('inventory-get', $branch);
+
         $search = $request->get('search');
         $inventories = Inventory::whereBranchId($branch->id)
             ->search($search)
@@ -66,6 +74,8 @@ class InventoryController extends Controller
     }
 
     public function getBarCode(Request $request, Branch $branch){
+        $this->canOnBranch('inventory-get', $branch);
+
         if($bar_code = $request->get('bar_code')) {
             $inventory = Inventory::whereBranchId($branch->id)
                 ->notDeletedProduct()

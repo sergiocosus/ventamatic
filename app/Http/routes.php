@@ -26,15 +26,19 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('','User\UserController@post');
         
         Route::group(['prefix' => '{user}'],function(){
+            Route::get('me','User\UserController@getMe');
             Route::get('','User\UserController@getUser');
             Route::delete('','User\UserController@delete');
             Route::put('','User\UserController@put');
 
-            Route::group(['prefix' => 'role/{role}'],function(){
-                Route::put('','User\UserController@putRole');
-                Route::delete('','User\UserController@deleteRole');
+            Route::group(['prefix' => 'roles'],function(){
+                Route::put('','User\UserController@putRoles');
             });
-            
+
+            Route::group(['prefix' => 'branch-roles'],function(){
+                Route::put('','User\UserController@putBranchRoles');
+            });
+
             Route::group(['prefix' => 'schedule'],function(){
                 Route::get('current','User\ScheduleController@getCurrent');
                 Route::post('{branch}','User\ScheduleController@post');

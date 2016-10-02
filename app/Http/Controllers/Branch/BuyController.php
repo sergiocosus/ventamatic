@@ -22,6 +22,8 @@ class BuyController extends Controller
 
     public function post(Request $request, Branch $branch)
     {
+        $this->canOnBranch('buy', $branch);
+
         $data = $request->all();
 
         $supplier = Supplier::findOrFail($data['supplier_id']);

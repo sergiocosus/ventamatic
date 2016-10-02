@@ -6,6 +6,7 @@ use Ventamatic\Core\System\RevisionableBaseModel;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\InventoryMovementType;
 use Ventamatic\Core\User\Schedule;
+use Ventamatic\Core\User\Security\BranchRole;
 use Ventamatic\Core\User\User;
 use Ventamatic\Exceptions\InventoryException;
 use Auth;
@@ -53,7 +54,10 @@ class Branch extends RevisionableBaseModel {
         return $this->hasMany(Schedule::class);
     }
 
-    
+    public function roles(){
+        return $this->belongsToMany(BranchRole::class);
+    }
+
     public function reductInventory(Array $products)
     {
         foreach ($products as $productData)

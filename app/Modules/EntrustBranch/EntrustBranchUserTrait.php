@@ -47,7 +47,8 @@ trait EntrustBranchUserTrait
         return $this->belongsToMany(Config::get('entrust-branch.role'),
             Config::get('entrust-branch.role_user_table'),
             Config::get('entrust-branch.user_foreign_key'),
-            Config::get('entrust-branch.role_foreign_key'));
+            Config::get('entrust-branch.role_foreign_key'))
+            ->withPivot('branch_id');
     }
 
     public function branchRolesBy($branch_id)
