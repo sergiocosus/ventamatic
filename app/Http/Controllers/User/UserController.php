@@ -43,7 +43,7 @@ class UserController extends Controller
     public function getMe()
     {
         $user = Auth::user();
-        $user->setAppends(['permissions']);
+        $user->setAppends(['permissions', 'branches']);
 
         return $this->success(compact('user'));
     }

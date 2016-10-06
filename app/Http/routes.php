@@ -22,11 +22,11 @@ Route::group(['prefix' => 'v1'],function(){
     Route::post('auth', 'Auth\AuthController@authenticate');
 
     Route::group(['prefix' => 'user'],function(){
+        Route::get('me','User\UserController@getMe');
         Route::get('','User\UserController@get');
         Route::post('','User\UserController@post');
-        
+
         Route::group(['prefix' => '{user}'],function(){
-            Route::get('me','User\UserController@getMe');
             Route::get('','User\UserController@getUser');
             Route::delete('','User\UserController@delete');
             Route::put('','User\UserController@put');

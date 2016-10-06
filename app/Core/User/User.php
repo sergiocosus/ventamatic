@@ -1,5 +1,6 @@
 <?php namespace Ventamatic\Core\User;
 
+use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
@@ -89,13 +90,13 @@ class User extends BaseUser
     }
 
 
-    public function getBranchPermissionsAttribute(){
-        return BranchPermission::whereHas('branchRoles',function($q){
-            $q->whereHas('users', function($q){
-                $q->whereId($this->id);
-            });
-        })->with('')
-            ->get();
+    public function getBranchesAttribute(){
+        return Branch::with(['branchRoles' => function($q) {
+            $q->where('branch_role_user.user_id', $this->id)
+                ->with('branchPermissions');
+        }])->whereHas('branchRoles', function($query){
+            $query->where('branch_role_user.user_id', $this->id);
+        })->get();
     }
 
 }

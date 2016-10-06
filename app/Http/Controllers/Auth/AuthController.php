@@ -38,7 +38,8 @@ class AuthController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
         $user = \Auth::user();
-        $user->setAppends(['permissions']);
+        $user->setAppends(['permissions', 'branches']);
+
         return response()->json(compact('token','user'));
     }
 
