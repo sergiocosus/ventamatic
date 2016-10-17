@@ -34,10 +34,7 @@ class InventoryController extends Controller
         $inventory = $product->inventories()
             ->whereBranchId($branch->id)
             ->notDeletedProduct()
-            ->with('product')
-            ->with('product.brand')
-            ->with('product.categories')
-            ->with('product.unit')
+            ->with('product', 'product.brand', 'product.categories','product.unit')
             ->first();
         
         return $this->success(compact('inventory'));

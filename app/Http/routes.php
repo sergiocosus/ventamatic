@@ -143,9 +143,12 @@ Route::group(['prefix' => 'v1'],function(){
         
 
     });
-    
 
-    
+    Route::group(['prefix' => 'report'],function(){
+        Route::get('sale','Report\ReportController@getSale');
+    });
+
+
     Route::group(['prefix' => 'revision'],function(){
         Route::get('','RevisionController@get');
         Route::get('user/{user}','RevisionController@getUser');
