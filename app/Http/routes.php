@@ -140,12 +140,11 @@ Route::group(['prefix' => 'v1'],function(){
             Route::delete('', 'Product\ProductController@delete');
             Route::put('', 'Product\ProductController@put');
         });
-        
-
     });
 
     Route::group(['prefix' => 'report'],function(){
         Route::get('sale','Report\ReportController@getSale');
+        Route::get('buy','Report\ReportController@getBuy');
     });
 
 
