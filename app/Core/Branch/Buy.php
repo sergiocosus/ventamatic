@@ -58,6 +58,11 @@ class Buy extends RevisionableBaseModel
             ->withPivot('cost','quantity');
     }
 
+    public function inventoryMovements()
+    {
+        return $this->morphMany(InventoryMovement::class, 'inventoriableMovement');
+    }
+
     public static function doBuy(User $user,
                                  $supplier,
                                  $supplierBillId,
@@ -82,16 +87,8 @@ class Buy extends RevisionableBaseModel
         try {
             DB::beginTransaction();
 
-            foreach ($products as $productData) {
-                /** @var Product $product */
-                $product = Product::findOrFail($productData['product_id']);
-                $quantity = $productData['quantity'];
-
-                $branch->alterInventory($product, $quantity);
-            }
-
             $buy->save();
-            $calculatedTotal = $buy->attachProducts($products);
+            $calculatedTotal = $buy->attachProducts($products, $branch, $user);
 
             if ($total != $calculatedTotal) {
                 throw new Exception(\Lang::get('buy.total_not_match', [
@@ -109,20 +106,27 @@ class Buy extends RevisionableBaseModel
         return $buy;
     }
 
-    private function attachProducts(Array $products)
+    private function attachProducts(Array $products, Branch $branch, User $user)
     {
         $productsToAttach = [];
         $total = 0;
-        foreach ($products as $product_data) {
+        foreach ($products as $productData) {
             /** @var Product $product */
-            $product = Product::findOrFail($product_data['product_id']);
-            $cost = $product_data['cost'];
-            $quantity = $product_data['quantity'];
+            $product = Product::findOrFail($productData['product_id']);
+            $cost = $productData['cost'];
+            $quantity = $productData['quantity'];
 
             $total += $cost * $quantity;
             $productsToAttach[$product->id] = compact('cost', 'quantity');
+
+            $branch->addInventoryMovement($user, $product, [
+                'inventory_movement_type_id' => InventoryMovementType::COMPRA,
+                'quantity' => $productData['quantity'],
+                'model' => $this,
+            ]);
         }
         $this->products()->attach($productsToAttach);
+
         return $total;
     }
 

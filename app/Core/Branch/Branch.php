@@ -64,28 +64,6 @@ class Branch extends RevisionableBaseModel {
             ->withPivot('user_id');
     }
 
-    public function reductInventory(Array $products)
-    {
-        foreach ($products as $productData)
-        {
-            /** @var Product $product */
-            $product_id = $productData['product_id'];
-            $quantity = $productData['quantity'];
-            
-            /** @var Inventory $inventory */
-            $inventory = $this->inventories()->whereProductId($product_id)->first();
-            if($inventory->quantity >= $quantity)
-            {
-                $inventory->quantity -= $quantity;
-                $inventory->save();
-            }
-            else
-            {
-                throw new InventoryException("Cantidad insuficiente en el inventario");
-            }
-        }
-    }
-
     public function alterInventory(Product $product, $quantity)
     {
         /** @var Inventory $inventory */
@@ -109,8 +87,6 @@ class Branch extends RevisionableBaseModel {
 
         $inventory->quantity += $quantity;
 
-
-
         return $inventory->save();
     }
 
@@ -123,17 +99,18 @@ class Branch extends RevisionableBaseModel {
 
         $quantity = $data['quantity'];
 
-        $batch = 1;
         $lastInventoryMovementBatch = InventoryMovement::orderBy('id','desc')->first(['batch']);
         if($lastInventoryMovementBatch) {
-            $batch += $lastInventoryMovementBatch->batch;
+            $batch = $lastInventoryMovementBatch->batch + 1;
+        } else {
+            $batch = 1;
         }
 
         switch($inventoryMovementType->id){
             case InventoryMovementType::COMPRA:
             case InventoryMovementType::PROMOCION:
                 InventoryMovement::createMovement($user, $this, $product,
-                    $inventoryMovementType, $quantity, $batch);
+                    $inventoryMovementType, $quantity, $batch, array_get($data, 'model'));
             break;
 
             case InventoryMovementType::TRASLADO:
@@ -149,7 +126,7 @@ class Branch extends RevisionableBaseModel {
             case InventoryMovementType::CADUCADO:
             case InventoryMovementType::VENTA:
                 InventoryMovement::createMovement($user, $this, $product,
-                    $inventoryMovementType, -$quantity, $batch);
+                    $inventoryMovementType, -$quantity, $batch, array_get($data, 'model'));
             break;
 
             case InventoryMovementType::AJUSTE:

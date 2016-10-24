@@ -82,11 +82,10 @@ class Sale extends RevisionableBaseModel {
 
         try {
             DB::beginTransaction();
-            
-            $branch->reductInventory($products);
+
             $sale->save();
-            $calculatedTotal = $sale->attachProducts($products);
-            \Log::alert('fin de Sale Total'.$calculatedTotal);
+            $calculatedTotal = $sale->attachProducts($products, $branch, $user);
+
             if($total != $calculatedTotal){
                 throw new Exception('El total no concuerda');
             }
@@ -100,22 +99,32 @@ class Sale extends RevisionableBaseModel {
        
     }
     
-    private function attachProducts(Array $products){
+    private function attachProducts(Array $products, Branch $branch, User $user){
         $productsToAttach = [];
         $total = 0;
-        foreach ($products as $product_data)
-        {
+        foreach ($products as $productData) {
             /** @var Product $product */
-            $product = Product::findOrFail($product_data['product_id']);
+            $product = Product::findOrFail($productData['product_id']);
 
             $price = $product->getCorrectPrice();
-            $quantity = $product_data['quantity'];
+            $quantity = $productData['quantity'];
 
             $total += $price * $quantity;
 
             $productsToAttach[$product->id] = compact('price', 'quantity');
+
+            $branch->addInventoryMovement($user, $product, [
+                'inventory_movement_type_id' => InventoryMovementType::VENTA,
+                'quantity' => $productData['quantity'],
+                'model' => $this,
+            ]);
         }
         $this->products()->attach($productsToAttach);
         return $total;
+    }
+
+    public function inventoryMovements()
+    {
+        return $this->morphMany(InventoryMovement::class, 'inventoriableMovement');
     }
 }

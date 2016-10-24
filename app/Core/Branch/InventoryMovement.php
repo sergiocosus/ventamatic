@@ -44,13 +44,18 @@ class InventoryMovement extends RevisionableBaseModel {
     }
 
 
+    public function inventoriableMovement()
+    {
+        return $this->morphTo();
+    }
 
     public static function createMovement(User $user,
                                    Branch $branch,
                                    Product $product,
                                    InventoryMovementType $inventoryMovementType,
                                    $quantity,
-                                   $batch){
+                                   $batch,
+                                   $model = null){
         $inventoryMovement = new static();
 
         $inventoryMovement->user()->associate($user);
@@ -60,10 +65,13 @@ class InventoryMovement extends RevisionableBaseModel {
         $inventoryMovement->batch =  $batch;
         $inventoryMovement->quantity = $quantity;
 
+        if ($model) {
+           $inventoryMovement->inventoriableMovement()->associate($model);
+        }
+
         $branch->alterInventory($product, $quantity);
 
         $inventoryMovement->save();
-        // $inventoryMovement->cost = $product->;
 
         return $inventoryMovement;
     }
