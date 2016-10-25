@@ -58,4 +58,12 @@ class ReportController extends Controller
 
         return $this->success(compact('inventories'));
     }
+
+    public function getHistoricInventory(Request $request)
+    {
+        $inventories = $this->reportService
+            ->getHistoricInventory($request->all())->get();
+
+        return $this->success(compact('inventories'));
+    }
 }

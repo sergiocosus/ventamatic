@@ -79,6 +79,22 @@ class ReportService
         return $query;
     }
 
+    public function getHistoricInventory(Array $request)
+    {
+        $query = Inventory::with('branch', 'product')
+            ->historicFrom($request['date']);
+
+        $this->processSimpleFields($query, $request, [
+            'branch_id',
+            'product_id',
+            'quantity',
+            'price',
+            'minimum',
+        ]);
+
+        return $query;
+    }
+
     public function processSimpleFields($query, $request, $fields){
         foreach ($fields as $field) {
             if($data = array_get($request, $field)) {

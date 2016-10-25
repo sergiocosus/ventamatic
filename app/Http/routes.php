@@ -147,6 +147,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('buy','Report\ReportController@getBuy');
         Route::get('inventory-movements','Report\ReportController@getInventoryMovements');
         Route::get('inventory','Report\ReportController@getInventory');
+        Route::get('historic-inventory','Report\ReportController@getHistoricInventory');
     });
 
 

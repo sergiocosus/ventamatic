@@ -57,5 +57,27 @@ class Inventory extends RevisionableBaseModel {
         });
     }
 
+    public function scopeHistoricFrom($query, $date) {
+        $query->select(
+            'inventories.*',
+            \DB::raw('(inventories.quantity - ifnull(inventory_movements_total.total_quantity,0)) as quantity')
+        )
+            ->leftJoin(\DB::raw('
+               (select inventory_movements.*,
+                 sum(inventory_movements.quantity) as total_quantity from inventory_movements
+                where inventory_movements.created_at >= ?
+                GROUP BY inventory_movements.product_id, inventory_movements.branch_id
+             )  as inventory_movements_total
+        
+        '), function($join){
+            $join->on('inventories.product_id', '=', 'inventory_movements_total.product_id');
+            $join->on('inventories.branch_id', '=', 'inventory_movements_total.branch_id');
+        })
+        ->addBinding($date)
+        ->groupBy('inventories.product_id', 'inventories.branch_id');
+    }
+
+
+
 
 }
