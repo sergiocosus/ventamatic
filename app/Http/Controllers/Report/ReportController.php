@@ -50,4 +50,12 @@ class ReportController extends Controller
 
         return $this->success(compact('inventory_movements'));
     }
+
+    public function getInventory(Request $request)
+    {
+        $inventories = $this->reportService
+            ->getInventory($request->all())->get();
+
+        return $this->success(compact('inventories'));
+    }
 }

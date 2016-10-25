@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Core\Report;
 use Carbon\Carbon;
 use Ventamatic\Core\Branch\Buy;
+use Ventamatic\Core\Branch\Inventory;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
 
@@ -59,6 +60,21 @@ class ReportService
         ]);
 
         $this->processDateRange($query, $request);
+
+        return $query;
+    }
+
+    public function getInventory(Array $request)
+    {
+        $query = Inventory::with('branch', 'product');
+
+        $this->processSimpleFields($query, $request, [
+            'branch_id',
+            'product_id',
+            'quantity',
+            'price',
+            'minimum',
+        ]);
 
         return $query;
     }
