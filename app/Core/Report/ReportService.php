@@ -4,6 +4,7 @@ use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Branch\Inventory;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
+use Ventamatic\Core\User\Schedule;
 
 /**
  * Created by PhpStorm.
@@ -16,6 +17,19 @@ use Ventamatic\Core\Branch\Sale;
 
 class ReportService
 {
+    public function getSchedule($request)
+    {
+        $query = Schedule::query()
+            ->with('user', 'branch', 'scheduleStatus');
+        $this->processSimpleFields($query, $request, [
+            'id',
+            'user_id',
+            'branch_id',
+        ]);
+        $this->processDateRange($query, $request);
+
+        return $query;
+    }
 
     public function getSale(Array $request){
         $query = Sale::query()
@@ -27,7 +41,6 @@ class ReportService
             'branch_id',
             'client_id',
         ]);
-
         $this->processDateRange($query, $request);
 
         return $query;

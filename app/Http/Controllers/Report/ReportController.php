@@ -29,6 +29,13 @@ class ReportController extends Controller
         $this->reportService = $reportService;
     }
 
+    public function getSchedule(Request $request)
+    {
+        $schedules = $this->reportService->getSchedule($request->all())->get();
+
+        return $this->success(compact('schedules'));
+    }
+
     public function getSale(Request $request)
     {
         $sales = $this->reportService->getSale($request->all())->get();

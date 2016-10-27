@@ -5,8 +5,9 @@ use Ventamatic\Core\System\RevisionableBaseModel;
 use DB;
 use Exception;
 
-class Schedule extends RevisionableBaseModel {
-    
+class Schedule extends RevisionableBaseModel
+{
+
     protected $fillable = ['initial_amount'];
 
     protected $casts = [
@@ -18,25 +19,27 @@ class Schedule extends RevisionableBaseModel {
         'system_amount' => 'double',
         'final_amount' => 'double',
     ];
-    
-    public function branch() {
+
+    public function branch()
+    {
         return $this->belongsTo(Branch::class);
     }
 
-    public function scheduleStatus() {
+    public function scheduleStatus()
+    {
         return $this->belongsTo(ScheduleStatus::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public static function doSchedule(User $user, Branch $branch,
+    public static function doSchedule(User $user,
+                                      Branch $branch,
                                       ScheduleStatus $scheduleStatus,
                                       $initial_amount)
     {
-
-        \Log::alert('Inicio Schedule');
         $schedule = new self();
         $schedule->user()->associate($user);
         $schedule->branch()->associate($branch);
@@ -44,21 +47,14 @@ class Schedule extends RevisionableBaseModel {
         try {
             DB::beginTransaction();
 
-        $schedule->initial_amount=$initial_amount;
-        \Log::alert('initial_amount'.$initial_amount);
+            $schedule->initial_amount = $initial_amount;
 
-        $schedule->save();
-            \Log::alert('fin de schedule:'.$schedule);
+            $schedule->save();
             DB::commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
         return $schedule;
-
-
     }
-
-
 }
