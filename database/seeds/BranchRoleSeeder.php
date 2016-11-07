@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Ventamatic\Core\User\Security\BranchRole;
 
 class BranchRoleSeeder extends Seeder
 {
@@ -11,16 +12,19 @@ class BranchRoleSeeder extends Seeder
      */
     public function run()
     {
-        $branchRole = new \Ventamatic\Core\User\Security\BranchRole();
-        $branchRole->name = 'admin';
-        $branchRole->display_name = 'Administrador de sucursale';
-        $branchRole->description = 'Control sobre las sucursales del sistema';
-        $branchRole->protected = true;
+        if (!$branchRole = BranchRole::whereName('admin')->first()) {
+            $branchRole = new BranchRole();
+            $branchRole->name = 'admin';
+            $branchRole->display_name = 'Administrador de sucursale';
+            $branchRole->description = 'Control sobre las sucursales del sistema';
+            $branchRole->protected = true;
 
-        $branchRole->save();
+            $branchRole->save();
+        }
+
 
         $permissions = \Ventamatic\Core\User\Security\BranchPermission::all();
 
-        $branchRole->attachPermissions($permissions);
+        $branchRole->savePermissions($permissions);
     }
 }

@@ -1,10 +1,12 @@
 <?php namespace Ventamatic\Core\Report;
 use Carbon\Carbon;
+use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Branch\Inventory;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\User\Schedule;
+use Ventamatic\Exceptions\BranchPermissionException;
 
 /**
  * Created by PhpStorm.
@@ -21,10 +23,10 @@ class ReportService
     {
         $query = Schedule::query()
             ->with('user', 'branch', 'scheduleStatus');
+        $this->validateBranchPermission('report-schedule', $query, $request);
         $this->processSimpleFields($query, $request, [
             'id',
             'user_id',
-            'branch_id',
         ]);
         $this->processDateRange($query, $request);
 
@@ -34,7 +36,7 @@ class ReportService
     public function getSale(Array $request){
         $query = Sale::query()
             ->with('products', 'client', 'user','branch');
-
+        $this->validateBranchPermission('report-sale', $query, $request);
         $this->processSimpleFields($query, $request, [
             'id',
             'user_id',
@@ -49,7 +51,7 @@ class ReportService
     public function getBuy(Array $request){
         $query = Buy::query()
             ->with('products', 'supplier', 'user', 'branch');
-
+        $this->validateBranchPermission('report-buy', $query, $request);
         $this->processSimpleFields($query, $request, [
             'id',
             'user_id',
@@ -64,7 +66,7 @@ class ReportService
 
     public function getInventoryMovements(Array $request){
         $query = InventoryMovement::with('user', 'product', 'branch', 'inventoryMovementType');
-
+        $this->validateBranchPermission('report-inventory-movement', $query, $request);
         $this->processSimpleFields($query, $request, [
             'product_id',
             'user_id',
@@ -81,7 +83,7 @@ class ReportService
     {
         $query = Inventory::with('branch', 'product', 'product.brand',
             'product.categories');
-
+        $this->validateBranchPermission('report-inventory', $query, $request);
         $this->processSimpleFields($query, $request, [
             'branch_id',
             'product_id',
@@ -97,7 +99,7 @@ class ReportService
     {
         $query = Inventory::with('branch', 'product')
             ->historicFrom($request['date']);
-
+        $this->validateBranchPermission('report-historic-inventory', $query, $request);
         $this->processSimpleFields($query, $request, [
             'branch_id',
             'product_id',
@@ -107,6 +109,17 @@ class ReportService
         ]);
 
         return $query;
+    }
+
+    private function validateBranchPermission($permission_name, $query, $request)
+    {
+        if ($branch_id = array_get($request, 'branch_id')) {
+            BranchPermissionException::check($permission_name, Branch::findOrFail($branch_id));
+            $query->where('branch_id', $branch_id);
+        } else{
+            $branches = \Auth::user()->getBranchesWithPermission($permission_name);
+            $query->whereIn('branch_id', $branches->pluck('id'));
+        }
     }
 
     public function processSimpleFields($query, $request, $fields){

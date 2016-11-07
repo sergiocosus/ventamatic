@@ -48,5 +48,8 @@ class BranchPermissionSeeder extends Seeder
         {
             \Ventamatic\Core\User\Security\BranchPermission::create($branchPermission);
         }
+
+        $this->call(BranchPermissionReportsSeeder::class);
+
     }
 }

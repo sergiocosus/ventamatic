@@ -99,4 +99,13 @@ class User extends BaseUser
         })->get();
     }
 
+    public function getBranchesWithPermission($name){
+        return Branch::whereHas('branchRoles', function($query) use ($name) {
+            $query->where('branch_role_user.user_id', $this->id)
+                ->whereHas('branchPermissions', function ($query) use ($name) {
+                    $query->whereName($name);
+                });
+        })->get();
+    }
+
 }
