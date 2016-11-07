@@ -79,7 +79,8 @@ class ReportService
 
     public function getInventory(Array $request)
     {
-        $query = Inventory::with('branch', 'product');
+        $query = Inventory::with('branch', 'product', 'product.brand',
+            'product.categories');
 
         $this->processSimpleFields($query, $request, [
             'branch_id',
