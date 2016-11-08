@@ -40,7 +40,6 @@ class ReportService
         $this->processSimpleFields($query, $request, [
             'id',
             'user_id',
-            'branch_id',
             'client_id',
         ]);
         $this->processDateRange($query, $request);
@@ -55,7 +54,6 @@ class ReportService
         $this->processSimpleFields($query, $request, [
             'id',
             'user_id',
-            'branch_id',
             'provider_id',
         ]);
 
@@ -71,7 +69,6 @@ class ReportService
             'product_id',
             'user_id',
             'inventory_movement_type_id',
-            'branch_id',
         ]);
 
         $this->processDateRange($query, $request);
@@ -85,7 +82,6 @@ class ReportService
             'product.categories');
         $this->validateBranchPermission('report-inventory', $query, $request);
         $this->processSimpleFields($query, $request, [
-            'branch_id',
             'product_id',
             'quantity',
             'price',
@@ -99,33 +95,39 @@ class ReportService
     {
         $query = Inventory::with('branch', 'product')
             ->historicFrom($request['date']);
-        $this->validateBranchPermission('report-historic-inventory', $query, $request);
+        $this->validateBranchPermission('report-historic-inventory', $query, $request, 'inventories.branch_id');
         $this->processSimpleFields($query, $request, [
-            'branch_id',
             'product_id',
-            'quantity',
             'price',
             'minimum',
-        ]);
+        ], 'inventories');
+
+        if($quantity = array_get($request, 'quantity')) {
+            $query->having('quantity', '=', $quantity);
+        }
 
         return $query;
     }
 
-    private function validateBranchPermission($permission_name, $query, $request)
+    private function validateBranchPermission($permission_name, $query, $request, $branchField = 'branch_id')
     {
         if ($branch_id = array_get($request, 'branch_id')) {
             BranchPermissionException::check($permission_name, Branch::findOrFail($branch_id));
-            $query->where('branch_id', $branch_id);
+            $query->where($branchField, $branch_id);
         } else{
             $branches = \Auth::user()->getBranchesWithPermission($permission_name);
-            $query->whereIn('branch_id', $branches->pluck('id'));
+            $query->whereIn($branchField, $branches->pluck('id'));
         }
     }
 
-    public function processSimpleFields($query, $request, $fields){
+    public function processSimpleFields($query, $request, $fields, $table = null){
         foreach ($fields as $field) {
             if($data = array_get($request, $field)) {
-                $query->where($field, $data);
+                if ($table) {
+                    $query->where($table . '.' . $field, $data);
+                } else {
+                    $query->where($field, $data);
+                }
             }
         }
     }
