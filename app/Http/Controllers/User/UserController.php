@@ -70,10 +70,6 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->save();
 
-        if($request->get('roles')) {
-            $user->roles()->sync($request->get('roles'));
-        }
-
         return $this->success(compact('user'));
     }
 
