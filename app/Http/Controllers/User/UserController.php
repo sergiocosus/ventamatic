@@ -40,6 +40,16 @@ class UserController extends Controller
         return $this->success(compact('user'));
     }
 
+    public function getSearch(Request $request)
+    {
+        $this->can('user-get');
+
+        $users = User::search($request->get('search'))
+            ->get();
+
+        return $this->success(compact('users'));
+    }
+
     public function getMe()
     {
         $user = Auth::user();

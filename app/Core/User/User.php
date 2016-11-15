@@ -1,5 +1,6 @@
 <?php namespace Ventamatic\Core\User;
 
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Branch\InventoryMovement;
@@ -20,6 +21,15 @@ class User extends BaseUser
 {
     use EntrustUserTrait;
     use EntrustBranchUserTrait;
+    use SearchableTrait;
+
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+            'last_name' => 10,
+            'last_name_2' => 10,
+        ]
+    ];
 
     protected $dates = ['deleted_at'];
 

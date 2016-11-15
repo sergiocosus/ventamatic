@@ -54,7 +54,7 @@ class ReportService
         $this->processSimpleFields($query, $request, [
             'id',
             'user_id',
-            'provider_id',
+            'supplier_id',
         ]);
 
         $this->processDateRange($query, $request);

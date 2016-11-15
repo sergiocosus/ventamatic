@@ -29,6 +29,16 @@ class SupplierController extends Controller
         return $this->success(compact('supplier'));
     }
 
+    public function getSearch(Request $request)
+    {
+        $this->can('supplier-get');
+
+        $suppliers = Supplier::search($request->get('search'))
+            ->get();
+
+        return $this->success(compact('suppliers'));
+    }
+
     public function post(Request $request)
     {
         $this->can('supplier-create');

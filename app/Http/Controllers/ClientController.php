@@ -25,6 +25,16 @@ class ClientController extends Controller
         return $this->success(compact('client'));
     }
 
+    public function getSearch(Request $request)
+    {
+        $this->can('client-get');
+
+        $clients = Client::search($request->get('search'))
+            ->get();
+
+        return $this->success(compact('clients'));
+    }
+
     public function post(Request $request)
     {
         $this->can('client-create');

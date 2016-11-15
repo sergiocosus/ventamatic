@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Core\External;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Ventamatic\Core\Branch\Buy;
 use Ventamatic\Core\Product\Brand;
 use Ventamatic\Core\System\RevisionableBaseModel;
@@ -8,6 +9,7 @@ use Ventamatic\Core\System\RevisionableBaseModel;
 class Supplier extends RevisionableBaseModel {
 
     use SoftDeletes;
+    use SearchableTrait;
 
     protected $dates = ['deleted_at'];
 
@@ -19,6 +21,14 @@ class Supplier extends RevisionableBaseModel {
     protected $casts = [
         'id' => 'integer',
         'supplier_category_id' => 'integer'
+    ];
+
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+            'last_name' => 10,
+            'last_name_2' => 10,
+        ]
     ];
 
     public function supplierCategory() {

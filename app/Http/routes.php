@@ -24,6 +24,7 @@ Route::group(['prefix' => 'v1'],function(){
     Route::group(['prefix' => 'user'],function(){
         Route::get('me','User\UserController@getMe');
         Route::get('','User\UserController@get');
+        Route::get('search','User\UserController@getSearch');
         Route::post('','User\UserController@post');
 
         Route::group(['prefix' => '{user}'],function(){
@@ -76,6 +77,7 @@ Route::group(['prefix' => 'v1'],function(){
 
     Route::group(['prefix' => 'client'],function(){
         Route::get('','ClientController@get');
+        Route::get('search','ClientController@getSearch');
         Route::post('','ClientController@post');
 
         Route::group(['prefix' => '{client}'],function() {
@@ -87,6 +89,7 @@ Route::group(['prefix' => 'v1'],function(){
     
     Route::group(['prefix' => 'supplier'],function(){ 
         Route::get('','Supplier\SupplierController@get');
+        Route::get('search','Supplier\SupplierController@getSearch');
         Route::post('','Supplier\SupplierController@post');
 
         Route::group(['prefix' => 'category'],function(){
