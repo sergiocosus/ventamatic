@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Http\Controllers\Branch;
 
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Inventory;
@@ -15,10 +16,29 @@ class InventoryController extends Controller
         $this->middleware('jwt.auth');
     }
 
+    public function post(Request $request, Branch $branch, Product $product)
+    {
+        $this->canOnBranch('inventory-edit', $branch);
+
+        $branch->addInventoryMovement(
+            \Auth::user(),
+            $product,
+            $request->all());
+
+        return $this->get($branch, $product);
+    }
+
     public function put(Request $request, Branch $branch, Product $product)
     {
         $this->canOnBranch('inventory-edit', $branch);
 
+        $inventory = Inventory::whereBranchId($branch->id)
+            ->whereProductId($product->id)->first();
+        if (!$inventory) {
+            throw (new ModelNotFoundException)->setModel(get_class($this->model));
+        }
+
+        Inventory::findOrFail()
         $branch->addInventoryMovement(
             \Auth::user(),
             $product,

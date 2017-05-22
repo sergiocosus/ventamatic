@@ -50,6 +50,7 @@ Route::group(['prefix' => 'v1'],function(){
 
     Route::group(['prefix' => 'branch'],function(){
         Route::get('','Branch\BranchController@get');
+        Route::get('search','Branch\BranchController@getSearch');
 
         Route::group(['prefix' => '{branch}'],function(){
             Route::get('','Branch\BranchController@getBranch');
@@ -68,6 +69,7 @@ Route::group(['prefix' => 'v1'],function(){
                 Route::get('search','Branch\InventoryController@getSearch');
                 Route::get('bar-code','Branch\InventoryController@getBarCode');
                 Route::put('{product}','Branch\InventoryController@put');
+                Route::put('{product}','Branch\InventoryController@post');
                 Route::get('{product}','Branch\InventoryController@get');
                 Route::patch('{product}','Branch\InventoryController@addInventoryMovement');
             });

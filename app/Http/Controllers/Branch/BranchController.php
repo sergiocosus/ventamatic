@@ -31,4 +31,13 @@ class BranchController extends Controller
         return $this->success(compact('branch'));
     }
 
+    public function getSearch(Request $request)
+    {
+        $branches = Branch::search($request->get('search'))
+            ->get();
+
+        return $this->success(compact('branches'));
+    }
+
+
 }

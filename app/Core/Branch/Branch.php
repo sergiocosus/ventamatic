@@ -1,6 +1,7 @@
 <?php namespace Ventamatic\Core\Branch;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Ventamatic\Core\Product\Product;
 use Ventamatic\Core\System\RevisionableBaseModel;
 use Ventamatic\Core\Branch\InventoryMovement;
@@ -16,6 +17,7 @@ use Auth;
 class Branch extends RevisionableBaseModel {
     
     use SoftDeletes;
+    use SearchableTrait;
 
     const SUMA_INVENTARIO = 1;
     const RESTA_INVENTARIO= 2;
@@ -29,6 +31,12 @@ class Branch extends RevisionableBaseModel {
 
     protected $casts = [
         'id' => 'integer',
+    ];
+
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+        ]
     ];
 
     public function products() {
