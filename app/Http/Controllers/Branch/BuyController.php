@@ -17,7 +17,7 @@ class BuyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth');
+        $this->middleware('auth:api');
     }
 
     public function post(Request $request, Branch $branch)

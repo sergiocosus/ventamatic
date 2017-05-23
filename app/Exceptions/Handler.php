@@ -3,6 +3,7 @@
 namespace Ventamatic\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -52,6 +53,9 @@ class Handler extends ExceptionHandler
         if ($request->wantsJson()) {
             Log::error($e);
 
+            if ($e instanceof AuthenticationException) {
+                return Response::error(401, 'Unauthenticated', null, 401);
+            }
             if ($e instanceof ModelNotFoundException) {
                 $message = $this->renderModelNotFoundException($e);
                 Log::error($message);
@@ -84,5 +88,6 @@ class Handler extends ExceptionHandler
                 return 'No se encontró: '.$e->getModel();
         }
     }
+
 }
     

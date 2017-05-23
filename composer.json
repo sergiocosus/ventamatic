@@ -6,23 +6,25 @@
     "type": "project",
     "require": {
         "php": ">=7.0",
-        "laravel/framework": "5.2.*",
+        "laravel/framework": "5.4.*",
         "zizaco/entrust": "5.2.x-dev",
         "barryvdh/laravel-ide-helper": "^2.1",
         "doctrine/dbal": "^2.5",
-        "tymon/jwt-auth": "0.5.*",
-        "nicolaslopezj/searchable": "1.*"
+        "nicolaslopezj/searchable": "1.*",
+        "laravel/tinker": "^1.0",
+        "barryvdh/laravel-cors": "^0.9.2",
+        "laravel/passport": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*",
+        "phpunit/phpunit": "~5.7",
+        "symfony/css-selector": "3.1.*",
+        "symfony/dom-crawler": "3.1.*",
         "venturecraft/revisionable": "1.*",
         "xethron/migrations-generator": "dev-l5",
-        "way/generators": "dev-feature/laravel-five-stable",
-        "user11001/eloquent-model-generator": "~2.0"
+        "user11001/eloquent-model-generator": "~2.0",
+        "laracasts/generators": "^1.1"
 
     },
     "repositories": [

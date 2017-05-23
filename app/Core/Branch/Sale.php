@@ -53,7 +53,7 @@ class Sale extends RevisionableBaseModel {
             ->withPivot('quantity','price');
     }
 
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    public function newPivot(Model $parent, array $attributes, $table, $exists, $using = NULL)
     {
         if ($parent instanceof Product) {
             return new ProductSalePivot($parent, $attributes, $table, $exists);

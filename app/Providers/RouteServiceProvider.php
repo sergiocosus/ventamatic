@@ -5,7 +5,7 @@ namespace Ventamatic\Providers;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Route;
 use Ventamatic\Core\User\User;
 
 class RouteServiceProvider extends ServiceProvider
@@ -22,16 +22,15 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
-        parent::boot($router);
+        parent::boot();
 
-        $router->bind('user', function ($value) {
+        \Route::bind('user', function ($value) {
             if($value == 'me'){
-                return $user = JWTAuth::parseToken()->authenticate();
+                return $user = Auth::user();
             } else {
                 return User::findOrFail($value);
             }
@@ -47,6 +46,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
+        $this->mapApiRoutes();
         $this->mapWebRoutes($router);
 
         //
@@ -65,7 +65,25 @@ class RouteServiceProvider extends ServiceProvider
         $router->group([
             'namespace' => $this->namespace, 'middleware' => 'web',
         ], function ($router) {
-            require app_path('Http/routes.php');
+            require base_path('routes/web.php');
+        });
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        Route::group([
+            'middleware' => 'api',
+            'namespace' => $this->namespace,
+            'prefix' => 'api/v1',
+        ], function () {
+            require base_path('routes/api.php');
         });
     }
 }

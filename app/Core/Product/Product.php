@@ -83,7 +83,7 @@ class Product extends RevisionableBaseModel {
         return $this->hasMany(InventoryMovement::class);
     }
 
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    public function newPivot(Model $parent, array $attributes, $table, $exists, $using = NULL)
     {
         if ($parent instanceof Sale) {
             return new ProductSalePivot($parent, $attributes, $table, $exists);

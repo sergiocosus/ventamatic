@@ -17,9 +17,9 @@ use Ventamatic\Http\Requests;
 
 class UserController extends Controller
 {
-    public function __construct(Route $route)
+    public function __construct()
     {
-        $this->middleware('jwt.auth');
+        $this->middleware('auth:api');
     }
 
     public function get(Request $request)
@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         $this->can('user-get-detail');
 
-        $user->load('roles','branchRoles');
+        $user->load('roles', 'branchRoles');
 
         return $this->success(compact('user'));
     }

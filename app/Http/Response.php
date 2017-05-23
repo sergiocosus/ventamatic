@@ -24,14 +24,14 @@ class Response
         return self::appendControlAccessHeaders($response);
     }
 
-    public static function error($code = 500, $message = "",  $data = null)
+    public static function error($code = 500, $message = "",  $data = null, $status = 400)
     {
         $response = \Response::json([
             'status' => 'error',
             'message' => $message,
             'code' => $code,
             'data' => $data,
-        ],500);
+        ], $status);
 
         return self::appendControlAccessHeaders($response);
     }

@@ -1,5 +1,6 @@
 <?php namespace Ventamatic\Core\User;
 
+use Laravel\Passport\HasApiTokens;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Buy;
@@ -7,8 +8,6 @@ use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\System\BaseUser;
 
-use Ventamatic\Core\User\EntrustForBranch\EntrustBranchRoleTrait;
-use Ventamatic\Core\User\Security\BranchPermission;
 use Ventamatic\Core\User\Security\Permission;
 use Ventamatic\Exceptions\PermissionException;
 use Ventamatic\Modules\EntrustBranch\EntrustBranchUserTrait;
@@ -22,6 +21,7 @@ class User extends BaseUser
     use EntrustUserTrait;
     use EntrustBranchUserTrait;
     use SearchableTrait;
+    use HasApiTokens;
 
     protected $searchable = [
         'columns' => [
@@ -118,4 +118,8 @@ class User extends BaseUser
         })->get();
     }
 
+    public static function findForPassport($username)
+    {
+        return self::whereUsername($username)->first();
+    }
 }

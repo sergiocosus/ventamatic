@@ -13,7 +13,7 @@ class InventoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth');
+        $this->middleware('auth:api');
     }
 
     public function post(Request $request, Branch $branch, Product $product)
@@ -38,7 +38,6 @@ class InventoryController extends Controller
             throw (new ModelNotFoundException)->setModel(get_class($this->model));
         }
 
-        Inventory::findOrFail()
         $branch->addInventoryMovement(
             \Auth::user(),
             $product,

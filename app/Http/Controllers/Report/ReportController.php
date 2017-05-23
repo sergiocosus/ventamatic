@@ -27,7 +27,7 @@ class ReportController extends Controller
     public function __construct(ReportService $reportService)
     {
         $this->reportService = $reportService;
-        $this->middleware('jwt.auth');
+        $this->middleware('auth:api');
     }
 
     public function getSchedule(Request $request)
