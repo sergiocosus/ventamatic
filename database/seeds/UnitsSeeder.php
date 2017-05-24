@@ -28,6 +28,11 @@ class UnitsSeeder extends Seeder
                 'name' => 'Litro',
                 'abbreviation' => 'l'
             ],
+            [
+                'id' => 4,
+                'name' => 'Metro',
+                'abbreviation' => 'm'
+            ],
 
         ];
         

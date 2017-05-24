@@ -4,6 +4,7 @@ namespace Ventamatic\Http;
 
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 class Kernel extends HttpKernel
 {
@@ -16,7 +17,6 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -35,6 +35,8 @@ class Kernel extends HttpKernel
 
         'api' => [
             'throttle:60,1',
+            'bindings',
+            \Barryvdh\Cors\HandleCors::class,
         ],
     ];
 
@@ -50,7 +52,7 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \Ventamatic\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
