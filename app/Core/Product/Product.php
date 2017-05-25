@@ -46,6 +46,23 @@ class Product extends RevisionableBaseModel {
         'global_price' => 'double',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::created(function(Product $product) {
+            $product->initializeInventory();
+        });
+    }
+
+    public function initializeInventory() {
+        $branches = Branch::get();
+        foreach ($branches as $branch) {
+            $branch->alterInventory($this, 0);
+        }
+    }
+
+
     public function brand() {
         return $this->belongsTo(Brand::class);
     }

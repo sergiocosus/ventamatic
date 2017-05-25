@@ -9,13 +9,24 @@
 namespace Ventamatic\Core\Product;
 
 
+use Ventamatic\Core\Branch\Branch;
+
 class ProductService
 {
     public function create(Array $data)
     {
-        $product = Product::create($data);
-        $product->categories()
-            ->sync(array_get($data,'categories',[]));
+        /** @var Product $product */
+        try {
+            \DB::beginTransaction();
+            $product = Product::create($data);
+            $product->categories()
+                ->sync(array_get($data,'categories',[]));
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            throw $e;
+        }
+
         $this->lazyLoad($product);
 
         return $product;
