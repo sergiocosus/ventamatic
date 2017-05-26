@@ -55,7 +55,7 @@ Route::group(['prefix' => 'branch'],function(){
             Route::get('search','Branch\InventoryController@getSearch');
             Route::get('bar-code','Branch\InventoryController@getBarCode');
             Route::put('{product}','Branch\InventoryController@put');
-            Route::put('{product}','Branch\InventoryController@post');
+            Route::post('{product}','Branch\InventoryController@post');
             Route::get('{product}','Branch\InventoryController@get');
             Route::patch('{product}','Branch\InventoryController@addInventoryMovement');
         });

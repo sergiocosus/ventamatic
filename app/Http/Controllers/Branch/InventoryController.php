@@ -38,10 +38,8 @@ class InventoryController extends Controller
             throw (new ModelNotFoundException)->setModel(get_class($this->model));
         }
 
-        $branch->addInventoryMovement(
-            \Auth::user(),
-            $product,
-            $request->all());
+        $inventory->fill($request->only(['price', 'minimum']));
+        $inventory->update();
 
         return $this->get($branch, $product);
     }
