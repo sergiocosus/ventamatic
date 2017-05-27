@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Inventory;
+use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Product\Brand;
 use Ventamatic\Core\Product\Product;
 use Ventamatic\Http\Controllers\Controller;
@@ -20,12 +21,18 @@ class InventoryController extends Controller
     {
         $this->canOnBranch('inventory-edit', $branch);
 
-        $branch->addInventoryMovement(
+        $movements = $branch->addInventoryMovement(
             \Auth::user(),
             $product,
             $request->all());
 
-        return $this->get($branch, $product);
+        $inventories = [];
+        /** @var InventoryMovement $movement */
+        foreach ($movements as $movement) {
+            $inventories[] = $this->loadProduct($movement->branch, $movement->product);
+        }
+
+        return $this->success(compact('inventories'));
     }
 
     public function put(Request $request, Branch $branch, Product $product)
@@ -48,13 +55,18 @@ class InventoryController extends Controller
     {
         $this->canOnBranch('inventory-get-detail', $branch);
 
-        $inventory = $product->inventories()
+        $inventory = $this->loadProduct($branch, $product);
+
+        return $this->success(compact('inventory'));
+    }
+
+    private function loadProduct(Branch $branch, Product $product)
+    {
+        return $product->inventories()
             ->whereBranchId($branch->id)
             ->notDeletedProduct()
             ->with('product', 'product.brand', 'product.categories','product.unit')
             ->first();
-        
-        return $this->success(compact('inventory'));
     }
 
     public function getAll(Branch $branch)

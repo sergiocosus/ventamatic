@@ -114,34 +114,43 @@ class Branch extends RevisionableBaseModel {
             $batch = 1;
         }
 
+        $movements = [];
+
         switch($inventoryMovementType->id){
             case InventoryMovementType::COMPRA:
             case InventoryMovementType::PROMOCION:
-                InventoryMovement::createMovement($user, $this, $product,
+                $movements[] = InventoryMovement::createMovement($user, $this, $product,
                     $inventoryMovementType, $quantity, $batch, array_get($data, 'model'));
             break;
 
             case InventoryMovementType::TRASLADO:
-                InventoryMovement::createMovement($user, $this, $product,
+                $movements[] = InventoryMovement::createMovement($user, $this, $product,
                     $inventoryMovementType, -$quantity, $batch);
-                InventoryMovement::createMovement($user,
+                $movements[] = InventoryMovement::createMovement($user,
                     Branch::find($data['destiny_branch_id']), $product,
                     $inventoryMovementType, $quantity, $batch);
             break;
-
-            //case InventoryMovementType::CONVERSION:
+            case InventoryMovementType::CONVERSION:
+                $movements[] = InventoryMovement::createMovement($user, $this, $product,
+                    $inventoryMovementType, -$quantity, $batch);
+                $movements[] = InventoryMovement::createMovement($user, $this,
+                    Product::find($data['product_converted_id']),
+                    $inventoryMovementType, $data['quantity_converted'], $batch);
+                break;
             case InventoryMovementType::CONCESION:
             case InventoryMovementType::CADUCADO:
             case InventoryMovementType::VENTA:
-                InventoryMovement::createMovement($user, $this, $product,
-                    $inventoryMovementType, -$quantity, $batch, array_get($data, 'model'));
+                $movements[] = InventoryMovement::createMovement($user, $this, $product,
+                $inventoryMovementType, -$quantity, $batch, array_get($data, 'model'));
             break;
 
             case InventoryMovementType::AJUSTE:
-                InventoryMovement::createMovement($user, $this, $product,
+                $movements[] = InventoryMovement::createMovement($user, $this, $product,
                     $inventoryMovementType, $quantity, $batch);
             break;
         }
+
+        return $movements;
     }
 
 }
