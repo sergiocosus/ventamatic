@@ -99,4 +99,18 @@ class ScheduleController extends Controller
 
         return $this->success(compact('schedule'));
     }
+
+    public function putNote(Request $request, User $user, Schedule $schedule)
+    {
+        $this->authorize('makeNote', $schedule);
+        $this->validate($request, [
+            'note' => 'required'
+        ]);
+
+        $schedule->note = $request->get('note');
+        $schedule->update();
+        $schedule->load('scheduleStatus');
+
+        return $this->success(compact('schedule'));
+    }
 }

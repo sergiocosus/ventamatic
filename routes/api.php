@@ -30,6 +30,7 @@ Route::group(['prefix' => 'user'],function(){
             Route::get('current','User\ScheduleController@getCurrent');
             Route::post('{branch}','User\ScheduleController@post');
             Route::put('','User\ScheduleController@patch');
+            Route::put('note/{schedule}','User\ScheduleController@putNote');
         });
     });
 });
