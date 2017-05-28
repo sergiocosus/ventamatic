@@ -98,7 +98,7 @@ class Branch extends RevisionableBaseModel {
         return $inventory->save();
     }
 
-    public function addInventoryMovement(User $user, Product $product, $data)
+    public function addInventoryMovement(User $user, Product $product, $data, $batch = null)
     {
         /** @var InventoryMovementType $inventoryMovementType */
         $inventoryMovementType = InventoryMovementType::findOrFail(
@@ -107,11 +107,8 @@ class Branch extends RevisionableBaseModel {
 
         $quantity = $data['quantity'];
 
-        $lastInventoryMovementBatch = InventoryMovement::orderBy('id','desc')->first(['batch']);
-        if($lastInventoryMovementBatch) {
-            $batch = $lastInventoryMovementBatch->batch + 1;
-        } else {
-            $batch = 1;
+        if (!isset($batch)) {
+            $batch = InventoryMovement::getLastBatch();
         }
 
         $movements = [];
@@ -119,6 +116,7 @@ class Branch extends RevisionableBaseModel {
         switch($inventoryMovementType->id){
             case InventoryMovementType::COMPRA:
             case InventoryMovementType::PROMOCION:
+            case InventoryMovementType::CONSIGNACION:
                 $movements[] = InventoryMovement::createMovement($user, $this, $product,
                     $inventoryMovementType, $quantity, $batch, array_get($data, 'model'));
             break;

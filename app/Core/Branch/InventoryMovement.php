@@ -75,4 +75,14 @@ class InventoryMovement extends RevisionableBaseModel {
 
         return $inventoryMovement;
     }
+
+    public static function getLastBatch()
+    {
+        $lastInventoryMovementBatch = self::orderBy('id','desc')->first(['batch']);
+        if($lastInventoryMovementBatch) {
+            return $lastInventoryMovementBatch->batch + 1;
+        } else {
+            return 1;
+        }
+    }
 }

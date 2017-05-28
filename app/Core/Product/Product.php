@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Ventamatic\Core\Branch\Branch;
 use Ventamatic\Core\Branch\Buy;
+use Ventamatic\Core\Branch\BuyProductPivot;
 use Ventamatic\Core\Branch\Inventory;
 use Ventamatic\Core\Branch\InventoryMovement;
 use Ventamatic\Core\Branch\ProductSalePivot;
@@ -104,6 +105,12 @@ class Product extends RevisionableBaseModel {
     {
         if ($parent instanceof Sale) {
             return new ProductSalePivot($parent, $attributes, $table, $exists);
+        }
+
+        if ($parent instanceof Buy) {
+            $pivot = new BuyProductPivot($parent, $attributes, $table, $exists);
+            $pivot->load('inventoryMovementType');
+            return $pivot;
         }
 
         return parent::newPivot($parent, $attributes, $table, $exists);
