@@ -10,11 +10,17 @@ class ClientController extends Controller
     {
         $this->middleware('auth:api');
     }
-    public function get()
+    public function get(Request $request)
     {
         $this->can('client-get');
 
-        $clients =  Client::all();
+        $query = Client::query();
+        if ($request->get('deleted')) {
+            $this->can('client-delete');
+            $query->withTrashed();
+        }
+        $clients = $query->get();
+
         return $this->success(compact('clients'));
     }
 
@@ -49,6 +55,17 @@ class ClientController extends Controller
 
         if($client->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(Client $client)
+    {
+        $this->can('client-delete');
+
+        if($client->restore()){
+            return $this->success(compact('client'));
         }else{
             return $this->error();
         }

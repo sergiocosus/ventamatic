@@ -12,12 +12,17 @@ class CategoryController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function get()
+    public function get(Request $request)
     {
         $this->can('category-get');
 
-        $categories = Category::all(); 
-        
+        $query = Category::query();
+        if ($request->get('deleted')) {
+            $this->can('category-delete');
+            $query->withTrashed();
+        }
+        $categories = $query->get();
+
         return $this->success(compact('categories')); 
     }
 
@@ -43,6 +48,17 @@ class CategoryController extends Controller
 
         if($category->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(Category $category)
+    {
+        $this->can('category-delete');
+
+        if($category->restore()){
+            return $this->success(compact('category'));
         }else{
             return $this->error();
         }

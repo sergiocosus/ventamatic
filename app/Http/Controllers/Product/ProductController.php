@@ -20,11 +20,18 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function get()
+    public function get(Request $request)
     {
         $this->can('product-get');
 
-        $products = Product::with('categories', 'unit', 'brand')->get();
+        $query = Product::withRelations();
+
+        if ($request->get('deleted')) {
+            $this->can('product-delete');
+            $query->withTrashed();
+        }
+
+        $products = $query->get();
         
         return $this->success(compact('products'));
     }
@@ -53,6 +60,18 @@ class ProductController extends Controller
 
         if($product->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(Product $product)
+    {
+        $this->can('product-delete');
+
+        if($product->restore()){
+            $product->load(Product::$basicRelationsToLoad);
+            return $this->success(compact('product'));
         }else{
             return $this->error();
         }

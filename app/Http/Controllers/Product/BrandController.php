@@ -12,11 +12,16 @@ class BrandController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function get()
+    public function get(Request $request)
     {
         $this->can('brand-get');
 
-        $brands = Brand::all();
+        $query = Brand::query();
+        if ($request->get('deleted')) {
+            $this->can('brand-delete');
+            $query->withTrashed();
+        }
+        $brands = $query->get();
 
         return $this->success(compact('brands'));
     }
@@ -42,6 +47,17 @@ class BrandController extends Controller
 
         if($brand->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(Brand $brand)
+    {
+        $this->can('brand-delete');
+
+        if($brand->restore()){
+            return $this->success(compact('brand'));
         }else{
             return $this->error();
         }

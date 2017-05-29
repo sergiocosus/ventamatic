@@ -12,11 +12,16 @@ class SupplierController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function get()
+    public function get(Request $request)
     {
         $this->can('supplier-get');
 
-        $suppliers = Supplier::get();
+        $query = Supplier::query();
+        if ($request->get('deleted')) {
+            $this->can('supplier-delete');
+            $query->withTrashed();
+        }
+        $suppliers = $query->get();
 
         return $this->success(compact('suppliers'));
     }
@@ -57,6 +62,17 @@ class SupplierController extends Controller
 
         if($supplier->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(Supplier $supplier)
+    {
+        $this->can('supplier-delete');
+
+        if($supplier->restore()){
+            return $this->success(compact('supplier'));
         }else{
             return $this->error();
         }

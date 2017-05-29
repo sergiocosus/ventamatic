@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Log;
 use Ventamatic\Core\Branch\Branch;
+use Ventamatic\Core\External\Client;
 use Ventamatic\Core\User\Schedule;
 use Ventamatic\Core\User\Security\Role;
 use Ventamatic\Core\User\User;
@@ -26,7 +27,12 @@ class UserController extends Controller
     {
         $this->can('user-get');
 
-        $users = User::all();
+        $query = User::query();
+        if ($request->get('deleted')) {
+            $this->can('user-delete');
+            $query->withTrashed();
+        }
+        $users = $query->get();
 
         return $this->success(compact('users'));
     }
@@ -90,6 +96,17 @@ class UserController extends Controller
 
         if($user->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(User $user)
+    {
+        $this->can('user-delete');
+
+        if($user->restore()){
+            return $this->success(compact('user'));
         }else{
             return $this->error();
         }

@@ -47,6 +47,10 @@ class Product extends RevisionableBaseModel {
         'global_price' => 'double',
     ];
 
+    public static $basicRelationsToLoad = [
+        'categories', 'unit', 'brand'
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -99,6 +103,12 @@ class Product extends RevisionableBaseModel {
 
     public function inventoryMovements() {
         return $this->hasMany(InventoryMovement::class);
+    }
+
+
+    public function scopeWithRelations($q)
+    {
+        $q->with(self::$basicRelationsToLoad);
     }
 
     public function newPivot(Model $parent, array $attributes, $table, $exists, $using = NULL)

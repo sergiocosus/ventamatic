@@ -33,6 +33,8 @@ Route::group(['prefix' => 'user'],function(){
             Route::put('note/{schedule}','User\ScheduleController@putNote');
         });
     });
+
+    Route::patch('{userTrashed}/restore', 'User\UserController@patchRestore');
 });
 
 Route::group(['prefix' => 'branch'],function(){
@@ -74,6 +76,9 @@ Route::group(['prefix' => 'client'],function(){
         Route::delete('', 'ClientController@delete');
         Route::put('', 'ClientController@put');
     });
+
+    Route::patch('{clientTrashed}/restore', 'ClientController@patchRestore');
+
 });
 
 Route::group(['prefix' => 'supplier'],function(){
@@ -85,11 +90,14 @@ Route::group(['prefix' => 'supplier'],function(){
         Route::get('','Supplier\CategoryController@get');
         Route::post('','Supplier\CategoryController@post');
 
-        Route::group(['prefix' => '{supplierCategory}'],function() {
+        Route::group(['prefix' => '{supplier_category}'],function() {
             Route::get('','Supplier\CategoryController@getCategory');
             Route::delete('', 'Supplier\CategoryController@delete');
             Route::put('', 'Supplier\CategoryController@put');
         });
+
+        Route::patch('{supplier_categoryTrashed}/restore', 'Supplier\CategoryController@patchRestore');
+
     });
 
     Route::group(['prefix' => '{supplier}'],function() {
@@ -97,6 +105,9 @@ Route::group(['prefix' => 'supplier'],function(){
         Route::delete('', 'Supplier\SupplierController@delete');
         Route::put('', 'Supplier\SupplierController@put');
     });
+
+    Route::patch('{supplierTrashed}/restore', 'Supplier\SupplierController@patchRestore');
+
 });
 
 Route::group(['prefix' => 'product'],function(){
@@ -114,6 +125,8 @@ Route::group(['prefix' => 'product'],function(){
             Route::delete('', 'Product\CategoryController@delete');
             Route::put('', 'Product\CategoryController@put');
         });
+
+        Route::patch('{categoryTrashed}/restore', 'Product\CategoryController@patchRestore');
     });
 
     Route::group(['prefix' => 'brand'],function(){
@@ -125,6 +138,8 @@ Route::group(['prefix' => 'product'],function(){
             Route::delete('', 'Product\BrandController@delete');
             Route::put('', 'Product\BrandController@put');
         });
+
+        Route::patch('{brandTrashed}/restore', 'Product\BrandController@patchRestore');
     });
 
     Route::group(['prefix' => '{product}'],function() {
@@ -132,6 +147,9 @@ Route::group(['prefix' => 'product'],function(){
         Route::delete('', 'Product\ProductController@delete');
         Route::put('', 'Product\ProductController@put');
     });
+
+    Route::patch('{productTrashed}/restore', 'Product\ProductController@patchRestore');
+
 });
 
 Route::group(['prefix' => 'report'],function(){

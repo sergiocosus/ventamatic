@@ -13,11 +13,16 @@ class CategoryController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function get()
+    public function get(Request $request)
     {
         $this->can('supplier-category-get');
 
-        $supplier_categories = SupplierCategory::all();
+        $query = SupplierCategory::query();
+        if ($request->get('deleted')) {
+            $this->can('supplier-category-delete');
+            $query->withTrashed();
+        }
+        $supplier_categories = $query->get();
 
         return $this->success(compact('supplier_categories'));
     }
@@ -38,12 +43,23 @@ class CategoryController extends Controller
         return $this->success(compact('supplier_category'));
     }
 
-    public function delete(Request $request, SupplierCategory $supplier_category)
+    public function delete(SupplierCategory $supplier_category)
     {
         $this->can('supplier-category-delete');
 
         if($supplier_category->delete()){
             return $this->success();
+        }else{
+            return $this->error();
+        }
+    }
+
+    public function patchRestore(SupplierCategory $supplier_category)
+    {
+        $this->can('supplier-category-delete');
+
+        if($supplier_category->restore()){
+            return $this->success(compact('supplier_category'));
         }else{
             return $this->error();
         }
