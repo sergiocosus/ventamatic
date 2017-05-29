@@ -22,7 +22,10 @@ class ReportService
     public function getSchedule($request)
     {
         $query = Schedule::query()
-            ->with('user', 'branch', 'scheduleStatus');
+            ->with([
+                'user' => function ($q) {$q->withTrashed();},
+                'branch' => function ($q) {$q->withTrashed();},
+                'scheduleStatus']);
         $this->validateBranchPermission('report-schedule', $query, $request);
         $this->processSimpleFields($query, $request, [
             'id',
@@ -35,7 +38,12 @@ class ReportService
 
     public function getSale(Array $request){
         $query = Sale::query()
-            ->with('products', 'client', 'user','branch');
+            ->with([
+                'products' => function ($q) {$q->withTrashed();},
+                'client' => function ($q) {$q->withTrashed();},
+                'user' => function ($q) {$q->withTrashed();},
+                'branch' => function ($q) {$q->withTrashed();}
+            ]);
         $this->validateBranchPermission('report-sale', $query, $request);
         $this->processSimpleFields($query, $request, [
             'id',
@@ -49,7 +57,12 @@ class ReportService
 
     public function getBuy(Array $request){
         $query = Buy::query()
-            ->with('products', 'supplier', 'user', 'branch');
+            ->with([
+                'products' => function ($q) {$q->withTrashed();},
+                'supplier' => function ($q) {$q->withTrashed();},
+                'user' => function ($q) {$q->withTrashed();},
+                'branch' => function ($q) {$q->withTrashed();}
+            ]);
         $this->validateBranchPermission('report-buy', $query, $request);
         $this->processSimpleFields($query, $request, [
             'id',
@@ -63,7 +76,12 @@ class ReportService
     }
 
     public function getInventoryMovements(Array $request){
-        $query = InventoryMovement::with('user', 'product', 'branch', 'inventoryMovementType');
+        $query = InventoryMovement::with([
+            'user' => function ($q) {$q->withTrashed();},
+            'product' => function ($q) {$q->withTrashed();},
+            'branch' => function ($q) {$q->withTrashed();},
+            'inventoryMovementType' => function ($q) {$q->withTrashed();}
+        ]);
         $this->validateBranchPermission('report-inventory-movement', $query, $request);
         $this->processSimpleFields($query, $request, [
             'product_id',
@@ -78,8 +96,12 @@ class ReportService
 
     public function getInventory(Array $request)
     {
-        $query = Inventory::with('branch', 'product', 'product.brand',
-            'product.categories');
+        $query = Inventory::with([
+            'branch' => function ($q) {$q->withTrashed();},
+            'product' => function ($q) {$q->withTrashed();},
+            'product.brand' => function ($q) {$q->withTrashed();},
+            'product.categories' => function ($q) {$q->withTrashed();}
+            ]);
         $this->validateBranchPermission('report-inventory', $query, $request);
         $this->processSimpleFields($query, $request, [
             'product_id',
@@ -93,7 +115,10 @@ class ReportService
 
     public function getHistoricInventory(Array $request)
     {
-        $query = Inventory::with('branch', 'product')
+        $query = Inventory::with([
+                'branch' => function ($q) {$q->withTrashed();},
+                'product' => function ($q) {$q->withTrashed();}
+            ])
             ->historicFrom($request['date']);
         $this->validateBranchPermission('report-historic-inventory', $query, $request, 'inventories.branch_id');
         $this->processSimpleFields($query, $request, [
