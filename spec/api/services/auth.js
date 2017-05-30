@@ -7,22 +7,22 @@ var TestRunner = require('../test-runner');
 module.exports = {
     auth : function (){
     return frisby.create('Auth Ventamatic APi')
-        .post('auth',
+        .post('',
             config.userCredentials
         )
         .expectStatus(200)
         .expectHeaderContains('content-type', 'application/json')
         .expectJSONTypes({
-            token: String
+            access_token: String
         })
         .afterJSON(function(body) {
-            config.token = body.token;
+            config.token = body.access_token;
 
             frisby.globalSetup({ // globalSetup is for ALL requests
                 request: {
                     headers: {
                         'Accept': 'application/json',
-                        'Authorization': 'Bearer '+ body.token
+                        'Authorization': 'Bearer '+ body.access_token
                     },
                     json:true,
                     baseUri: config.url,

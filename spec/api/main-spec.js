@@ -33,7 +33,7 @@ frisby.globalSetup({ // globalSetup is for ALL requests
             'Accept': 'application/json'
         },
         json:true,
-        baseUri: config.url,
+        baseUri: config.urlLogin,
         inspectOnFailure: true
     }
 });
