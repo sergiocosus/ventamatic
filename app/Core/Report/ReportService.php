@@ -117,7 +117,9 @@ class ReportService
     {
         $query = Inventory::with([
                 'branch' => function ($q) {$q->withTrashed();},
-                'product' => function ($q) {$q->withTrashed();}
+                'product' => function ($q) {$q->withTrashed();},
+                'product.brand' => function ($q) {$q->withTrashed();},
+                'product.categories' => function ($q) {$q->withTrashed();}
             ])
             ->historicFrom($request['date']);
         $this->validateBranchPermission('report-historic-inventory', $query, $request, 'inventories.branch_id');

@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class BuyProductPivot extends Pivot
 {
+    protected $casts = [
+        'quantity' => 'double',
+        'cost' => 'double',
+    ];
+
     public function inventoryMovementType()
     {
         return $this->belongsTo(InventoryMovementType::class);

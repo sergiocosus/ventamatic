@@ -212,3 +212,4 @@ Route::group(['prefix' => 'security'],function(){
     });
 });
 
+Route::get('inventory/movement-type','Branch\InventoryMovementTypeController@getAll');
