@@ -34,7 +34,11 @@ class Inventory extends RevisionableBaseModel {
             'categories' => ['categories.id','category_product.category_id']
         ],
     ];
-    
+
+    protected $appends = [
+        'current_price',
+    ];
+
     public function branch() {
         return $this->belongsTo(Branch::class);
     }
@@ -78,6 +82,14 @@ class Inventory extends RevisionableBaseModel {
     }
 
 
+    public function getCurrentPriceAttribute()
+    {
+        if ($this->price) {
+            return $this->price;
+        } else {
+            return $this->product->global_price;
+        }
+    }
 
 
 }

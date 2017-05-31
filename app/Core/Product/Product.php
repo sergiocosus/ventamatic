@@ -129,9 +129,11 @@ class Product extends RevisionableBaseModel {
 
     public function getCorrectPrice()
     {
-        /* TODO change logic for price*/
+        if ($this->invento)
         return $this->global_price;
     }
+
+
 
     
     public function scopeHasInBranch($query, Branch $branch){

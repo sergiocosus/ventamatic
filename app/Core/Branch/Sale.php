@@ -30,6 +30,7 @@ class Sale extends RevisionableBaseModel {
         'card_payment_id' => 'integer',
         'client_payment' => 'double',
         'total' => 'double',
+        'current_price' => 'double',
     ];
 
     public function branch() {
@@ -68,7 +69,7 @@ class Sale extends RevisionableBaseModel {
                                   Branch $branch,
                                   PaymentType $paymentType,
                                   Array $products,
-                                  $total, $client_payment, $card_payment_id = null)
+                                  $given_total, $client_payment, $card_payment_id = null)
     {
         $sale = new self();
         $sale->client()->associate($client);
@@ -77,17 +78,20 @@ class Sale extends RevisionableBaseModel {
         $sale->paymentType()->associate($paymentType);
 
         $sale->card_payment_id=$card_payment_id;
-        $sale->total=$total;
+        $sale->total=$given_total;
         $sale->client_payment=$client_payment;
 
         try {
             DB::beginTransaction();
 
             $sale->save();
-            $calculatedTotal = $sale->attachProducts($products, $branch, $user);
+            $calculed_total = $sale->attachProducts($products, $branch, $user);
 
-            if($total != $calculatedTotal){
-                throw new Exception('El total no concuerda');
+            if($given_total != $calculed_total){
+                throw new Exception(\Lang::get('buy.total_not_match', [
+                    'given_total' => $given_total,
+                    'calculed_total' => $calculed_total,
+                ]));
             }
             DB::commit();
         }
@@ -95,25 +99,26 @@ class Sale extends RevisionableBaseModel {
             DB::rollBack();
             throw $e;
         }
+
         return $sale;
-       
     }
     
     private function attachProducts(Array $products, Branch $branch, User $user){
         $productsToAttach = [];
         $total = 0;
         foreach ($products as $productData) {
-            /** @var Product $product */
-            $product = Product::findOrFail($productData['product_id']);
+            /** @var Product $inventory */
+            $inventory = Inventory::whereProductId($productData['product_id'])
+                    ->whereBranchId($branch->id)->first();
 
-            $price = $product->getCorrectPrice();
+            $price = $inventory->current_price;
             $quantity = $productData['quantity'];
 
             $total += $price * $quantity;
 
-            $productsToAttach[$product->id] = compact('price', 'quantity');
+            $productsToAttach[$inventory->product_id] = compact('price', 'quantity');
 
-            $branch->addInventoryMovement($user, $product, [
+            $branch->addInventoryMovement($user, $inventory->product, [
                 'inventory_movement_type_id' => InventoryMovementType::VENTA,
                 'quantity' => $productData['quantity'],
                 'model' => $this,
