@@ -16,22 +16,26 @@ class UnitsSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Pieza',
-                'abbreviation' => 'pza'
+                'abbreviation' => 'pza',
+                'step' => 1
             ],
             [
                 'id' => 2,
                 'name' => 'Kilogramo',
-                'abbreviation' => 'Kg'
+                'abbreviation' => 'Kg',
+                'step' => 0.005
             ],
             [
                 'id' => 3,
                 'name' => 'Litro',
-                'abbreviation' => 'l'
+                'abbreviation' => 'l',
+                'step' => 0.005
             ],
             [
                 'id' => 4,
                 'name' => 'Metro',
-                'abbreviation' => 'm'
+                'abbreviation' => 'm',
+                'step' => 0.005
             ],
 
         ];

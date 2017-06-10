@@ -15,10 +15,18 @@ class Unit extends RevisionableBaseModel {
 
     protected $casts = [
         'id' => 'integer',
+        'step' => 'float',
     ];
     
     public function products() {
         return $this->hasMany(Product::class);
+    }
+
+    public function validateQuantity($quantity)
+    {
+        $module = $quantity - $this->step * floor($quantity / $this->step);
+
+        return $module == 0;
     }
 
 }

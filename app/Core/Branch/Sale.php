@@ -85,14 +85,9 @@ class Sale extends RevisionableBaseModel {
             DB::beginTransaction();
 
             $sale->save();
-            $calculed_total = $sale->attachProducts($products, $branch, $user);
+            $calculated_total = $sale->attachProducts($products, $branch, $user);
+            self::validateTotal($given_total, $calculated_total);
 
-            if($given_total != $calculed_total){
-                throw new Exception(\Lang::get('buy.total_not_match', [
-                    'given_total' => $given_total,
-                    'calculed_total' => $calculed_total,
-                ]));
-            }
             DB::commit();
         }
         catch (Exception $e) {
@@ -101,6 +96,15 @@ class Sale extends RevisionableBaseModel {
         }
 
         return $sale;
+    }
+
+    private static function validateTotal($given_total, $calculated_total) {
+        if($given_total != floor($calculated_total*100)/100){
+            throw new Exception(\Lang::get('buy.total_not_match', [
+                'given_total' => $given_total,
+                'calculed_total' => $calculated_total,
+            ]));
+        }
     }
     
     private function attachProducts(Array $products, Branch $branch, User $user){

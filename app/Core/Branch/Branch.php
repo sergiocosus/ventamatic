@@ -74,6 +74,15 @@ class Branch extends RevisionableBaseModel {
 
     public function alterInventory(Product $product, $quantity)
     {
+        if (!$product->unit->validateQuantity($quantity)) {
+            throw new InventoryException(\Lang::get('unit.invalid_quantity_for_unit',
+                [
+                    'quantity' => $quantity,
+                    'unit_name' => $product->unit->name,
+                ]
+            ));
+        }
+
         /** @var Inventory $inventory */
         $inventory = $this->inventories()->whereProductId($product->id)->first();
         if (!$inventory) {
