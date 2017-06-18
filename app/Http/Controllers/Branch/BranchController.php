@@ -3,13 +3,20 @@
 
 use Illuminate\Http\Request;
 use Ventamatic\Core\Branch\Branch;
+use Ventamatic\Core\Branch\BranchService;
 use Ventamatic\Http\Controllers\Controller;
 
 class BranchController extends Controller
 {
-    public function __construct()
+    /**
+     * @var BranchService
+     */
+    private $branchService;
+
+    public function __construct(BranchService $branchService)
     {
         $this->middleware('auth:api');
+        $this->branchService = $branchService;
     }
 
     public function get()
@@ -29,8 +36,7 @@ class BranchController extends Controller
     {
         $this->canOnBranch('branch-edit', $branch);
 
-        $branch->fill($request->all());
-        $branch->save();
+        $this->branchService->update($branch, $request);
 
         return $this->success(compact('branch'));
     }

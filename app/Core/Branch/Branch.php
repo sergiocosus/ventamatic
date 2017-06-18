@@ -33,6 +33,10 @@ class Branch extends RevisionableBaseModel {
         'id' => 'integer',
     ];
 
+    protected $appends = [
+        'image_url',
+    ];
+
     protected $searchable = [
         'columns' => [
             'name' => 10,
@@ -160,4 +164,12 @@ class Branch extends RevisionableBaseModel {
         return $movements;
     }
 
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_hash) {
+            return env('APP_URL').'/storage/images/branch/'.$this->image_hash;
+        }
+
+        return null;
+    }
 }
