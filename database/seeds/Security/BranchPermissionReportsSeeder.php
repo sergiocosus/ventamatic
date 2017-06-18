@@ -48,5 +48,6 @@ class BranchPermissionReportsSeeder extends Seeder
         foreach ($data as $branchPermission)
         {
             \Ventamatic\Core\User\Security\BranchPermission::create($branchPermission);
-        }    }
+        }
+    }
 }

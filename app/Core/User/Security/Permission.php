@@ -10,6 +10,18 @@ class Permission extends EntrustPermission {
         'id' => 'integer',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::created(function(Permission $permission) {
+            $adminRole = Role::whereName('admin')->first();
+            if ($adminRole) {
+                $adminRole->attachPermission($permission);
+            }
+        });
+    }
+
     public function roles() {
         return $this->belongsToMany(Role::class);
     }

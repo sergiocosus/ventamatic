@@ -50,6 +50,7 @@ class BranchPermissionSeeder extends Seeder
         }
 
         $this->call(BranchPermissionReportsSeeder::class);
+        $this->call(BranchPermissionForBranchSeeder::class);
 
     }
 }

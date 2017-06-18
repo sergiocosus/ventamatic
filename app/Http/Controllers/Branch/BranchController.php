@@ -20,11 +20,15 @@ class BranchController extends Controller
 
     public function getBranch(Branch $branch)
     {
+        $this->canOnBranch('branch-get-detail', $branch);
+
         return $this->success(compact('branch'));
     }
 
     public function put(Request $request, Branch $branch)
     {
+        $this->canOnBranch('branch-edit', $branch);
+
         $branch->fill($request->all());
         $branch->save();
 
