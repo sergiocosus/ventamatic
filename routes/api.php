@@ -7,8 +7,11 @@ Route::get('/', function () {
 });
 Route::post('auth', 'Auth\AuthController@authenticate');
 
-Route::group(['prefix' => 'user'],function(){
-    Route::get('me','User\UserController@getMe');
+Route::group(['prefix' => 'user'],function() {
+    Route::group(['prefix' => 'me'], function() {
+        Route::get('','User\UserController@getMe');
+        Route::put('password','User\UserController@putPassword');
+    });
     Route::get('','User\UserController@get');
     Route::get('search','User\UserController@getSearch');
     Route::post('','User\UserController@post');

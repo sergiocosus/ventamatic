@@ -3,6 +3,7 @@
 namespace Ventamatic\Http\Controllers\User;
 
 use Auth;
+use Hash;
 use Illuminate\Http\Request;
 
 use Illuminate\Routing\Route;
@@ -83,10 +84,24 @@ class UserController extends Controller
     {
         $this->can('user-edit');
 
-        $user->fill($request->all());
+        $user->fill($request->except(['password']));
         $user->save();
 
         return $this->success(compact('user'));
+    }
+
+    public function putPassword(Request $request)
+    {
+        $user = Auth::user();
+
+        if (Hash::check($request->get('current_password'), $user->password)) {
+            $user->password = Hash::make($request->get('password'));
+            $user->update();
+        } else {
+            return $this->error(400, \Lang::get('user.password_does_not_match'));
+        }
+
+        return $this->success();
     }
 
     public function delete(User $user)
