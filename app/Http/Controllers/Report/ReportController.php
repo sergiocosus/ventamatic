@@ -62,7 +62,8 @@ class ReportController extends Controller
     public function getInventory(Request $request)
     {
         $inventories = $this->reportService
-            ->getInventory($request->all())->get();
+            ->getInventory($request->all())
+            ->get();
 
         return $this->success(compact('inventories'));
     }

@@ -126,12 +126,14 @@ class Branch extends RevisionableBaseModel {
 
         $movements = [];
 
+        $value = array_get($data, 'value', 0);
+
         switch($inventoryMovementType->id){
             case InventoryMovementType::COMPRA:
             case InventoryMovementType::PROMOCION:
             case InventoryMovementType::CONSIGNACION:
                 $movements[] = InventoryMovement::createMovement($user, $this, $product,
-                    $inventoryMovementType, $quantity, $batch, array_get($data, 'model'));
+                    $inventoryMovementType, $quantity, $batch, array_get($data, 'model'), $value);
             break;
 
             case InventoryMovementType::TRASLADO:

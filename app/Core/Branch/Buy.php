@@ -143,6 +143,7 @@ class Buy extends RevisionableBaseModel
             $branch->addInventoryMovement($user, $product, [
                 'inventory_movement_type_id' => $inventory_movement_type_id,
                 'quantity' => $productData['quantity'],
+                'value' => $productData['cost'],
                 'model' => $this,
                 $batch
             ]);

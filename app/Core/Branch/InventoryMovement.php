@@ -55,7 +55,8 @@ class InventoryMovement extends RevisionableBaseModel {
                                    InventoryMovementType $inventoryMovementType,
                                    $quantity,
                                    $batch,
-                                   $model = null){
+                                   $model = null,
+                                   $value = 0){
         $inventoryMovement = new static();
 
         $inventoryMovement->user()->associate($user);
@@ -64,6 +65,7 @@ class InventoryMovement extends RevisionableBaseModel {
         $inventoryMovement->inventoryMovementType()->associate($inventoryMovementType);
         $inventoryMovement->batch =  $batch;
         $inventoryMovement->quantity = $quantity;
+        $inventoryMovement->value = $value;
 
         if ($model) {
            $inventoryMovement->inventoriableMovement()->associate($model);

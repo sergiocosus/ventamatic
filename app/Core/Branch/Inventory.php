@@ -37,6 +37,7 @@ class Inventory extends RevisionableBaseModel {
 
     protected $appends = [
         'current_price',
+        'current_total_cost'
     ];
 
     public function branch() {
@@ -89,6 +90,37 @@ class Inventory extends RevisionableBaseModel {
         } else {
             return $this->product->global_price;
         }
+    }
+
+    public function getCurrentTotalCostAttribute() {
+        $inventoryMovements = (InventoryMovement::query()
+            ->whereProductId($this->product_id)
+            ->whereBranchId($this->branch_id)
+            ->whereIn('inventory_movement_type_id', [
+                InventoryMovementType::CONSIGNACION,
+                InventoryMovementType::COMPRA,
+                InventoryMovementType::PROMOCION,
+                ])
+            ->orderBy('created_at','desc')
+            ->get());
+
+        $cost = 0;
+        $quantity = $this->quantity;
+        foreach ($inventoryMovements as $inventoryMovement) {
+            if ($quantity >= $inventoryMovement->quantity) {
+                $cost += $inventoryMovement->quantity * $inventoryMovement->value;
+                $quantity -= $inventoryMovement->quantity;
+            } else {
+                $cost += $quantity * $inventoryMovement->value;
+                $quantity = 0;
+            }
+
+            if ($quantity <= 0) {
+                break;
+            }
+        }
+
+        return $cost;
     }
 
 
