@@ -171,7 +171,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'api',
-            'prefix' => 'api/v1',
+            'prefix' => 'v1',
         ], function () {
             \Laravel\Passport\Passport::routes();
         });
@@ -179,7 +179,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::group([
             'middleware' => 'api',
             'namespace' => $this->namespace,
-            'prefix' => 'api/v1',
+            'prefix' => 'v1',
         ], function () {
             require base_path('routes/api.php');
         });
