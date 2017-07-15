@@ -93,6 +93,7 @@ class InventoryController extends Controller
             ->search($search)
             ->groupBy('inventories.id')
             ->notDeletedProduct()
+            ->orderBy('quantity', 'desc')
             ->with('product')
             ->get();
 
@@ -109,7 +110,7 @@ class InventoryController extends Controller
                 ->with('product')
                 ->first();
             if($inventory){
-                return $this->success(compact('inventory'));
+                return $this->succesPassport::routes()s(compact('inventory'));
             } else {
                 return $this->error(400, \Lang::get('products.not_found_bar_code',compact('bar_code')));
             }
