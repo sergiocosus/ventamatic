@@ -68,6 +68,7 @@ class ReportService
             'id',
             'user_id',
             'supplier_id',
+            'supplier_bill_id',
         ]);
 
         $this->processDateRange($query, $request);

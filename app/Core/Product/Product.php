@@ -143,4 +143,15 @@ class Product extends RevisionableBaseModel {
             $query->where('branch_id', $branch->id);
         }]);
     }
+
+    public function getLastCostAttribute() {
+        $lastBuy = $this->buys()->withPivot('quantity', 'cost')
+            ->orderBy('created_at','desc')->first();
+
+        if (!$lastBuy) {
+            return null;
+        }
+
+        return $lastBuy->pivot->cost;
+    }
 }

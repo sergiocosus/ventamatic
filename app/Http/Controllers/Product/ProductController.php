@@ -41,6 +41,7 @@ class ProductController extends Controller
         $this->can('product-get-detail');
 
         $product->load('categories', 'unit', 'brand');
+        $product->append('last_cost');
 
         return $this->success(compact('product'));
     }
@@ -94,6 +95,10 @@ class ProductController extends Controller
             ->groupBy('products.id')
             ->get();
 
+        $products->each(function($product) {
+            $product->append('last_cost');
+        });
+
         return $this->success(compact('products'));
     }
     
@@ -103,6 +108,8 @@ class ProductController extends Controller
         if($bar_code = $request->get('bar_code')) {
             $product = Product::with('categories', 'unit', 'brand')
                 ->whereBarCode($bar_code)->first();
+            $product->append('last_cost');
+
             if($product){
                 return $this->success(compact('product'));
             } else {
