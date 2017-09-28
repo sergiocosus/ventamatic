@@ -82,6 +82,7 @@ class Branch extends RevisionableBaseModel {
             throw new InventoryException(\Lang::get('unit.invalid_quantity_for_unit',
                 [
                     'quantity' => $quantity,
+                    'unit_id' => $product->unit->id,
                     'unit_name' => $product->unit->name,
                 ]
             ));
@@ -158,8 +159,9 @@ class Branch extends RevisionableBaseModel {
             break;
 
             case InventoryMovementType::AJUSTE:
+            case InventoryMovementType::CARGA_MASIVA:
                 $movements[] = InventoryMovement::createMovement($user, $this, $product,
-                    $inventoryMovementType, $quantity, $batch);
+                    $inventoryMovementType, $quantity, $batch,null,  $value);
             break;
         }
 

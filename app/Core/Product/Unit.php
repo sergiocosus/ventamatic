@@ -24,7 +24,7 @@ class Unit extends RevisionableBaseModel {
 
     public function validateQuantity($quantity)
     {
-        $module = $quantity - $this->step * floor($quantity / $this->step);
+        $module = ($quantity * 1000) % ($this->step * 1000);
 
         return $module == 0;
     }

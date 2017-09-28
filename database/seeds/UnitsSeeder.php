@@ -37,12 +37,18 @@ class UnitsSeeder extends Seeder
                 'abbreviation' => 'm',
                 'step' => 0.005
             ],
+            [
+                'id' => 5,
+                'name' => 'Paquete',
+                'abbreviation' => 'paq',
+                'step' => 1
+            ],
 
         ];
         
         foreach ($data as $unit)
         {
-            Unit::create($unit);
+            Unit::firstOrCreate($unit);
         }
     }
 }

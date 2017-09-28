@@ -14,6 +14,7 @@ class InventoryMovementType extends RevisionableBaseModel {
     const COMPRA = 7;
     const VENTA = 8;
     const CONSIGNACION = 9;
+    const CARGA_MASIVA = 10;
 
     use SoftDeletes;
 

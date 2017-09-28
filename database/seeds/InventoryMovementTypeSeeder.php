@@ -49,11 +49,15 @@ class InventoryMovementTypeSeeder extends Seeder
                 'id' => 9,
                 'name' => 'Consignación'
             ],
+            [
+                'id' => 10,
+                'name' => 'Carga masiva'
+            ],
         ];
         
         foreach ($data as $movementType)
         {
-            InventoryMovementType::create($movementType);
+            InventoryMovementType::firstOrCreate($movementType);
         }
     }
 }
