@@ -95,6 +95,7 @@ class InventoryController extends Controller
             ->notDeletedProduct()
             ->orderBy('quantity', 'desc')
             ->with('product')
+            ->limit(100)
             ->get();
 
         return $this->success(compact('inventories'));

@@ -93,6 +93,7 @@ class ProductController extends Controller
 
         $products = Product::search($request->get('search'))
             ->groupBy('products.id')
+            ->limit(100)
             ->get();
 
         $products->each(function($product) {
