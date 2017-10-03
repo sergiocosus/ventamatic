@@ -155,7 +155,7 @@ class Branch extends RevisionableBaseModel {
             case InventoryMovementType::CADUCADO:
             case InventoryMovementType::VENTA:
                 $movements[] = InventoryMovement::createMovement($user, $this, $product,
-                $inventoryMovementType, -$quantity, $batch, array_get($data, 'model'));
+                $inventoryMovementType, -$quantity, $batch, array_get($data, 'model'), $value);
             break;
 
             case InventoryMovementType::AJUSTE:

@@ -126,6 +126,7 @@ class Sale extends RevisionableBaseModel {
                 'inventory_movement_type_id' => InventoryMovementType::VENTA,
                 'quantity' => $productData['quantity'],
                 'model' => $this,
+                'value' => $price,
             ]);
         }
         $this->products()->attach($productsToAttach);
