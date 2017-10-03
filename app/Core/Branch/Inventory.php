@@ -100,6 +100,7 @@ class Inventory extends RevisionableBaseModel {
                 InventoryMovementType::CONSIGNACION,
                 InventoryMovementType::COMPRA,
                 InventoryMovementType::PROMOCION,
+                InventoryMovementType::CARGA_MASIVA,
                 ])
             ->orderBy('created_at','desc')
             ->get());

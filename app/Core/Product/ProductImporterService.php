@@ -105,8 +105,16 @@ class ProductImporterService
 
             $product->global_minimum = $productData['minimo'];
             $product->global_price = $productData['precio'];
-            $bar_code = $productData['codigo_barras'];
-            if (strtolower($bar_code) == 'null' || $bar_code == 'NA') {
+            $bar_code = explode("'", $productData['codigo_barras']);
+
+            if (count($bar_code)>1) {
+                $bar_code= $bar_code[1];
+            } else {
+                $bar_code= $bar_code[0];
+            }
+
+
+            if (strtolower($bar_code) == 'null' || $bar_code == 'NA' || '') {
                 $product->bar_code = null;
             } else {
                 $product->bar_code = $bar_code;
