@@ -37,7 +37,8 @@ class Inventory extends RevisionableBaseModel {
 
     protected $appends = [
         'current_price',
-        'current_total_cost'
+        'current_total_cost',
+        'last_cost'
     ];
 
     public function branch() {
@@ -124,5 +125,18 @@ class Inventory extends RevisionableBaseModel {
         return $cost;
     }
 
+    public function getLastCostAttribute() {
+        $inventoryMovement = (InventoryMovement::query()
+            ->whereProductId($this->product_id)
+            ->whereBranchId($this->branch_id)
+            ->whereIn('inventory_movement_type_id', [
+                InventoryMovementType::COMPRA,
+                InventoryMovementType::CARGA_MASIVA,
+                ])
+            ->orderBy('created_at','desc')
+            ->first());
+
+        return $inventoryMovement ? $inventoryMovement->value : null;
+    }
 
 }
