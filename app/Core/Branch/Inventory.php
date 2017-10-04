@@ -37,6 +37,7 @@ class Inventory extends RevisionableBaseModel {
 
     protected $appends = [
         'current_price',
+        'current_minimum',
         'current_total_cost',
         'last_cost'
     ];
@@ -90,6 +91,15 @@ class Inventory extends RevisionableBaseModel {
             return $this->price;
         } else {
             return $this->product->global_price;
+        }
+    }
+
+    public function getCurrentMinimumAttribute()
+    {
+        if ($this->minimum) {
+            return $this->minimum;
+        } else {
+            return $this->product->global_minimum;
         }
     }
 
