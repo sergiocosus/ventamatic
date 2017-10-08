@@ -75,10 +75,12 @@ class InventoryController extends Controller
 
         $inventories = Inventory::whereBranchId($branch->id)
             ->notDeletedProduct()
+            ->join('products', 'products.id', '=', 'inventories.product_id')
             ->with('product')
             ->with('product.brand')
             ->with('product.categories')
             ->with('product.unit')
+            ->orderBy('products.description')
             ->get();
 
         return $this->success(compact('inventories'));

@@ -31,7 +31,8 @@ class ProductController extends Controller
             $query->withTrashed();
         }
 
-        $products = $query->get();
+        $products = $query->orderBy('description')
+            ->get();
         
         return $this->success(compact('products'));
     }
