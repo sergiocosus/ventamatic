@@ -38,7 +38,7 @@ class SupplierController extends Controller
     {
         $this->can('supplier-get');
 
-        $suppliers = Supplier::search($request->get('search'))
+        $suppliers = Supplier::search($request->get('search'), null, true, true)
             ->get();
 
         return $this->success(compact('suppliers'));

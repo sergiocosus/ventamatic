@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $this->can('user-get');
 
-        $users = User::search($request->get('search'))
+        $users = User::search($request->get('search'), null, true, true)
             ->get();
 
         return $this->success(compact('users'));

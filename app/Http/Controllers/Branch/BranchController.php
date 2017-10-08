@@ -43,7 +43,7 @@ class BranchController extends Controller
 
     public function getSearch(Request $request)
     {
-        $branches = Branch::search($request->get('search'))
+        $branches = Branch::search($request->get('search'), null, true, true)
             ->get();
 
         return $this->success(compact('branches'));

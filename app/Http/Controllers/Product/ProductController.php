@@ -91,7 +91,7 @@ class ProductController extends Controller
     {
         $this->can('product-get');
 
-        $products = Product::search($request->get('search'))
+        $products = Product::search($request->get('search'), null, true, true)
             ->groupBy('products.id')
             ->limit(100)
             ->get();

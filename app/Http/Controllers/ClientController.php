@@ -35,7 +35,7 @@ class ClientController extends Controller
     {
         $this->can('client-get');
 
-        $clients = Client::search($request->get('search'))
+        $clients = Client::search($request->get('search'), null, true, true)
             ->get();
 
         return $this->success(compact('clients'));
