@@ -110,6 +110,7 @@ class ReportService
             'price',
             'minimum',
         ]);
+        $this->processOrder($query, $request);
 
         return $query;
     }
@@ -191,5 +192,19 @@ class ReportService
         $end_at->setTimezone('UTC');
 
         return $end_at;
+    }
+
+    private function processOrder($query, $request)
+    {
+        $orderBy = array_get($request, 'order_by');
+        $orderType = array_get($request, 'order_type', 'desc');
+
+        if (!($orderType == 'desc' || $orderBy == 'asc')) {
+            throw new \Exception('Invalid order type');
+        }
+
+        if ($orderBy) {
+            $query->orderBy($orderBy, $orderType);
+        }
     }
 }

@@ -16,7 +16,7 @@ class SupplierController extends Controller
     {
         $this->can('supplier-get');
 
-        $query = Supplier::query();
+        $query = Supplier::query()->with('brands');
         if ($request->get('deleted')) {
             $this->can('supplier-delete');
             $query->withTrashed();
