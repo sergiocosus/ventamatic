@@ -67,6 +67,11 @@ Route::group(['prefix' => 'branch'],function(){
         });
 
     });
+
+    Route::group(['prefix' => 'sale'],function(){
+        Route::delete('{sale}','Branch\SaleController@delete');
+    });
+
 });
 
 Route::group(['prefix' => 'client'],function(){

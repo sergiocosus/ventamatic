@@ -38,6 +38,7 @@ class ReportService
 
     public function getSale(Array $request){
         $query = Sale::query()
+            ->withTrashed()
             ->with([
                 'products' => function ($q) {$q->withTrashed();},
                 'client' => function ($q) {$q->withTrashed();},

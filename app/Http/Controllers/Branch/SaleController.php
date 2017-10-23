@@ -5,6 +5,8 @@ use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Ventamatic\Core\Branch\Branch;
+use Ventamatic\Core\Branch\InventoryMovement;
+use Ventamatic\Core\Branch\InventoryMovementType;
 use Ventamatic\Core\Branch\PaymentType;
 use Ventamatic\Core\Branch\Sale;
 use Ventamatic\Core\External\Client;
@@ -51,5 +53,29 @@ class SaleController extends Controller
         ]);
 
         return $this->success(compact('sale'));
+    }
+
+    public function delete(Sale $sale)
+    {
+        $branch = $sale->branch;
+        $this->canOnBranch('sale-delete', $branch);
+
+        $batch = InventoryMovement::getLastBatch();
+
+        foreach($sale->products as $product) {
+            $branch->addInventoryMovement(Auth::user(),
+                $product,
+                [
+                    'inventory_movement_type_id' => InventoryMovementType::SALE_CANCELED,
+                    'quantity' => $product->pivot->quantity,
+                    'value' => $product->pivot->price
+                ],
+                $batch
+            );
+        }
+
+        $sale->delete();
+
+        return $this->success();
     }
 }

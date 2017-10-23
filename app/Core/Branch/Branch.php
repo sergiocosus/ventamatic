@@ -163,6 +163,10 @@ class Branch extends RevisionableBaseModel {
                 $movements[] = InventoryMovement::createMovement($user, $this, $product,
                     $inventoryMovementType, $quantity, $batch,null,  $value);
             break;
+            case InventoryMovementType::SALE_CANCELED:
+                $movements[] = InventoryMovement::createMovement($user, $this, $product,
+                    $inventoryMovementType, $quantity, $batch, array_get($data, 'model'), $value);
+                break;
         }
 
         return $movements;

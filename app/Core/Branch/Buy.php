@@ -81,6 +81,7 @@ class Buy extends RevisionableBaseModel
                                  PaymentType $paymentType,
                                  Array $products,
                                  $ieps, $iva, $total,
+                                 $supplierBillTotal,
                                  $card_payment_id = null)
     {
         $buy = new self();
@@ -94,6 +95,7 @@ class Buy extends RevisionableBaseModel
         $buy->ieps = $ieps;
         $buy->iva = $iva;
         $buy->supplier_bill_id = $supplierBillId;
+        $buy->supplier_bill_total = $supplierBillTotal;
 
         try {
             DB::beginTransaction();
