@@ -35,7 +35,7 @@ class BuyController extends Controller
         $iva = $data['iva'];
         $products = $data['products'];
         $supplierBillId = $data['supplier_bill_id'];
-        $supplierBillTotal = $data['supplier_bill_total'];
+        $supplierBillTotal = array_get($data, 'supplier_bill_total', 0);
 
         $buy = Buy::doBuy(
             Auth::user(),
