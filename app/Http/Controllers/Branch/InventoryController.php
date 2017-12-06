@@ -45,7 +45,7 @@ class InventoryController extends Controller
             throw (new ModelNotFoundException)->setModel(get_class($this->model));
         }
 
-        $inventory->fill($request->only(['price', 'minimum']));
+        $inventory->fill($request->only(['price', 'minimum', 'last_cost']));
         $inventory->update();
 
         return $this->get($branch, $product);

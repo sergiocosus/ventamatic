@@ -8,8 +8,10 @@ class Inventory extends RevisionableBaseModel {
 
     use SearchableTrait;
 
-    protected $fillable = ['branch_id', 'product_id', 'quantity', 
-        'price', 'minimum'];
+    protected $fillable = [
+        'branch_id', 'product_id', 'quantity',
+        'price', 'minimum', 'last_cost',
+    ];
 
     protected $casts = [
         'id' => 'integer',
@@ -17,6 +19,7 @@ class Inventory extends RevisionableBaseModel {
         'product_id' => 'integer',
         'quantity' => 'double',
         'price' => 'double',
+        'last_cost' => 'double',
         'minimum' => 'double',
     ];
     
@@ -39,7 +42,6 @@ class Inventory extends RevisionableBaseModel {
         'current_price',
         'current_minimum',
         'current_total_cost',
-        'last_cost'
     ];
 
     public function branch() {
@@ -135,6 +137,7 @@ class Inventory extends RevisionableBaseModel {
         return $cost;
     }
 
+    /*
     public function getLastCostAttribute() {
         $inventoryMovement = (InventoryMovement::query()
             ->whereProductId($this->product_id)
@@ -142,11 +145,24 @@ class Inventory extends RevisionableBaseModel {
             ->whereIn('inventory_movement_type_id', [
                 InventoryMovementType::COMPRA,
                 InventoryMovementType::CARGA_MASIVA,
+                InventoryMovementType::CONSIGNACION,
                 ])
             ->orderBy('created_at','desc')
             ->first());
 
         return $inventoryMovement ? $inventoryMovement->value : null;
     }
+    */
 
+    public function updateLastCost($cost, InventoryMovementType $inventoryMovementType)
+    {
+        switch ($inventoryMovementType->id) {
+            case InventoryMovementType::COMPRA:
+            case InventoryMovementType::CONSIGNACION:
+            case InventoryMovementType::CARGA_MASIVA:
+                $this->last_cost = $cost;
+                $this->save();
+        }
+    }
 }
+

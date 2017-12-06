@@ -70,9 +70,9 @@ class InventoryMovement extends RevisionableBaseModel {
         if ($model) {
            $inventoryMovement->inventoriableMovement()->associate($model);
         }
-        logger($quantity);
-        $branch->alterInventory($product, $quantity);
 
+        $branch->alterInventory($product, $quantity)
+            ->updateLastCost($value, $inventoryMovementType);
         $inventoryMovement->save();
 
         return $inventoryMovement;

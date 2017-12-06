@@ -108,8 +108,9 @@ class Branch extends RevisionableBaseModel {
         }
 
         $inventory->quantity += $quantity;
+        $inventory->save();
 
-        return $inventory->save();
+        return $inventory;
     }
 
     public function addInventoryMovement(User $user, Product $product, $data, $batch = null)
