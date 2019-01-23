@@ -100,10 +100,14 @@ class ReportService
     {
         $query = Inventory::with([
             'branch' => function ($q) {$q->withTrashed();},
-            'product' => function ($q) {$q->withTrashed();},
-            'product.brand' => function ($q) {$q->withTrashed();},
-            'product.categories' => function ($q) {$q->withTrashed();}
-            ]);
+            'product' => function ($q) {
+                $q->withTrashed();
+
+                $q->with([
+                    'brand' => function ($q) {$q->withTrashed();},
+                    'categories' => function ($q) {$q->withTrashed();},
+                ]);
+        }])->has('product');
         $this->validateBranchPermission('report-inventory', $query, $request);
         $this->processSimpleFields($query, $request, [
             'product_id',
